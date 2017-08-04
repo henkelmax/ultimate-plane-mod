@@ -1,0 +1,16 @@
+[
+{
+  "modid": "plane",
+  "name": "Plane Mod",
+  "description": "Plane Mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "http://maxhenkel.de/",
+  "authorList": ["Max Henkel"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
