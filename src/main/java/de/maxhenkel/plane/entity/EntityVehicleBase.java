@@ -19,13 +19,6 @@ import java.util.List;
 
 public abstract class EntityVehicleBase extends Entity {
 
-    private int steps;
-    private double clientX;
-    private double clientY;
-    private double clientZ;
-    private double clientYaw;
-    private double clientPitch;
-
     protected float deltaRotation;
 
     protected AxisAlignedBB boundingBox;
@@ -40,16 +33,13 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public void tick() {
-        //if (!world.isRemote) {
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
-        //}
 
         this.setPositionNonDirty();
 
         super.tick();
-        this.tickLerp();
 
         recalculateBoundingBox();
     }
@@ -222,43 +212,6 @@ public abstract class EntityVehicleBase extends Entity {
     @Override
     public boolean canBeCollidedWith() {
         return isAlive();
-    }
-
-    private void tickLerp() {
-        if (this.steps > 0 && !this.canPassengerSteer()) {
-            double x = posX + (clientX - posX) / (double) steps;
-            double y = posY + (clientY - posY) / (double) steps;
-            double z = posZ + (clientZ - posZ) / (double) steps;
-            double d3 = MathHelper.wrapDegrees(clientYaw - (double) rotationYaw);
-            this.rotationYaw = (float) ((double) rotationYaw + d3 / (double) steps);
-            this.rotationPitch = (float) ((double) rotationPitch
-                    + (clientPitch - (double) rotationPitch) / (double) steps);
-            steps--;
-            setPosition(x, y, z);
-            setRotation(rotationYaw, rotationPitch);
-        }
-    }
-
-    /**
-     * Set the position and rotation values directly without any clamping.
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
-                                             int posRotationIncrements, boolean teleport) {
-        this.clientX = x;
-        this.clientY = y;
-        this.clientZ = z;
-        this.clientYaw = (double) yaw;
-        this.clientPitch = (double) pitch;
-        this.steps = 10;
-    }
-
-    public static final double calculateMotionX(float speed, float rotationYaw) {
-        return (double) (MathHelper.sin(-rotationYaw * 0.017453292F) * speed);
-    }
-
-    public static final double calculateMotionZ(float speed, float rotationYaw) {
-        return (double) (MathHelper.cos(rotationYaw * 0.017453292F) * speed);
     }
 
     @Override

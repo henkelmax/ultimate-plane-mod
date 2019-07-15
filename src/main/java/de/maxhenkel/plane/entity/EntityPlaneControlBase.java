@@ -57,17 +57,14 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         double speed = getMotion().length();
 
         float rotationSpeed = 0;
-        if (Math.abs(speed) > 0.005F) {
+        if (Math.abs(speed) > 0F) {
             rotationSpeed = MathHelper.abs(0.5F / (float) Math.pow(speed, 2)); //rotation modifier+0.5
-
-            rotationSpeed = MathHelper.clamp(rotationSpeed, 2.0F, 5.0F);
+            rotationSpeed = MathHelper.clamp(rotationSpeed, 1.0F, 5.0F);
         }
 
         deltaRotation = 0;
 
-        if (speed < 0) {
-            rotationSpeed = -rotationSpeed;
-        }
+        rotationSpeed = Math.abs(rotationSpeed);
 
         if (isLeft()) {
             deltaRotation -= rotationSpeed;
@@ -78,15 +75,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
         // ----- YAW ------
         rotationYaw += deltaRotation;
-        float delta = Math.abs(rotationYaw - prevRotationYaw);
-        while (rotationYaw > 180F) {
-            rotationYaw -= 360F;
-            prevRotationYaw = rotationYaw - delta;
-        }
-        while (rotationYaw <= -180F) {
-            rotationYaw += 360F;
-            prevRotationYaw = delta + rotationYaw;
-        }
         // ----- YAW ------
 
         // ----- PITCH ------
@@ -103,14 +91,14 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
         if (onGroundEnhanced()) {
             if (rotationPitch > 0) {
-                rotationPitch -= 6F;
+                rotationPitch -= 10F;
                 if (rotationPitch < 0) {
                     rotationPitch = 0;
                 }
             }
 
             if (rotationPitch < -groundPitchTolerance && speed < MIN_TAKEOFF_SPEED) {
-                rotationPitch += 6F;
+                rotationPitch += 10F;
                 if (rotationPitch > -groundPitchTolerance) {
                     rotationPitch = -groundPitchTolerance;
                 }
@@ -128,6 +116,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             setRight(false);
             setUp(false);
             setDown(false);
+            setBreak(false);
         }
 
         Vec3d motionVector = getMotion();
@@ -143,16 +132,17 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 speed = speed + engineSpeed * 0.01D;
+
                 if (speed > MAX_ENGINE_SPEED * engineSpeed) {
                     speed = MAX_ENGINE_SPEED * engineSpeed;
                 }
             }
             if (isBreak()) {
-                speed = decreaseToZero(speed, 0.03F); // break resistance
+                speed = decreaseToZero(speed, 0.01F); // break resistance
             }
 
             if (engineSpeed <= 0F) {
-                speed = decreaseToZero(speed, 0.0075F); // ground resistance
+                speed = decreaseToZero(speed, 0.0025F); // ground resistance
             }
 
             motion = motion.normalize().scale(speed);
@@ -167,8 +157,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
                 move(MoverType.SELF, getMotion());
             }
         } else {
-
-
             double fallSpeed = 0.08D;
             Vec3d lookVec = getLookVec();
             float pitch = rotationPitch * ((float) Math.PI / 180F);
@@ -194,7 +182,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
             motionVector = motionVector.mul(0.99D, 0.98D, 0.99D);
 
-            // ---
             double speed = motionVector.length();
 
             double engineSpeed = getEngineSpeed();
@@ -217,8 +204,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
                 motionVector = motionVector.add(new Vec3d(addVec.x, 0D/*Math.min(addVec.y, 0.0001D)*/, addVec.z));
             }
-
-            // ---
 
             setMotion(motionVector);
 
@@ -249,11 +234,14 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
     }
 
     private boolean onGroundLast;
+    private boolean onGroundLast2;
 
     public boolean onGroundEnhanced() {
         boolean last = onGroundLast;
+        boolean last2 = onGroundLast2;
+        onGroundLast2 = onGroundLast;
         onGroundLast = onGround;
-        return last || onGround;
+        return last || last2 || onGround;
     }
 
     public double getHorizontalMotion(Vec3d vec3d) {
@@ -263,123 +251,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
     public double getAngle(Vec3d vec1, Vec3d vec2) {
         return Math.acos(Math.abs(vec1.dotProduct(vec2)) / (vec1.length() * vec2.length()));
     }
-
-    private void controlPlane3() {
-
-        if (!isBeingRidden()) {
-            setThrustPositive(false);
-            setThrustNegative(false);
-            setLeft(false);
-            setRight(false);
-            setUp(false);
-            setDown(false);
-        }
-
-        Vec3d motionVector = getMotion();
-        /*if (motionVector.y > -0.5D) {
-            fallDistance = 1.0F;
-        }*/
-        double fallSpeed = 0.08D;
-        Vec3d lookVec = getLookVec();
-        float pitch = rotationPitch * ((float) Math.PI / 180F);
-        double xzLook = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
-        double xzMotion = Math.sqrt(motionVector.x * motionVector.x + motionVector.z * motionVector.z);
-        double lookLength = lookVec.length();
-        float cosPitch = MathHelper.cos(pitch);
-        cosPitch = (float) ((double) cosPitch * (double) cosPitch * Math.min(1.0D, lookLength / 0.4D));
-        motionVector = getMotion().add(0.0D, fallSpeed * (-1.0D + (double) cosPitch * 0.75D), 0.0D);
-        if (motionVector.y < 0.0D && xzLook > 0.0D) {
-            double d3 = motionVector.y * -0.1D * (double) cosPitch;
-            motionVector = motionVector.add(lookVec.x * d3 / xzLook, d3, lookVec.z * d3 / xzLook);
-        }
-
-        if (pitch < 0.0F && xzLook > 0.0D) {
-            double d13 = xzMotion * (double) (-MathHelper.sin(pitch)) * 0.04D;
-            motionVector = motionVector.add(-lookVec.x * d13 / xzLook, d13 * 3.2D, -lookVec.z * d13 / xzLook);
-        }
-
-        if (xzLook > 0.0D) {
-            motionVector = motionVector.add((lookVec.x / xzLook * xzMotion - motionVector.x) * 0.1D, 0.0D, (lookVec.z / xzLook * xzMotion - motionVector.z) * 0.1D);
-        }
-
-        setMotion(motionVector.mul((double) 0.99F, (double) 0.98F, (double) 0.99F));
-        move(MoverType.SELF, this.getMotion());
-        if (this.collidedHorizontally && !world.isRemote) {
-            double d14 = Math.sqrt(func_213296_b(this.getMotion()));
-            double d4 = xzMotion - d14;
-            float f4 = (float) (d4 * 10.0D - 3.0D);
-            if (f4 > 0.0F) {
-                //this.playSound(this.getFallSound((int)f4), 1.0F, 1.0F);
-                //this.attackEntityFrom(DamageSource.FLY_INTO_WALL, f4);
-            }
-        }
-
-        /*if (this.onGround && !world.isRemote) {
-            setFlag(7, false);
-        }*/
-    }
-/*
-    private void controlPlane2() {
-
-        if (!isBeingRidden()) {
-            setThrustPositive(false);
-            setThrustNegative(false);
-            setLeft(false);
-            setRight(false);
-            setUp(false);
-            setDown(false);
-        }
-
-        float maxSpeed = 3F;
-        Vec3d movement = getLookVec();
-
-        float speed = getSpeed();
-
-        speed = decreaseToZero(speed, 0.002F);  // air resistance
-
-        if (collidedVertically) {
-            speed = decreaseToZero(speed, 0.01F); // ground resistance
-        } else {
-            speed += (getPitchPercentage() + 0.0F) * 0.5F;
-            if (speed > maxSpeed) {
-                speed = maxSpeed;
-            }
-        }
-
-
-        //speed += getEngineSpeed() * 0.075F; // engine power
-
-        //speed = Math.min(speed, maxSpeed);
-        //speed = Math.max(speed, 0F);
-
-
-        if (collidedHorizontally) {
-            //TODO crash
-            setMotion(0F, 0F, 0F);
-            setSpeed(0F);
-            return;
-        }
-
-        if (speed < 0) {
-            speed = 0;
-        }
-
-        movement = movement.normalize().scale(speed);
-
-        double downForce = -9.81D / 20D;
-
-        //downForce += speed * 0.45D;
-
-        movement = movement.add(0D, downForce, 0D);
-
-        setMotion(movement.x, movement.y, movement.z);
-
-        /*if (getPitchPercentage() > 0 && getSpeed() < maxSpeed) {
-            speed -= movement.y * 0.1F;
-        }*/
-/*
-        setSpeed(speed);
-    }*/
 
     private static float decreaseToZero(float num, float amount) {
         float erg;

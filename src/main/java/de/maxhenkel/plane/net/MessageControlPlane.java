@@ -53,6 +53,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         thrustPos = buf.readBoolean();
         thrustNeg = buf.readBoolean();
         left = buf.readBoolean();
+        right = buf.readBoolean();
         breaking = buf.readBoolean();
         return this;
     }
