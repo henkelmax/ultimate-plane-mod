@@ -17,6 +17,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             DataSerializers.FLOAT);
     private static final DataParameter<Boolean> STARTED = EntityDataManager.createKey(EntityPlaneControlBase.class,
             DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> START_TIME = EntityDataManager.createKey(EntityPlaneControlBase.class,
+            DataSerializers.VARINT);
     private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.createKey(EntityPlaneControlBase.class,
             DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.createKey(EntityPlaneControlBase.class,
@@ -43,17 +45,27 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
     public void tick() {
         super.tick();
 
-        if (isThrustPositive()) {
-            setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
-        } else if (isThrustNegative()) {
-            setEngineSpeed(Math.max(getEngineSpeed() - 0.025F, 0F));
+        if (getStartTime() > 60) {
+            setStarted(true);
         }
+
+        if (isStarted()) {
+            if (isThrustPositive()) {
+                setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
+            } else if (isThrustNegative()) {
+                setEngineSpeed(Math.max(getEngineSpeed() - 0.025F, 0F));
+            }
+        } else {
+            setEngineSpeed(0F);
+        }
+
 
         controlPlane();
         handleRotation();
     }
 
     private void handleRotation() {
+
         double speed = getMotion().length();
 
         float rotationSpeed = 0;
@@ -117,18 +129,18 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             setUp(false);
             setDown(false);
             setBreak(false);
+            setStartTime(0);
         }
 
         Vec3d motionVector = getMotion();
         double verticalMotion = Math.abs(motionVector.y);
         double horizontalMotion = getHorizontalMotion(motionVector);
+        float engineSpeed = getEngineSpeed();
 
         if (onGroundEnhanced()) {
             Vec3d motion = getLookVec();
 
             double speed = getMotion().length();
-
-            float engineSpeed = getEngineSpeed();
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 speed = speed + engineSpeed * 0.01D;
@@ -183,8 +195,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             motionVector = motionVector.mul(0.99D, 0.98D, 0.99D);
 
             double speed = motionVector.length();
-
-            double engineSpeed = getEngineSpeed();
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 double addSpeed = 0D;
@@ -294,6 +304,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
     protected void registerData() {
         super.registerData();
         dataManager.register(STARTED, false);
+        dataManager.register(START_TIME, 0);
         dataManager.register(ENGINE_SPEED, 0F);
         dataManager.register(THRUST_POSITIVE, false);
         dataManager.register(THRUST_NEGATIVE, false);
@@ -304,7 +315,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         dataManager.register(BREAK, false);
     }
 
-    public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean breaking) {
+    public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean breaking, boolean starting) {
         boolean needsUpdate = false;
 
         if (isThrustPositive() != thrustPos) {
@@ -342,8 +353,23 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             needsUpdate = true;
         }
 
+
+        if (starting) {
+            if (isStarted() && getStartTime() <= 0) {
+                setStarted(false);
+            } else {
+                setStartTime(getStartTime() + 1);
+            }
+            needsUpdate = true;
+        } else {
+            if (getStartTime() > 0) {
+                setStartTime(0);
+                needsUpdate = true;
+            }
+        }
+
         if (world.isRemote && needsUpdate) {
-            Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, breaking));
+            Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, breaking, starting));
         }
     }
 
@@ -417,5 +443,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
     public void setEngineSpeed(float speed) {
         dataManager.set(ENGINE_SPEED, speed);
+    }
+
+    public int getStartTime() {
+        return dataManager.get(START_TIME);
+    }
+
+    public void setStartTime(int startTime) {
+        dataManager.set(START_TIME, startTime);
     }
 }

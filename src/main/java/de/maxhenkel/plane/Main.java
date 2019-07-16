@@ -1,9 +1,11 @@
 package de.maxhenkel.plane;
 
+import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.net.MessageControlPlane;
+import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityClassification;
@@ -132,7 +134,7 @@ public class Main {
     @SubscribeEvent
     public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
         event.getRegistry().registerAll(
-
+                ModSounds.getAll().toArray(new SoundEvent[0])
         );
     }
 

@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.events;
 
-import de.maxhenkel.plane.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -40,7 +40,7 @@ public class KeyEvents {
         EntityPlane plane = (EntityPlane) riding;
 
         if (player.equals(plane.getDriver())) {
-            plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BREAK_KEY.isKeyDown());
+            plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BREAK_KEY.isKeyDown(), Main.START_KEY.isKeyDown());
         }
     }
 
