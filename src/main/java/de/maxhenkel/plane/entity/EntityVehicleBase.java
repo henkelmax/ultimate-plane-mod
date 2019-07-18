@@ -19,6 +19,13 @@ import java.util.List;
 
 public abstract class EntityVehicleBase extends Entity {
 
+    private int steps;
+    private double clientX;
+    private double clientY;
+    private double clientZ;
+    private double clientYaw;
+    private double clientPitch;
+
     protected float deltaRotation;
 
     protected AxisAlignedBB boundingBox;
@@ -36,6 +43,7 @@ public abstract class EntityVehicleBase extends Entity {
         setPositionNonDirty();
 
         super.tick();
+        this.tickLerp();
 
         recalculateBoundingBox();
     }
@@ -105,6 +113,35 @@ public abstract class EntityVehicleBase extends Entity {
         return this.getPassengers().size() < getPassengerSize();
     }
 
+    private void tickLerp() {
+        if (this.steps > 0 && !this.canPassengerSteer()) {
+            double x = posX + (clientX - posX) / (double) steps;
+            double y = posY + (clientY - posY) / (double) steps;
+            double z = posZ + (clientZ - posZ) / (double) steps;
+            double d3 = MathHelper.wrapDegrees(clientYaw - (double) rotationYaw);
+            this.rotationYaw = (float) ((double) rotationYaw + d3 / (double) steps);
+            this.rotationPitch = (float) ((double) rotationPitch
+                    + (clientPitch - (double) rotationPitch) / (double) steps);
+            steps--;
+            setPosition(x, y, z);
+            setRotation(rotationYaw, rotationPitch);
+        }
+    }
+
+    /**
+     * Set the position and rotation values directly without any clamping.
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+                                             int posRotationIncrements, boolean teleport) {
+        this.clientX = x;
+        this.clientY = y;
+        this.clientZ = z;
+        this.clientYaw = (double) yaw;
+        this.clientPitch = (double) pitch;
+        this.steps = 10;
+    }
+
     protected void applyYawToEntity(Entity entityToUpdate) {
         entityToUpdate.setRenderYawOffset(this.rotationYaw);
         float f = MathHelper.wrapDegrees(entityToUpdate.rotationYaw - this.rotationYaw);
@@ -156,7 +193,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public Entity getControllingPassenger() {
-        return getDriver();
+        return null;
     }
 
     /**

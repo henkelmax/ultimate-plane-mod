@@ -244,17 +244,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         }
     }
 
-    @Override
-    public void move(MoverType moverType, Vec3d vec3d) {
-        if (moverType.equals(MoverType.PLAYER)) {
-            lastTickPosX = posX;
-            lastTickPosY = posY;
-            lastTickPosZ = posZ;
-            return;
-        }
-        super.move(moverType, vec3d);
-    }
-
     private boolean onGroundLast;
     private boolean onGroundLast2;
 
