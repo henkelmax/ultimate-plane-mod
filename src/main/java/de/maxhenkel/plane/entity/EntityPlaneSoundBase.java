@@ -35,7 +35,6 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneControlBase {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private int ticksSinceStarted = 0;
 
     private void updateSounds() {
