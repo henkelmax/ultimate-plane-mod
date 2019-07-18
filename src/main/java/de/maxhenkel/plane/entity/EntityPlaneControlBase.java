@@ -4,6 +4,7 @@ import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -273,23 +274,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         return Math.acos(Math.abs(vec1.dotProduct(vec2)) / (vec1.length() * vec2.length()));
     }
 
-    private static float decreaseToZero(float num, float amount) {
-        float erg;
-        if (num < 0) {
-            erg = num + amount;
-            if (erg > 0) {
-                erg = 0;
-            }
-        } else {
-            erg = num - amount;
-            if (erg < 0) {
-                erg = 0;
-            }
-        }
-
-        return erg;
-    }
-
     private static double decreaseToZero(double num, double amount) {
         double erg;
         if (num < 0) {
@@ -382,6 +366,20 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         if (world.isRemote && needsUpdate) {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, breaking, starting));
         }
+    }
+
+    @Override
+    protected void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putFloat("EngineSpeed", getEngineSpeed());
+        compound.putBoolean("Started", isStarted());
+    }
+
+    @Override
+    protected void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        setEngineSpeed(compound.getFloat("EngineSpeed"));
+        setStarted(compound.getBoolean("Started"));
     }
 
     public boolean isStarted() {

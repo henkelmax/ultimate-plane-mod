@@ -4,6 +4,7 @@ import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.KeyEvents;
+import de.maxhenkel.plane.net.DataSerializerVec3d;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -44,6 +46,8 @@ public class Main {
     public static EntityType PLANE_ENTITY_TYPE;
 
     public Main() {
+        DataSerializers.registerSerializer(DataSerializerVec3d.VEC3D);
+
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(SoundEvent.class, this::registerSounds);
