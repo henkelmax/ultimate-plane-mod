@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public abstract class EntityPlaneControlBase extends EntityPlaneBase {
+public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.createKey(EntityPlaneControlBase.class,
             DataSerializers.FLOAT);
@@ -48,23 +48,37 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
     public void tick() {
         super.tick();
 
-        if (getStartTime() > 60) {
-            setStarted(true);
+        if (getStartTime() > getTimeToStart() && !isStarted()) {
+            if (getPlaneDamage() < 100F) {
+                setStarted(true);
+            }
         }
 
-        if (isStarted()) {
-            if (isThrustPositive()) {
-                setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
-            } else if (isThrustNegative()) {
-                setEngineSpeed(Math.max(getEngineSpeed() - 0.025F, 0F));
+        if (isStarted() && getPlaneDamage() >= 100F) {
+            setStarted(false);
+        }
+
+        if (!world.isRemote) {
+            if (isStarted()) {
+                if (isThrustPositive()) {
+                    setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
+                } else if (isThrustNegative()) {
+                    setEngineSpeed(Math.max(getEngineSpeed() - 0.025F, 0F));
+                }
+            } else {
+                setEngineSpeed(0F);
             }
-        } else {
-            setEngineSpeed(0F);
         }
 
 
         controlPlane();
         handleRotation();
+    }
+
+    public int getTimeToStart() {
+        int time = 40;
+        time += ((int) getPlaneDamage() / 2F);
+        return time;
     }
 
     private void handleRotation() {
@@ -90,6 +104,15 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
         // ----- YAW ------
         rotationYaw += deltaRotation;
+        float delta = Math.abs(rotationYaw - prevRotationYaw);
+        while (rotationYaw > 180F) {
+            rotationYaw -= 360F;
+            prevRotationYaw = rotationYaw - delta;
+        }
+        while (rotationYaw <= -180F) {
+            rotationYaw += 360F;
+            prevRotationYaw = delta + rotationYaw;
+        }
         // ----- YAW ------
 
         // ----- PITCH ------
@@ -131,7 +154,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             setRight(false);
             setUp(false);
             setDown(false);
-            setBrake(false);
+            setBrake(true);
             setStartTime(0);
         }
 
@@ -229,9 +252,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             double motionDifference = horizontalMotion - newHorizontalMotion;
             double damage = motionDifference * 100D - 12D;
             if (damage > 0D) {
+                damagePlane(damage, true);
                 System.out.println("dmg: " + damage);
-                //this.playSound(this.getFallSound((int)damage), 1.0F, 1.0F);
-                //this.attackEntityFrom(DamageSource.FLY_INTO_WALL, damage);
             }
         }
 
@@ -240,10 +262,17 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             double motionDifference = verticalMotion - newVerticalMotion;
             double damage = motionDifference * 100D - 10D;
             if (damage > 0D) {
+                damagePlane(damage, false);
                 System.out.println("dmg vert: " + damage);
-                //this.playSound(this.getFallSound((int)damage), 1.0F, 1.0F);
-                //this.attackEntityFrom(DamageSource.FLY_INTO_WALL, damage);
             }
+        }
+    }
+
+    @Override
+    public void damagePlane(double damage, boolean horizontal) {
+        super.damagePlane(damage, horizontal);
+        if ((horizontal && damage > 5D) || damage > 20D) {
+            setStarted(false);
         }
     }
 
@@ -342,8 +371,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
 
         if (starting) {
-            if (isStarted() && getStartTime() <= 0) {
-                setStarted(false);
+            if (isStarted()) {
+                if (getStartTime() <= 0) {
+                    setStarted(false);
+                }
             } else {
                 setStartTime(getStartTime() + 1);
             }

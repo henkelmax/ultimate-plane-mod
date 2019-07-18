@@ -1,6 +1,5 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Main;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.Vec3d;
@@ -28,6 +27,9 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
 
     }
 
+    public void damagePlane(double damage, boolean horizontal) {
+
+    }
 
     @Override
     public double getPlaneWidth() {

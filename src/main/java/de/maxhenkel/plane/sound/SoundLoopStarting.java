@@ -20,7 +20,7 @@ public class SoundLoopStarting extends SoundLoopPlane {
 
     @Override
     public boolean shouldStopSound() {
-        return plane.getStartTime() <= 0;
+        return plane.getStartTime() <= 0 || plane.isStarted();
 
     }
 

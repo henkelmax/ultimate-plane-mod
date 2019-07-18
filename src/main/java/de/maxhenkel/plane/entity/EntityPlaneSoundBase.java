@@ -69,6 +69,13 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneControlBase {
         }
     }
 
+    @Override
+    public void damagePlane(double damage, boolean horizontal) {
+        super.damagePlane(damage, horizontal);
+
+        ModSounds.playSound(ModSounds.CRASH, world, getPosition(), null, SoundCategory.NEUTRAL, 1.0F);
+    }
+
     @OnlyIn(Dist.CLIENT)
     public void checkIdleLoop() {
         if (!isSoundPlaying(idleLoop)) {

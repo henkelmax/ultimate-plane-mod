@@ -22,6 +22,7 @@ public class ModSounds {
     public static SoundEvent ENGINE_START = registerSound("engine_start");
     public static SoundEvent ENGINE_IDLE = registerSound("engine_idle");
     public static SoundEvent ENGINE_HIGH = registerSound("engine_high");
+    public static SoundEvent CRASH = registerSound("crash");
 
     public static List<SoundEvent> getAll() {
         List<SoundEvent> sounds = new ArrayList<>();
