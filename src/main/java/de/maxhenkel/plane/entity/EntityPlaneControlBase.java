@@ -164,34 +164,28 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         float engineSpeed = getEngineSpeed();
 
         if (onGroundEnhanced()) {
-            Vec3d motion = getLookVec();
-
             double speed = getMotion().length();
+            double maxEngineSpeed = MAX_ENGINE_SPEED * engineSpeed;
 
-            if (speed < MAX_ENGINE_SPEED * engineSpeed) {
-                speed = speed + engineSpeed * ENGINE_ACCELERATION;
-
-                if (speed > MAX_ENGINE_SPEED * engineSpeed) {
-                    speed = MAX_ENGINE_SPEED * engineSpeed;
-                }
+            if (speed < maxEngineSpeed) {
+                speed = Math.min(speed + engineSpeed * ENGINE_ACCELERATION, maxEngineSpeed);
             }
+
             if (isBrake()) {
                 speed = decreaseToZero(speed, (1D / (speed + 1D)) * BRAKE_POWER); // brake resistance
             }
 
             if (engineSpeed <= 0F) {
-                speed = decreaseToZero(speed, 0.001D); // ground resistance
+                speed = decreaseToZero(speed, 0.002D); // ground resistance
             }
 
-            motion = motion.normalize().scale(speed);
-            motion = new Vec3d(motion.x, 0D, motion.z);
-
+            Vec3d motion = getLookVec().normalize().scale(speed).mul(1D, 0D, 1D);
             if (speed < MIN_TAKEOFF_SPEED) {
                 motion.add(0D, -0.1D, 0D);
             }
 
             setMotion(motion);
-            if (motion.length() > 0D) {
+            if (speed > 0D) {
                 move(MoverType.SELF, getMotion());
             }
         } else {
