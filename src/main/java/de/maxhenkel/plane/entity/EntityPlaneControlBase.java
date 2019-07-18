@@ -32,11 +32,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DOWN = EntityDataManager.createKey(EntityPlaneControlBase.class,
             DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> BREAK = EntityDataManager.createKey(EntityPlaneControlBase.class,
+    private static final DataParameter<Boolean> BRAKE = EntityDataManager.createKey(EntityPlaneControlBase.class,
             DataSerializers.BOOLEAN);
 
-    public static final double MAX_ENGINE_SPEED = 1D;
-    public static final double MIN_TAKEOFF_SPEED = 0.8D;
+    public static final double MAX_ENGINE_SPEED = 1.5D;
+    public static final double ENGINE_ACCELERATION = 0.005D;
+    public static final double MIN_TAKEOFF_SPEED = 1.3D;
+    public static final double BRAKE_POWER = 0.012D;
 
     public EntityPlaneControlBase(EntityType type, World worldIn) {
         super(type, worldIn);
@@ -129,7 +131,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             setRight(false);
             setUp(false);
             setDown(false);
-            setBreak(false);
+            setBrake(false);
             setStartTime(0);
         }
 
@@ -144,18 +146,18 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             double speed = getMotion().length();
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
-                speed = speed + engineSpeed * 0.01D;
+                speed = speed + engineSpeed * ENGINE_ACCELERATION;
 
                 if (speed > MAX_ENGINE_SPEED * engineSpeed) {
                     speed = MAX_ENGINE_SPEED * engineSpeed;
                 }
             }
-            if (isBreak()) {
-                speed = decreaseToZero(speed, 0.01F); // break resistance
+            if (isBrake()) {
+                speed = decreaseToZero(speed, (1D / (speed + 1D)) * BRAKE_POWER); // brake resistance
             }
 
             if (engineSpeed <= 0F) {
-                speed = decreaseToZero(speed, 0.0025F); // ground resistance
+                speed = decreaseToZero(speed, 0.001D); // ground resistance
             }
 
             motion = motion.normalize().scale(speed);
@@ -172,7 +174,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         } else {
             double fallSpeed = 0.08D;
             Vec3d lookVec = getLookVec();
-            float pitch = rotationPitch * ((float) Math.PI / 180F);
+            float modifiedPitch = (rotationPitch < 0F ? rotationPitch : Math.min(rotationPitch * 1.5F, 90F)) - 5F;
+            float pitch = modifiedPitch * ((float) Math.PI / 180F);
             double horizontalLook = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
 
             double lookLength = lookVec.length();
@@ -199,7 +202,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 double addSpeed = 0D;
-                addSpeed = addSpeed + engineSpeed * 0.04D;
+                addSpeed = addSpeed + engineSpeed * ENGINE_ACCELERATION * 4F;//0.04D;
                 if (speed + addSpeed > MAX_ENGINE_SPEED * engineSpeed) {
                     addSpeed = (MAX_ENGINE_SPEED * engineSpeed) - speed;
                 }
@@ -296,10 +299,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         dataManager.register(RIGHT, false);
         dataManager.register(UP, false);
         dataManager.register(DOWN, false);
-        dataManager.register(BREAK, false);
+        dataManager.register(BRAKE, false);
     }
 
-    public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean breaking, boolean starting) {
+    public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean braking, boolean starting) {
         boolean needsUpdate = false;
 
         if (isThrustPositive() != thrustPos) {
@@ -332,8 +335,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
             needsUpdate = true;
         }
 
-        if (isBreak() != breaking) {
-            setBreak(breaking);
+        if (isBrake() != braking) {
+            setBrake(braking);
             needsUpdate = true;
         }
 
@@ -353,7 +356,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         }
 
         if (world.isRemote && needsUpdate) {
-            Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, breaking, starting));
+            Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }
 
@@ -379,12 +382,12 @@ public abstract class EntityPlaneControlBase extends EntityPlaneBase {
         dataManager.set(STARTED, started);
     }
 
-    public boolean isBreak() {
-        return dataManager.get(BREAK);
+    public boolean isBrake() {
+        return dataManager.get(BRAKE);
     }
 
-    public void setBreak(boolean breaking) {
-        dataManager.set(BREAK, breaking);
+    public void setBrake(boolean breaking) {
+        dataManager.set(BRAKE, breaking);
     }
 
     public boolean isThrustPositive() {

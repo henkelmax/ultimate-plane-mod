@@ -7,7 +7,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
-    private boolean up, down, thrustPos, thrustNeg, left, right, breaking, starting;
+    private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 
     public MessageControlPlane() {
         this.up = false;
@@ -16,18 +16,18 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         this.thrustNeg = false;
         this.left = false;
         this.right = false;
-        this.breaking = false;
+        this.braking = false;
         this.starting = false;
     }
 
-    public MessageControlPlane(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean breaking, boolean starting) {
+    public MessageControlPlane(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean braking, boolean starting) {
         this.up = up;
         this.down = down;
         this.thrustPos = thrustPos;
         this.thrustNeg = thrustNeg;
         this.left = left;
         this.right = right;
-        this.breaking = breaking;
+        this.braking = braking;
         this.starting = starting;
     }
 
@@ -40,7 +40,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
 
         EntityPlane plane = (EntityPlane) e;
 
-        plane.updateControls(up, down, thrustPos, thrustNeg, left, right, breaking, starting);
+        plane.updateControls(up, down, thrustPos, thrustNeg, left, right, braking, starting);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         thrustNeg = buf.readBoolean();
         left = buf.readBoolean();
         right = buf.readBoolean();
-        breaking = buf.readBoolean();
+        braking = buf.readBoolean();
         starting = buf.readBoolean();
         return this;
     }
@@ -69,7 +69,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         buf.writeBoolean(thrustNeg);
         buf.writeBoolean(left);
         buf.writeBoolean(right);
-        buf.writeBoolean(breaking);
+        buf.writeBoolean(braking);
         buf.writeBoolean(starting);
     }
 }
