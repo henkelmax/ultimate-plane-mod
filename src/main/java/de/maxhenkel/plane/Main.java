@@ -4,6 +4,7 @@ import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.KeyEvents;
+import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.net.DataSerializerVec3d;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.sound.ModSounds;
@@ -119,6 +120,7 @@ public class Main {
         ClientRegistry.registerKeyBinding(BREAK_KEY);
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
+        MinecraftForge.EVENT_BUS.register(new RenderEvents());
     }
 
     @SubscribeEvent
