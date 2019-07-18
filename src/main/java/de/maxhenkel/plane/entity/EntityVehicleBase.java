@@ -33,11 +33,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public void tick() {
-            this.prevPosX = this.posX;
-            this.prevPosY = this.posY;
-            this.prevPosZ = this.posZ;
-
-        this.setPositionNonDirty();
+        setPositionNonDirty();
 
         super.tick();
 

@@ -141,12 +141,12 @@ public class Main {
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         PLANE_ENTITY_TYPE = EntityType.Builder.<EntityPlaneBase>create(EntityPlane::new, EntityClassification.MISC)
-                .setTrackingRange(128)
+                .setTrackingRange(256)
                 .setUpdateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
                 .size(1F, 1F)
                 .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world))
-                .build(Main.MODID + ":car");
+                .build(Main.MODID + ":plane");
         PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
         event.getRegistry().register(PLANE_ENTITY_TYPE);
     }
