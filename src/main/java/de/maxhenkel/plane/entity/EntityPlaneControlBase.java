@@ -49,12 +49,12 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         super.tick();
 
         if (getStartTime() > getTimeToStart() && !isStarted()) {
-            if (getPlaneDamage() < 100F) {
+            if (canEngineBeStarted()) {
                 setStarted(true);
             }
         }
 
-        if (isStarted() && getPlaneDamage() >= 100F) {
+        if (isStarted() && !canEngineBeStarted()) {
             setStarted(false);
         }
 
@@ -73,6 +73,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
         controlPlane();
         handleRotation();
+    }
+
+    public boolean canEngineBeStarted() {
+        if (isStarted() && getPlaneDamage() >= 100F) {
+            return false;
+        }
+        return true;
     }
 
     public int getTimeToStart() {
