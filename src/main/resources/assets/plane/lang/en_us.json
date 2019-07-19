@@ -1,3 +1,23 @@
 {
+  "entity.plane.plane": "Plane",
 
+  "gui.plane.fuel": "Fuel",
+  "gui.plane.damage": "Damage",
+  "gui.plane.throttle": "Throttle",
+
+  "tooltip.fuel": "Fuel: %s mb",
+  "tooltip.damage": "Damage: %s %%",
+  "tooltip.throttle": "Throttle: %s %%",
+
+  "category.plane": "Plane",
+
+  "key.plane": "Plane GUI",
+  "key.plane_add_thrust": "Add Thrust",
+  "key.plane_remove_thrust": "Remove Thrust",
+  "key.plane_left": "Left",
+  "key.plane_right": "Right",
+  "key.plane_up": "Up",
+  "key.plane_down": "Down",
+  "key.plane_start": "Start",
+  "key.plane_brake": "Brake"
 }

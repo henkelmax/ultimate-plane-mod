@@ -13,6 +13,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @OnlyIn(Dist.CLIENT)
 public class KeyEvents {
 
+    private boolean wasGuiPressed;
+
     public KeyEvents() {
 
     }
@@ -40,7 +42,16 @@ public class KeyEvents {
         EntityPlane plane = (EntityPlane) riding;
 
         if (player.equals(plane.getDriver())) {
-            plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BREAK_KEY.isKeyDown(), Main.START_KEY.isKeyDown());
+            plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BRAKE_KEY.isKeyDown(), Main.START_KEY.isKeyDown());
+        }
+
+        if (Main.PLANE_KEY.isKeyDown()) {
+            if (!wasGuiPressed) {
+                plane.openGUI(player);
+                wasGuiPressed = true;
+            }
+        } else {
+            wasGuiPressed = false;
         }
     }
 

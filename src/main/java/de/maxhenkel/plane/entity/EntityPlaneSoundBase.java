@@ -1,6 +1,5 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.EntityPlaneFuelBase;
 import de.maxhenkel.plane.sound.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -10,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class EntityPlaneSoundBase extends EntityPlaneFuelBase {
+public abstract class EntityPlaneSoundBase extends EntityPlaneInventoryBase {
 
     @OnlyIn(Dist.CLIENT)
     private SoundLoopStart startLoop;

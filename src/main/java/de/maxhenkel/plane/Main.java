@@ -5,13 +5,18 @@ import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
+import de.maxhenkel.plane.gui.ContainerPlane;
+import de.maxhenkel.plane.gui.GuiPlane;
 import de.maxhenkel.plane.net.DataSerializerVec3d;
 import de.maxhenkel.plane.net.MessageControlPlane;
+import de.maxhenkel.plane.net.MessagePlaneGui;
 import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -19,6 +24,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,9 +39,13 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.lwjgl.glfw.GLFW;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 @Mod(Main.MODID)
 public class Main {
@@ -79,9 +89,10 @@ public class Main {
 
         SIMPLE_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Main.MODID, "default"), () -> "1.0.0", s -> true, s -> true);
         SIMPLE_CHANNEL.registerMessage(0, MessageControlPlane.class, (msg, buf) -> msg.toBytes(buf), (buf) -> new MessageControlPlane().fromBytes(buf), (msg, fun) -> msg.executeServerSide(fun.get()));
-
+        SIMPLE_CHANNEL.registerMessage(1, MessagePlaneGui.class, (msg, buf) -> msg.toBytes(buf), (buf) -> new MessagePlaneGui().fromBytes(buf), (msg, fun) -> msg.executeServerSide(fun.get()));
     }
 
+    public static KeyBinding PLANE_KEY;
     public static KeyBinding FORWARD_KEY;
     public static KeyBinding BACK_KEY;
     public static KeyBinding LEFT_KEY;
@@ -89,11 +100,17 @@ public class Main {
     public static KeyBinding UP_KEY;
     public static KeyBinding DOWN_KEY;
     public static KeyBinding START_KEY;
-    public static KeyBinding BREAK_KEY;
+    public static KeyBinding BRAKE_KEY;
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
+
+        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerPlane, GuiPlane>) (container, playerInventory, name) -> new GuiPlane(container, playerInventory, name);
+        ScreenManager.registerFactory(Main.PLANE_CONTAINER_TYPE, factory);
+
+        this.PLANE_KEY = new KeyBinding("key.plane", GLFW.GLFW_KEY_P, "category.plane");
+        ClientRegistry.registerKeyBinding(PLANE_KEY);
 
         this.FORWARD_KEY = new KeyBinding("key.plane_add_thrust", GLFW.GLFW_KEY_I, "category.plane");
         ClientRegistry.registerKeyBinding(FORWARD_KEY);
@@ -116,8 +133,8 @@ public class Main {
         this.START_KEY = new KeyBinding("key.plane_start", GLFW.GLFW_KEY_R, "category.plane");
         ClientRegistry.registerKeyBinding(START_KEY);
 
-        this.BREAK_KEY = new KeyBinding("key.plane_break", GLFW.GLFW_KEY_B, "category.plane");
-        ClientRegistry.registerKeyBinding(BREAK_KEY);
+        this.BRAKE_KEY = new KeyBinding("key.plane_brake", GLFW.GLFW_KEY_B, "category.plane");
+        ClientRegistry.registerKeyBinding(BRAKE_KEY);
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
@@ -157,9 +174,25 @@ public class Main {
         event.getRegistry().register(PLANE_ENTITY_TYPE);
     }
 
+    public static ContainerType<ContainerPlane> PLANE_CONTAINER_TYPE;
+
     @SubscribeEvent
     public void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
+        PLANE_CONTAINER_TYPE = new ContainerType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
+            EntityPlane plane = getPlaneByUUID(inv.player, data.readUniqueId());
+            if (plane == null) {
+                return null;
+            }
+            return new ContainerPlane(windowId, plane, inv);
+        });
+        PLANE_CONTAINER_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
+        event.getRegistry().register(PLANE_CONTAINER_TYPE);
+    }
 
+    @Nullable
+    public static EntityPlane getPlaneByUUID(PlayerEntity player, UUID uuid) {
+        double distance = 10D;
+        return player.world.getEntitiesWithinAABB(EntityPlane.class, new AxisAlignedBB(player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance, player.posY + distance, player.posZ + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
     }
 
     @SubscribeEvent

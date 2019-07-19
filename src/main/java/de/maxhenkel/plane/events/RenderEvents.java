@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.events;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.maxhenkel.plane.MathTools;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -61,7 +62,7 @@ public class RenderEvents {
     public void renderSpeed(double speed) {
         Minecraft mc = Minecraft.getInstance();
 
-        String s = String.valueOf(round(Math.abs(speed), 2));
+        String s = String.valueOf(MathTools.round(Math.abs(speed), 2));
         int i1 = (mc.mainWindow.getScaledWidth() - mc.ingameGUI.getFontRenderer().getStringWidth(s)) / 2;
         int j1 = mc.mainWindow.getScaledHeight() - 31 - 4;
         mc.ingameGUI.getFontRenderer().drawString(s, i1 + 1, j1, 0);
@@ -71,11 +72,6 @@ public class RenderEvents {
         mc.ingameGUI.getFontRenderer().drawString(s, i1, j1, 8453920);
 
     }
-
-    public static double round(double value, int scale) {
-        return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
-    }
-
 
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
