@@ -121,6 +121,6 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneInventoryBase {
         if (sound == null) {
             return false;
         }
-        return Minecraft.getInstance().getSoundHandler().func_215294_c(sound);
+        return Minecraft.getInstance().getSoundHandler().isPlaying(sound);
     }
 }
