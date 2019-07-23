@@ -134,7 +134,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
         float groundPitchTolerance = 7F;
 
-        if (onGroundEnhanced()) {
+        if (isCollidedVertical()) {
             if (rotationPitch > 0) {
                 rotationPitch -= 10F;
                 if (rotationPitch < 0) {
@@ -170,7 +170,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         double horizontalMotion = getHorizontalMotion(motionVector);
         float engineSpeed = getEngineSpeed();
 
-        if (onGroundEnhanced()) {
+        if (isCollidedVertical()) {
             double speed = getMotion().length();
             double maxEngineSpeed = MAX_ENGINE_SPEED * engineSpeed;
 
@@ -248,7 +248,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             move(MoverType.SELF, getMotion());
         }
 
-        if (collidedHorizontally && !world.isRemote) {
+        if (world.isRemote) {
+            return;
+        }
+        if (isCollidedHorizontal()) {
             double newHorizontalMotion = getHorizontalMotion(getMotion());
             double motionDifference = horizontalMotion - newHorizontalMotion;
             double damage = motionDifference * 100D - 12D;
@@ -258,7 +261,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
         }
 
-        if (onGroundEnhanced() && !world.isRemote) {
+        if (isCollidedVertical()) {
             double newVerticalMotion = Math.abs(getMotion().y);
             double motionDifference = verticalMotion - newVerticalMotion;
             double damage = motionDifference * 100D - 10D;
@@ -280,12 +283,16 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     private boolean onGroundLast;
     private boolean onGroundLast2;
 
-    public boolean onGroundEnhanced() {
+    public boolean isCollidedVertical() {
         boolean last = onGroundLast;
         boolean last2 = onGroundLast2;
         onGroundLast2 = onGroundLast;
         onGroundLast = onGround;
         return last || last2 || onGround;
+    }
+
+    public boolean isCollidedHorizontal() {
+        return collidedHorizontally;
     }
 
     public double getHorizontalMotion(Vec3d vec3d) {

@@ -31,16 +31,6 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
 
     }
 
-    @Override
-    public double getPlaneWidth() {
-        return 1D;
-    }
-
-    @Override
-    public double getPlaneHeight() {
-        return 1D;
-    }
-
     public int getPassengerSize() {
         return 1;
     }

@@ -28,14 +28,10 @@ public abstract class EntityVehicleBase extends Entity {
 
     protected float deltaRotation;
 
-    protected AxisAlignedBB boundingBox;
-
     public EntityVehicleBase(EntityType type, World worldIn) {
         super(type, worldIn);
         this.preventEntitySpawning = true;
         this.stepHeight = 0.6F;
-
-        recalculateBoundingBox();
     }
 
     @Override
@@ -44,19 +40,7 @@ public abstract class EntityVehicleBase extends Entity {
 
         super.tick();
         this.tickLerp();
-
-        recalculateBoundingBox();
     }
-
-    public void recalculateBoundingBox() {
-        double width = getPlaneWidth();
-        double height = getPlaneHeight();
-        boundingBox = new AxisAlignedBB(posX - width / 2D, posY, posZ - width / 2D, posX + width / 2D, posY + height, posZ + width / 2D);
-    }
-
-    public abstract double getPlaneWidth();
-
-    public abstract double getPlaneHeight();
 
     @Override
     protected void removePassenger(Entity passenger) {
@@ -71,7 +55,7 @@ public abstract class EntityVehicleBase extends Entity {
             for (int i = 0; i < 4; i++) {
                 AxisAlignedBB playerbb = player.getBoundingBox();
                 double playerHitboxWidth = (playerbb.maxX - playerbb.minX) / 2;
-                double carHitboxWidth = getPlaneWidth() / 2;
+                double carHitboxWidth = getBoundingBox().getZSize() / 2;
 
                 double offset = playerHitboxWidth + carHitboxWidth + 0.2;
 
@@ -196,55 +180,26 @@ public abstract class EntityVehicleBase extends Entity {
         return null;
     }
 
-    /**
-     * Returns a boundingBox used to collide the entity with other entities and
-     * blocks. This enables the entity to be pushable on contact, like boats or
-     * minecarts.
-     */
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBox(Entity entityIn) {
-        if (!(entityIn instanceof EntityVehicleBase)) {
-            return null;
-        }
-        return entityIn.canBePushed() ? entityIn.getBoundingBox() : null;
+        return null;
     }
 
-    /**
-     * Returns the collision bounding box for this entity
-     */
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
-        return this.getBoundingBox();
+        return getBoundingBox();
     }
 
-    @Override
-    public AxisAlignedBB getBoundingBox() {
-        return boundingBox;
-    }
-
-    @Override
-    public void setBoundingBox(AxisAlignedBB boundingBox) {
-        this.boundingBox = boundingBox;
-    }
-
-    /**
-     * Returns true if this entity should push and be pushed by other entities
-     * when colliding.
-     */
     @Override
     public boolean canBePushed() {
         return true;
     }
 
-    /**
-     * Returns true if other Entities should be prevented from moving through
-     * this Entity.
-     */
     @Override
     public boolean canBeCollidedWith() {
-        return isAlive();
+        return true;
     }
 
     @Override

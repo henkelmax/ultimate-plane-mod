@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.entity.render;
 
 import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +23,7 @@ public class PlaneModel extends OBJModelRenderer {
     }
 
     @Override
-    public List<OBJModelInstance> getModels(EntityPlaneBase entity) {
+    public List<OBJModelInstance> getModels(EntityPlane entity) {
         return models; //entity.getModels();
     }
 }

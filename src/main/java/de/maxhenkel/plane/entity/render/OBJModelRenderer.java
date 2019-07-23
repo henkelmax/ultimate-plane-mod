@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import de.maxhenkel.plane.entity.EntityPlaneBase;
+import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 
 // https://github.com/2piradians/Minewatch/tree/1.12.1/src/main/java/twopiradians/minewatch/client
-public abstract class OBJModelRenderer<T extends EntityPlaneBase> extends EntityRenderer<T> {
+public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRenderer<T> {
 
     protected OBJModelRenderer(EntityRendererManager renderManager) {
         super(renderManager);
