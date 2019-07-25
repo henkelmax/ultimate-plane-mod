@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class EntityPlaneSoundBase extends EntityPlaneHitboxBase {
+public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
 
     @OnlyIn(Dist.CLIENT)
     private SoundLoopStart startLoop;

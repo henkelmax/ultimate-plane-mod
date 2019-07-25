@@ -10,12 +10,14 @@ public class EntityPlaneHitboxBase extends EntityPlaneInventoryBase {
 
     private EntityPlanePart[] parts;
     private EntityPlanePart front;
+    private EntityPlanePart middle;
     private EntityPlanePart leftInner;
     private EntityPlanePart rightInner;
     private EntityPlanePart leftMiddle;
     private EntityPlanePart rightMiddle;
     private EntityPlanePart back;
-    private EntityPlanePart top;
+    private EntityPlanePart tail;
+    private EntityPlanePart center;
 
     private boolean initialized;
 
@@ -24,22 +26,26 @@ public class EntityPlaneHitboxBase extends EntityPlaneInventoryBase {
     }
 
     private void initParts() {
-        front = createPart(0D, 0.5D, 1D, 1F, 0.5F);
-        back = createPart(0D, 0.5D, -1D, 1F, 0.5F);
-        leftInner = createPart(-1D, 1.4D, 0D, 1F, 0.1F);
-        rightInner = createPart(1D, 1.4D, 0D, 1F, 0.1F);
-        leftMiddle = createPart(-2D, 1.4D, 0D, 1F, 0.1F);
-        rightMiddle = createPart(2D, 1.4D, 0D, 1F, 0.1F);
-        top = createPart(0D, 1D, 0D, 1F, 0.5F);
+        front = createPart(0D, 6D / 16D, 1D, 1F, 1F);
+        back = createPart(0D, 6D / 16D, -1D, 1F, 1F);
+        tail = createPart(0D, 14D / 16D, -2D, 1F, 0.5F);
+        middle = createPart(0D, 32D / 16D, 10D / 16D, 1F, 2F / 16F);
+        leftInner = createPart(-1D, 32D / 16D, 10D / 16D, 1F, 2F / 16F);
+        rightInner = createPart(1D, 32D / 16D, 10D / 16D, 1F, 2F / 16F);
+        leftMiddle = createPart(-2D, 32D / 16D, 10D / 16D, 1F, 2F / 16F);
+        rightMiddle = createPart(2D, 32D / 16D, 10D / 16D, 1F, 2F / 16F);
+        center = createPart(0D, 6D / 16D, 0D, 1F, 1F);
 
         parts = new EntityPlanePart[]{
                 front,
                 back,
+                tail,
+                middle,
                 leftInner,
                 rightInner,
                 leftMiddle,
                 rightMiddle,
-                top
+                center
         };
     }
 

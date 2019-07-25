@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity.render;
 
+import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.util.math.Vec3d;
 
 public class OBJModelOptions {
@@ -53,6 +54,6 @@ public class OBJModelOptions {
     }
 
     public static interface RenderListener{
-        public void onRender(float partialTicks);
+        public void onRender(EntityPlane plane, float partialTicks);
     }
 }

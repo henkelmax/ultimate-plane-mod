@@ -172,7 +172,7 @@ public class Main {
                 .setTrackingRange(256)
                 .setUpdateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
-                .size(1F, 1F)
+                .size(0.9F, 1.5F)
                 .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world))
                 .build(Main.MODID + ":plane");
         PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
@@ -183,7 +183,6 @@ public class Main {
                 .setUpdateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
                 .disableSerialization()
-                //.size(1F, 1F)
                 .setCustomClientFactory((spawnEntity, world) -> new EntityPlanePart(world))
                 .build(Main.MODID + ":plane_part");
         PLANE_PART_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane_part"));

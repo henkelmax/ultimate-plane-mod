@@ -45,14 +45,13 @@ public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRend
             }
 
             GlStateManager.translated(models.get(i).getOptions().getOffset().x, models.get(i).getOptions().getOffset().y, models.get(i).getOptions().getOffset().z);
-            GlStateManager.rotatef(-90F, 1F, 0F, 0F);
 
             if (models.get(i).getOptions().getRotation() != null) {
                 models.get(i).getOptions().getRotation().applyGLRotation();
             }
 
             if (models.get(i).getOptions().getOnRender() != null) {
-                models.get(i).getOptions().getOnRender().onRender(partialTicks);
+                models.get(i).getOptions().getOnRender().onRender(entity, partialTicks);
             }
 
             OBJRenderer.renderObj(models.get(i).getModel().getModel());

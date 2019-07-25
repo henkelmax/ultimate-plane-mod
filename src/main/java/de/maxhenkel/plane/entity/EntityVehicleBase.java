@@ -152,26 +152,20 @@ public abstract class EntityVehicleBase extends Entity {
             return;
         }
 
-        double front = 0.0F;
-        double side = 0.0F;
-        double height = 0.0F;
-
         List<Entity> passengers = getPassengers();
 
         if (passengers.size() > 0) {
             int i = passengers.indexOf(passenger);
 
             Vec3d offset = getPlayerOffsets()[i];
-            front = offset.x;
-            side = offset.z;
-            height = offset.y;
+            offset = offset.rotateYaw((float) -Math.toRadians(rotationYaw));
+            offset = offset.rotatePitch((float) -Math.toRadians(rotationPitch));
+
+            passenger.setPosition(posX + offset.x, posY + offset.y, posZ + offset.z);
+            passenger.rotationYaw += deltaRotation;
+            passenger.setRotationYawHead(passenger.getRotationYawHead() + deltaRotation);
         }
 
-        Vec3d vec3d = (new Vec3d(front, height, side))
-                .rotateYaw(-this.rotationYaw * 0.017453292F - ((float) Math.PI / 2F));
-        passenger.setPosition(this.posX + vec3d.x, this.posY + vec3d.y, this.posZ + vec3d.z);
-        passenger.rotationYaw += this.deltaRotation;
-        passenger.setRotationYawHead(passenger.getRotationYawHead() + this.deltaRotation);
         this.applyYawToEntity(passenger);
     }
 
