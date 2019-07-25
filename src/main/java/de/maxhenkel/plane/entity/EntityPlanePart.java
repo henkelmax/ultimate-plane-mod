@@ -128,6 +128,10 @@ public class EntityPlanePart extends Entity {
         }).anyMatch(coll -> coll);
     }
 
+    public EntityPlane getPlane() {
+        return plane;
+    }
+
     @Override
     public boolean processInitialInteract(PlayerEntity player, Hand hand) {
         if (plane != null) {
@@ -156,7 +160,7 @@ public class EntityPlanePart extends Entity {
 
     @Override
     public boolean canBePushed() {
-        return true;
+        return false;
     }
 
     @Override

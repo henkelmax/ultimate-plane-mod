@@ -1,5 +1,7 @@
 {
   "entity.plane.plane": "Plane",
+  "item.plane.plane": "Plane",
+  "item.plane.wrench": "Wrench",
 
   "gui.plane.fuel": "Fuel",
   "gui.plane.damage": "Damage",

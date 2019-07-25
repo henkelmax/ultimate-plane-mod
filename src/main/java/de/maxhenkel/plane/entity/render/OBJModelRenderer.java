@@ -3,6 +3,7 @@ package de.maxhenkel.plane.entity.render;
 import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -33,6 +34,11 @@ public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRend
         setupRotation(entity, entityYaw, partialTicks);
 
         GlStateManager.pushMatrix();
+        GlStateManager.enableLighting();
+        GlStateManager.enableBlend();
+        GlStateManager.enableDepthTest();
+        GlStateManager.enableRescaleNormal();
+        RenderHelper.disableStandardItemLighting();
 
         //Render parts
         for (int i = 0; i < models.size(); i++) {
@@ -59,6 +65,8 @@ public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRend
             GlStateManager.popMatrix();
         }
 
+        GlStateManager.disableBlend();
+        GlStateManager.disableLighting();
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();

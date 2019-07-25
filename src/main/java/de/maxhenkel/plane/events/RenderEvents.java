@@ -13,17 +13,23 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEvents {
+
+    private Minecraft mc;
+    private EntityPlane lastVehicle;
+
+    public RenderEvents() {
+        mc = Minecraft.getInstance();
+    }
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent evt) {
         if (!evt.getType().equals(ElementType.EXPERIENCE)) {
             return;
         }
-
-        Minecraft mc = Minecraft.getInstance();
 
         PlayerEntity player = mc.player;
 
@@ -44,7 +50,6 @@ public class RenderEvents {
     }
 
     public void renderFuelBar(double percent) {
-        Minecraft mc = Minecraft.getInstance();
         int x = mc.mainWindow.getScaledWidth() / 2 - 91;
 
         mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
@@ -60,8 +65,6 @@ public class RenderEvents {
     }
 
     public void renderSpeed(double speed) {
-        Minecraft mc = Minecraft.getInstance();
-
         String s = String.valueOf(MathTools.round(Math.abs(speed), 2));
         int i1 = (mc.mainWindow.getScaledWidth() - mc.ingameGUI.getFontRenderer().getStringWidth(s)) / 2;
         int j1 = mc.mainWindow.getScaledHeight() - 31 - 4;
@@ -96,4 +99,26 @@ public class RenderEvents {
         }
     }
 
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent evt) {
+        if (!evt.player.equals(mc.player)) {
+            return;
+        }
+
+        EntityPlane vehicle = getPlane();
+
+        if (vehicle != null && lastVehicle == null) {
+            mc.gameSettings.thirdPersonView = 1;
+        } else if (vehicle == null && lastVehicle != null) {
+            mc.gameSettings.thirdPersonView = 0;
+        }
+        lastVehicle = vehicle;
+    }
+
+    private EntityPlane getPlane() {
+        if (mc.player.getRidingEntity() instanceof EntityPlane) {
+            return (EntityPlane) mc.player.getRidingEntity();
+        }
+        return null;
+    }
 }

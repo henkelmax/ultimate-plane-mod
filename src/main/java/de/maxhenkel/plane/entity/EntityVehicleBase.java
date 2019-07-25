@@ -126,9 +126,9 @@ public abstract class EntityVehicleBase extends Entity {
         this.steps = 10;
     }
 
-    protected void applyYawToEntity(Entity entityToUpdate) {
-        entityToUpdate.setRenderYawOffset(this.rotationYaw);
-        float f = MathHelper.wrapDegrees(entityToUpdate.rotationYaw - this.rotationYaw);
+    protected void applyOriantationsToEntity(Entity entityToUpdate) {
+        entityToUpdate.setRenderYawOffset(rotationYaw);
+        float f = MathHelper.wrapDegrees(entityToUpdate.rotationYaw - rotationYaw);
         float f1 = MathHelper.clamp(f, -130.0F, 130.0F);
         entityToUpdate.prevRotationYaw += f1 - f;
         entityToUpdate.rotationYaw += f1 - f;
@@ -140,8 +140,9 @@ public abstract class EntityVehicleBase extends Entity {
      * update passenger orientation.
      */
     @OnlyIn(Dist.CLIENT)
+    @Override
     public void applyOrientationToEntity(Entity entityToUpdate) {
-        this.applyYawToEntity(entityToUpdate);
+        this.applyOriantationsToEntity(entityToUpdate);
     }
 
     public abstract Vec3d[] getPlayerOffsets();
@@ -166,7 +167,7 @@ public abstract class EntityVehicleBase extends Entity {
             passenger.setRotationYawHead(passenger.getRotationYawHead() + deltaRotation);
         }
 
-        this.applyYawToEntity(passenger);
+        this.applyOriantationsToEntity(passenger);
     }
 
     @Override
@@ -183,12 +184,12 @@ public abstract class EntityVehicleBase extends Entity {
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
-        return getBoundingBox();
+        return null;
     }
 
     @Override
     public boolean canBePushed() {
-        return true;
+        return false;
     }
 
     @Override

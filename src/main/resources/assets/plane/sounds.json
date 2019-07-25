@@ -4,5 +4,6 @@
   "engine_starting": {"category": "master","sounds": [{"name": "plane:engine_starting","stream": false}]},
   "engine_stop": {"category": "master","sounds": [{"name": "plane:engine_stop","stream": false}]},
   "engine_high": {"category": "master","sounds": [{"name": "plane:engine_high","stream": false}]},
-  "crash": {"category": "master","sounds": [{"name": "plane:crash","stream": false}]}
+  "crash": {"category": "master","sounds": [{"name": "plane:crash","stream": false}]},
+  "ratchet": {"category": "master", "sounds": [{"name": "plane:ratchet_1", "stream": false}, {"name": "plane:ratchet_2", "stream": false}, {"name": "plane:ratchet_3", "stream": false}]}
 }
