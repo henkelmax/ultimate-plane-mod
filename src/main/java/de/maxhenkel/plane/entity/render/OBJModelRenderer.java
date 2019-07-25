@@ -35,9 +35,6 @@ public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRend
 
         GlStateManager.pushMatrix();
         GlStateManager.enableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableRescaleNormal();
         RenderHelper.disableStandardItemLighting();
 
         //Render parts
@@ -65,7 +62,6 @@ public abstract class OBJModelRenderer<T extends EntityPlane> extends EntityRend
             GlStateManager.popMatrix();
         }
 
-        GlStateManager.disableBlend();
         GlStateManager.disableLighting();
         GlStateManager.popMatrix();
 

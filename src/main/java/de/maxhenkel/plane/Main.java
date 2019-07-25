@@ -4,6 +4,7 @@ import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlanePart;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.entity.render.PlanePartModel;
+import de.maxhenkel.plane.events.CapabilityEvents;
 import de.maxhenkel.plane.events.InteractEvents;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
@@ -94,6 +95,7 @@ public class Main {
     public void commonSetup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new InteractEvents());
+        MinecraftForge.EVENT_BUS.register(new CapabilityEvents());
 
         SIMPLE_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Main.MODID, "default"), () -> "1.0.0", s -> true, s -> true);
         SIMPLE_CHANNEL.registerMessage(0, MessageControlPlane.class, (msg, buf) -> msg.toBytes(buf), (buf) -> new MessageControlPlane().fromBytes(buf), (msg, fun) -> msg.executeServerSide(fun.get()));

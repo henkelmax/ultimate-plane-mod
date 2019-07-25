@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.plane.FluidStackWrapper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -76,7 +77,7 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     }
 
     public boolean isValidFuel(FluidStack fluid) {
-        return true; //TODO check for valid fuel
+        return fluid.getFluid().getName().equals("bio_diesel"); //TODO check for valid fuel
     }
 
     @Override
@@ -85,7 +86,7 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
 
             @Override
             public FluidStack getContents() {
-                return new FluidStack((Fluid) null, getFuel());
+                return new FluidStackWrapper(new Fluid("bio_diesel", null, null, 0), getFuel()); // TODO
             }
 
             @Override

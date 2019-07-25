@@ -15,7 +15,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
@@ -23,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class EntityPlanePart extends Entity {
+public class EntityPlanePart extends Entity implements IFluidHandler {
 
     private static final DataParameter<Vec3d> OFFSET = EntityDataManager.createKey(EntityPlanePart.class, DataSerializerVec3d.VEC3D);
     private static final DataParameter<EntitySize> SIZE = EntityDataManager.createKey(EntityPlanePart.class, DataSerializerEntitySize.ENTITY_SIZE);
@@ -224,5 +228,43 @@ public class EntityPlanePart extends Entity {
         } else {
             dataManager.set(UUID, Optional.of(uuid));
         }
+    }
+
+    @Override
+    public IFluidTankProperties[] getTankProperties() {
+        return plane == null ? new IFluidTankProperties[0] : plane.getTankProperties();
+    }
+
+    @Override
+    public int fill(FluidStack resource, boolean doFill) {
+        return plane == null ? 0 : plane.fill(resource, doFill);
+    }
+
+    @Nullable
+    @Override
+    public FluidStack drain(FluidStack resource, boolean doDrain) {
+        return plane == null ? null : plane.drain(resource, doDrain);
+    }
+
+    @Nullable
+    @Override
+    public FluidStack drain(int maxDrain, boolean doDrain) {
+        return plane == null ? null : plane.drain(maxDrain, doDrain);
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return plane == null ? super.getDisplayName() : plane.getDisplayName();
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return plane == null ? super.getName() : plane.getName();
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return plane == null ? super.getCustomName() : plane.getCustomName();
     }
 }

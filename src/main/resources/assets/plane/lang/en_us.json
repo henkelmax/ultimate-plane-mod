@@ -1,5 +1,6 @@
 {
   "entity.plane.plane": "Plane",
+  "entity.plane.plane_part": "Plane Part",
   "item.plane.plane": "Plane",
   "item.plane.wrench": "Wrench",
 
