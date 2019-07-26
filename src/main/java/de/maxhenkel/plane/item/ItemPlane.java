@@ -62,8 +62,10 @@ public class ItemPlane extends Item {
 
     private void addData(ItemStack stack, EntityPlane plane) {
         CompoundNBT planeData = getPlaneData(stack);
-        plane.readAdditional(planeData);
-        plane.setStarted(false, false);
+        if(planeData!=null){
+            plane.readAdditional(planeData);
+            plane.setStarted(false, false);
+        }
 
         if (!stack.getItem().getDisplayName(stack).equals(stack.getDisplayName())) {
             plane.setCustomName(stack.getDisplayName());

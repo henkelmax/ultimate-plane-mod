@@ -55,7 +55,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
         Vec3d lookVec = getLookVec().normalize();
         double offX = lookVec.x;
         double offY = lookVec.y;
-        double offZ = lookVec.z;
+        double offZ = lookVec.z - 0.5D;
 
         float damage = getPlaneDamage();
 

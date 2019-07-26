@@ -54,6 +54,19 @@ public class PlaneModel extends OBJModelRenderer {
                                     GlStateManager.rotatef(-plane.getWheelRotation(partialTicks), 1F, 0F, 0F);
                                 }
                         )
+                ),
+                new OBJModelInstance(
+                        new OBJModel(
+                                new ResourceLocation(Main.MODID, "models/entity/propeller.obj"),
+                                new ResourceLocation(Main.MODID, "textures/entity/propeller.png")
+                        ),
+                        new OBJModelOptions(
+                                new Vec3d(0D / 16D, 16D / 16D, -29.5D / 16D),
+                                (plane, partialTicks) -> {
+                                    GlStateManager.scalef(1F / 16F, 1F / 16F, 1F / 16F);
+                                    GlStateManager.rotatef(-plane.getPropellerRotation(partialTicks), 0F, 0F, 1F);
+                                }
+                        )
                 )
 
         );
