@@ -22,5 +22,8 @@
   "key.plane_up": "Up",
   "key.plane_down": "Down",
   "key.plane_start": "Start",
-  "key.plane_brake": "Brake"
+  "key.plane_brake": "Brake",
+
+  "plane.tooltip.plane.damage": "Damage: %s %%",
+  "plane.tooltip.plane.fuel": "Fuel: %s mb"
 }

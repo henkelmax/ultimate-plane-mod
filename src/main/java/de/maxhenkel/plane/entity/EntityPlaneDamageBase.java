@@ -1,7 +1,12 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -9,8 +14,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameterSets;
+import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.world.storage.loot.LootTable;
 
 public class EntityPlaneDamageBase extends EntityPlaneBase {
 
@@ -98,20 +109,37 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
 
         if (player.abilities.isCreativeMode) {
             if (player.isSneaking()) {
-                destroyPlane(player, false);
+                destroyPlane(source, player);
                 return true;
             }
-            return false;
         }
 
-        if (getPlaneDamage() >= 90F && amount > 0F) {
-            destroyPlane(player, true);
+        ItemStack heldItem = player.getHeldItemMainhand();
+        if (heldItem.getItem().equals(ModItems.WRENCH) && (heldItem.getMaxDamage() - heldItem.getDamage()) >= 512) {
+            heldItem.damageItem(512, player, playerEntity -> {
+            });
+            destroyPlane(source, player);
         }
 
         return false;
     }
 
-    public void destroyPlane(PlayerEntity player, boolean dropParts) {
+    public void destroyPlane(DamageSource source, PlayerEntity player) {
+        IInventory inventory = ((EntityPlaneInventoryBase) this).getInventory();
+        InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
+        inventory.clear();
+
+        ResourceLocation resourcelocation = new ResourceLocation(Main.MODID, "entities/plane");
+        LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(resourcelocation);
+
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
+                .withParameter(LootParameters.POSITION, getPosition())
+                .withParameter(LootParameters.THIS_ENTITY, this)
+                .withParameter(LootParameters.DAMAGE_SOURCE, source)
+                .withParameter(LootParameters.KILLER_ENTITY, player)
+                .withParameter(LootParameters.DIRECT_KILLER_ENTITY, player);
+        loottable.generate(context.build(LootParameterSets.ENTITY), this::entityDropItem);
+
         remove();
     }
 

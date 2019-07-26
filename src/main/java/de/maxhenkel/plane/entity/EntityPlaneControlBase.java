@@ -410,7 +410,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     protected void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setEngineSpeed(compound.getFloat("EngineSpeed"));
-        setStarted(compound.getBoolean("Started"));
+        ((EntityPlaneSoundBase) this).setStarted(compound.getBoolean("Started"), false);
     }
 
     public boolean isStarted() {

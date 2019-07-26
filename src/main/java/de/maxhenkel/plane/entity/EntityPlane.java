@@ -2,6 +2,7 @@ package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 public class EntityPlane extends EntityPlaneSoundBase {
@@ -16,4 +17,13 @@ public class EntityPlane extends EntityPlaneSoundBase {
         super(type, world);
     }
 
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+    }
 }

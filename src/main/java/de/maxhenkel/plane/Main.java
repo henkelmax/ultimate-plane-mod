@@ -11,6 +11,7 @@ import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.GuiPlane;
 import de.maxhenkel.plane.item.ModItems;
+import de.maxhenkel.plane.loottable.CopyPlaneData;
 import de.maxhenkel.plane.net.DataSerializerEntitySize;
 import de.maxhenkel.plane.net.DataSerializerVec3d;
 import de.maxhenkel.plane.net.MessageControlPlane;
@@ -30,6 +31,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -96,6 +98,8 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new InteractEvents());
         MinecraftForge.EVENT_BUS.register(new CapabilityEvents());
+
+        LootFunctionManager.registerFunction(new CopyPlaneData.Serializer());
 
         SIMPLE_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Main.MODID, "default"), () -> "1.0.0", s -> true, s -> true);
         SIMPLE_CHANNEL.registerMessage(0, MessageControlPlane.class, (msg, buf) -> msg.toBytes(buf), (buf) -> new MessageControlPlane().fromBytes(buf), (msg, fun) -> msg.executeServerSide(fun.get()));

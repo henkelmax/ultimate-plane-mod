@@ -59,8 +59,12 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
 
     @Override
     public void setStarted(boolean started) {
+        setStarted(started, true);
+    }
+
+    public void setStarted(boolean started, boolean playSound) {
         super.setStarted(started);
-        if (world.isRemote) {
+        if (world.isRemote && playSound) {
             if (!started) {
                 checkStopLoop();
             } else {
