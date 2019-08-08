@@ -24,9 +24,12 @@ import java.util.List;
 
 public class ItemPlane extends Item {
 
-    public ItemPlane() {
+    private EntityPlane.Type type;
+
+    public ItemPlane(EntityPlane.Type type) {
         super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC));
-        setRegistryName(new ResourceLocation(Main.MODID, "plane"));
+        this.type = type;
+        setRegistryName(new ResourceLocation(Main.MODID, "plane_" + type.getTypeName()));
     }
 
     @Override
@@ -51,6 +54,8 @@ public class ItemPlane extends Item {
 
         addData(context.getItem(), plane);
 
+        plane.setPlaneType(type);
+
         world.addEntity(plane);
 
         if (!player.abilities.isCreativeMode) {
@@ -62,7 +67,7 @@ public class ItemPlane extends Item {
 
     private void addData(ItemStack stack, EntityPlane plane) {
         CompoundNBT planeData = getPlaneData(stack);
-        if(planeData!=null){
+        if (planeData != null) {
             plane.readAdditional(planeData);
             plane.setStarted(false, false);
         }

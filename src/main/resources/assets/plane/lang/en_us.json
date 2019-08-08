@@ -1,7 +1,12 @@
 {
   "entity.plane.plane": "Plane",
   "entity.plane.plane_part": "Plane Part",
-  "item.plane.plane": "Plane",
+  "item.plane.plane_oak": "Oak Plane",
+  "item.plane.plane_dark_oak": "Dark Oak Plane",
+  "item.plane.plane_spruce": "Spruce Plane",
+  "item.plane.plane_acacia": "Acacia Plane",
+  "item.plane.plane_jungle": "Jungle Plane",
+  "item.plane.plane_birch": "Birch Plane",
   "item.plane.wrench": "Wrench",
 
   "gui.plane.fuel": "Fuel",

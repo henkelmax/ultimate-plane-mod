@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "plane:plane",
+          "name": "plane:plane_jungle",
           "functions": [
             {
               "function": "plane:copy_plane_data"

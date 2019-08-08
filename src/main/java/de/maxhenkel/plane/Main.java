@@ -157,7 +157,9 @@ public class Main {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
-                ModItems.PLANE,
+                ModItems.PLANES
+        );
+        event.getRegistry().registerAll(
                 ModItems.WRENCH
         );
     }

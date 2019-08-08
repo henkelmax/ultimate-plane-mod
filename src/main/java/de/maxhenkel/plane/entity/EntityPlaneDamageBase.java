@@ -129,7 +129,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
         InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
         inventory.clear();
 
-        ResourceLocation resourcelocation = new ResourceLocation(Main.MODID, "entities/plane");
+        ResourceLocation resourcelocation = new ResourceLocation(Main.MODID, "entities/plane_" + ((EntityPlane) this).getPlaneType().getTypeName());
         LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(resourcelocation);
 
         LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
