@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "WBW",
+    "X X"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:jungle_slab"
+    },
+    "W": {
+      "item": "minecraft:jungle_planks"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "X": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "plane:plane_jungle",
+    "count": 1
+  }
+}

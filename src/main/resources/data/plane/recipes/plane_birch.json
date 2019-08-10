@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "WBW",
+    "X X"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:birch_slab"
+    },
+    "W": {
+      "item": "minecraft:birch_planks"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "X": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "plane:plane_birch",
+    "count": 1
+  }
+}

@@ -7,10 +7,10 @@
   ],
   "key": {
     "S": {
-      "item": "minecraft:oak_slab"
+      "item": "minecraft:dark_oak_slab"
     },
     "W": {
-      "item": "minecraft:oak_planks"
+      "item": "minecraft:dark_oak_planks"
     },
     "B": {
       "item": "minecraft:iron_block"
@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:plane",
+    "item": "plane:plane_dark_oak",
     "count": 1
   }
 }
