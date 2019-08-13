@@ -82,7 +82,6 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
         setupRotation(plane, entityYaw, partialTicks);
 
         GlStateManager.pushMatrix();
-        GlStateManager.enableLighting();
         RenderHelper.disableStandardItemLighting();
 
         renderModel(plane, partialTicks, getModelFromType(plane));
@@ -91,7 +90,7 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
             renderModel(plane, partialTicks, instance);
         }
 
-        GlStateManager.disableLighting();
+        RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
