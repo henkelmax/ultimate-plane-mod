@@ -1,7 +1,9 @@
 package de.maxhenkel.plane.entity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -10,6 +12,16 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
 
     public EntityPlaneBase(EntityType type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+
+    }
+
+    @Override
+    public void fall(float distance, float damageMultiplier) {
+
     }
 
     @Override

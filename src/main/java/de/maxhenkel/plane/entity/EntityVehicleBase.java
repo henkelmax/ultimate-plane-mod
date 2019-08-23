@@ -83,8 +83,8 @@ public abstract class EntityVehicleBase extends Entity {
             return null;
         }
 
-        if (passengers.get(0) instanceof PlayerEntity) {
-            return (PlayerEntity) passengers.get(0);
+        if (passengers.get(passengers.size() - 1) instanceof PlayerEntity) {
+            return (PlayerEntity) passengers.get(passengers.size() - 1);
         }
 
         return null;
