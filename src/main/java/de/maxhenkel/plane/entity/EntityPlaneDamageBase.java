@@ -103,7 +103,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
             return false;
         }
 
-        if (player.equals(getDriver())) {
+        if (isPassenger(player)) {
             return false;
         }
 
