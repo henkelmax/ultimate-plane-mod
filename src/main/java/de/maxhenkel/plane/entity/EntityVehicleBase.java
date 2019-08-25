@@ -95,18 +95,14 @@ public abstract class EntityVehicleBase extends Entity {
     protected void addPassenger(Entity passenger) {
         List<Entity> passengers;
         try {
-            passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "field_219474_p");
-        } catch (ObfuscationReflectionHelper.UnableToFindFieldException x) {
+            passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "field_184244_h");
+        } catch (ObfuscationReflectionHelper.UnableToFindFieldException x1) {
             try {
-                passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "field_184244_h");
-            } catch (ObfuscationReflectionHelper.UnableToFindFieldException x1) {
-                try {
-                    passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "passengers");
-                } catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
-                    super.addPassenger(passenger);
-                    e.printStackTrace();
-                    return;
-                }
+                passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "passengers");
+            } catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
+                super.addPassenger(passenger);
+                e.printStackTrace();
+                return;
             }
         }
         passengers.add(passenger);

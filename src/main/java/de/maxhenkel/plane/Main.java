@@ -1,9 +1,7 @@
 package de.maxhenkel.plane;
 
 import de.maxhenkel.plane.entity.EntityPlane;
-import de.maxhenkel.plane.entity.EntityPlanePart;
 import de.maxhenkel.plane.entity.render.PlaneModel;
-import de.maxhenkel.plane.entity.render.PlanePartModel;
 import de.maxhenkel.plane.events.CapabilityEvents;
 import de.maxhenkel.plane.events.InteractEvents;
 import de.maxhenkel.plane.events.KeyEvents;
@@ -12,8 +10,6 @@ import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.GuiPlane;
 import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.loottable.CopyPlaneData;
-import de.maxhenkel.plane.net.DataSerializerEntitySize;
-import de.maxhenkel.plane.net.DataSerializerVec3d;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import de.maxhenkel.plane.sound.ModSounds;
@@ -26,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -62,11 +57,8 @@ public class Main {
     public static SimpleChannel SIMPLE_CHANNEL;
 
     public static EntityType PLANE_ENTITY_TYPE;
-    public static EntityType PLANE_PART_ENTITY_TYPE;
 
     public Main() {
-        DataSerializers.registerSerializer(DataSerializerVec3d.VEC3D);
-        DataSerializers.registerSerializer(DataSerializerEntitySize.ENTITY_SIZE);
 
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
@@ -90,7 +82,6 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityPlane.class, manager -> new PlaneModel(manager));
-        RenderingRegistry.registerEntityRenderingHandler(EntityPlanePart.class, manager -> new PlanePartModel(manager));
     }
 
     @SubscribeEvent
@@ -184,21 +175,11 @@ public class Main {
                 .setTrackingRange(256)
                 .setUpdateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
-                .size(0.9F, 1.5F)
+                .size(3.5F, 1.5F)
                 .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world))
                 .build(Main.MODID + ":plane");
         PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
         event.getRegistry().register(PLANE_ENTITY_TYPE);
-
-        PLANE_PART_ENTITY_TYPE = EntityType.Builder.<EntityPlanePart>create(EntityPlanePart::new, EntityClassification.MISC)
-                .setTrackingRange(256)
-                .setUpdateInterval(1)
-                .setShouldReceiveVelocityUpdates(true)
-                .disableSerialization()
-                .setCustomClientFactory((spawnEntity, world) -> new EntityPlanePart(world))
-                .build(Main.MODID + ":plane_part");
-        PLANE_PART_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane_part"));
-        event.getRegistry().register(PLANE_PART_ENTITY_TYPE);
     }
 
     public static ContainerType<ContainerPlane> PLANE_CONTAINER_TYPE;
