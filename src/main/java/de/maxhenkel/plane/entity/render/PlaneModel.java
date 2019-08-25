@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
@@ -82,7 +81,7 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
         setupRotation(plane, entityYaw, partialTicks);
 
         GlStateManager.pushMatrix();
-        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableLighting();
 
         renderModel(plane, partialTicks, getModelFromType(plane));
 
@@ -90,7 +89,7 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
             renderModel(plane, partialTicks, instance);
         }
 
-        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableLighting();
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
@@ -123,7 +122,7 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
     }
 
     public void setupRotation(EntityPlane entity, float yaw, float partialTicks) {
-        GlStateManager.rotatef(180.0F - yaw, 0F, 1F, 0F);
+        GlStateManager.rotatef(180F - yaw, 0F, 1F, 0F);
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
         GlStateManager.rotatef(pitch, -1F, 0F, 0F);
     }

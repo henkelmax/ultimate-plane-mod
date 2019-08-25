@@ -14,7 +14,7 @@ public class InteractEvents {
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.EntityInteract evt) {
-        PlayerEntity player = evt.getEntityPlayer();
+        PlayerEntity player = evt.getPlayer();
         ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
         if (!stack.getItem().equals(ModItems.WRENCH)) {
             stack = player.getHeldItem(Hand.OFF_HAND);
