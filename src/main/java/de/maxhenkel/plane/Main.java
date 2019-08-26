@@ -151,7 +151,9 @@ public class Main {
                 ModItems.PLANES
         );
         event.getRegistry().registerAll(
-                ModItems.WRENCH
+                ModItems.WRENCH,
+                ModItems.PLANE_WHEEL,
+                ModItems.PLANE_ENGINE
         );
     }
 

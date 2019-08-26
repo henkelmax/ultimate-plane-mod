@@ -8,6 +8,8 @@
   "item.plane.plane_jungle": "Jungle Plane",
   "item.plane.plane_birch": "Birch Plane",
   "item.plane.wrench": "Wrench",
+  "item.plane.plane_engine": "Plane Engine",
+  "item.plane.plane_wheel": "Plane Wheel",
 
   "gui.plane.fuel": "Fuel",
   "gui.plane.damage": "Damage",

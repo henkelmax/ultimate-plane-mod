@@ -2,21 +2,21 @@
   "type": "crafting_shaped",
   "pattern": [
     "SSS",
-    "WBW",
-    "X X"
+    "PEP",
+    "W W"
   ],
   "key": {
     "S": {
       "item": "minecraft:birch_slab"
     },
-    "W": {
+    "P": {
       "item": "minecraft:birch_planks"
     },
-    "B": {
-      "item": "minecraft:iron_block"
+    "E": {
+      "item": "plane:plane_engine"
     },
-    "X": {
-      "item": "minecraft:black_wool"
+    "W": {
+      "item": "plane:plane_wheel"
     }
   },
   "result": {
