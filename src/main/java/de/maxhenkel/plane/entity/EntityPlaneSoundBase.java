@@ -83,7 +83,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkIdleLoop() {
         if (!isSoundPlaying(idleLoop)) {
-            idleLoop = new SoundLoopIdle(world, (EntityPlane) this, ModSounds.ENGINE_IDLE, SoundCategory.NEUTRAL);
+            idleLoop = new SoundLoopIdle((EntityPlane) this, ModSounds.ENGINE_IDLE, SoundCategory.NEUTRAL);
             ModSounds.playSoundLoop(idleLoop, world);
         }
     }
@@ -91,7 +91,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkHighLoop() {
         if (!isSoundPlaying(highLoop)) {
-            highLoop = new SoundLoopHigh(world, (EntityPlane) this, ModSounds.ENGINE_HIGH, SoundCategory.NEUTRAL);
+            highLoop = new SoundLoopHigh((EntityPlane) this, ModSounds.ENGINE_HIGH, SoundCategory.NEUTRAL);
             ModSounds.playSoundLoop(highLoop, world);
         }
     }
@@ -99,7 +99,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStartLoop() {
         if (!isSoundPlaying(startLoop)) {
-            startLoop = new SoundLoopStart(world, (EntityPlane) this, ModSounds.ENGINE_START, SoundCategory.NEUTRAL);
+            startLoop = new SoundLoopStart((EntityPlane) this, ModSounds.ENGINE_START, SoundCategory.NEUTRAL);
             ModSounds.playSoundLoop(startLoop, world);
         }
     }
@@ -107,7 +107,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStopLoop() {
         if (!isSoundPlaying(stopLoop)) {
-            stopLoop = new SoundLoopStop(world, (EntityPlane) this, ModSounds.ENGINE_STOP, SoundCategory.NEUTRAL);
+            stopLoop = new SoundLoopStop((EntityPlane) this, ModSounds.ENGINE_STOP, SoundCategory.NEUTRAL);
             ModSounds.playSoundLoop(stopLoop, world);
         }
     }
@@ -115,7 +115,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStartingLoop() {
         if (!isSoundPlaying(startingLoop)) {
-            startingLoop = new SoundLoopStarting(world, (EntityPlane) this, ModSounds.ENGINE_STARTING, SoundCategory.NEUTRAL);
+            startingLoop = new SoundLoopStarting((EntityPlane) this, ModSounds.ENGINE_STARTING, SoundCategory.NEUTRAL);
             ModSounds.playSoundLoop(startingLoop, world);
         }
     }

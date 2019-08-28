@@ -177,7 +177,7 @@ public class Main {
                 .setTrackingRange(256)
                 .setUpdateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
-                .size(3.5F, 1.5F)
+                .size(3.5F, 2F)
                 .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world))
                 .build(Main.MODID + ":plane");
         PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));

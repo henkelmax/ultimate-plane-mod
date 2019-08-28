@@ -6,22 +6,22 @@ import net.minecraft.client.audio.TickableSound;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
 
 public abstract class SoundLoopPlane extends TickableSound {
 
-    protected World world;
     protected EntityPlane plane;
 
-    public SoundLoopPlane(World world, EntityPlane car, SoundEvent event, SoundCategory category) {
+    public SoundLoopPlane(EntityPlane plane, SoundEvent event, SoundCategory category) {
         super(event, category);
-        this.world = world;
-        this.plane = car;
+        this.plane = plane;
         this.repeat = true;
         this.repeatDelay = 0;
-        this.updatePos();
         this.volume = 1F;
         this.pitch = 1F;
+        this.priority = true;
+        this.global = false;
+        this.attenuationType = AttenuationType.LINEAR;
+        this.updatePos();
     }
 
     public void updatePos() {
@@ -33,7 +33,6 @@ public abstract class SoundLoopPlane extends TickableSound {
     @Override
     public void tick() {
         if (donePlaying) {
-            onFinishPlaying();
             return;
         }
 
@@ -43,13 +42,11 @@ public abstract class SoundLoopPlane extends TickableSound {
             return;
         }
 
-        if (world.isRemote) {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
-            if (player == null || !player.isAlive()) {
-                this.donePlaying = true;
-                this.repeat = false;
-                return;
-            }
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || !player.isAlive()) {
+            this.donePlaying = true;
+            this.repeat = false;
+            return;
         }
 
         if (shouldStopSound()) {
@@ -59,14 +56,6 @@ public abstract class SoundLoopPlane extends TickableSound {
         }
 
         updatePos();
-    }
-
-    public void onFinishPlaying() {
-
-    }
-
-    public void setDonePlaying() {
-        donePlaying = true;
     }
 
     public abstract boolean shouldStopSound();

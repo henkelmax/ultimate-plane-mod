@@ -3,12 +3,11 @@ package de.maxhenkel.plane.sound;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.World;
 
 public class SoundLoopHigh extends SoundLoopPlane {
 
-    public SoundLoopHigh(World world, EntityPlane plane, SoundEvent event, SoundCategory category) {
-        super(world, plane, event, category);
+    public SoundLoopHigh(EntityPlane plane, SoundEvent event, SoundCategory category) {
+        super(plane, event, category);
     }
 
     @Override
