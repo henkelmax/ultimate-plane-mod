@@ -1,8 +1,11 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.plane.DamageSourcePlane;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.item.ModItems;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -15,6 +18,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -155,6 +159,21 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
 
     public void setPlaneDamage(float damage) {
         dataManager.set(DAMAGE, damage);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBox(Entity entityIn) {
+        if (entityIn instanceof LivingEntity) {
+            if (entityIn.getBoundingBox().intersects(getBoundingBox())) {
+                double speed = getMotion().length();
+                if (speed > 0.35F) {
+                    float damage = Math.min((float) (speed * 10D), 15F);
+                    entityIn.attackEntityFrom(DamageSourcePlane.DAMAGE_PLANE, damage);
+                }
+
+            }
+        }
+        return super.getCollisionBox(entityIn);
     }
 
     @Override

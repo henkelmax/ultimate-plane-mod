@@ -32,5 +32,6 @@
   "key.plane_brake": "Brake",
 
   "plane.tooltip.plane.damage": "Damage: %s %%",
-  "plane.tooltip.plane.fuel": "Fuel: %s mb"
+  "plane.tooltip.plane.fuel": "Fuel: %s mb",
+  "death.attack.hit_plane": "%s was run over by a plane"
 }
