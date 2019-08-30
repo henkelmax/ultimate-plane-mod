@@ -2,20 +2,25 @@ package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Config;
 import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
-    private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.VARINT);
+    private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.VARINT);
+    private static final DataParameter<String> FUEL_TYPE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.STRING);
 
     private static final float MAX_FUEL_USAGE = 5F;
     public static final int MAX_FUEL = 5000;
@@ -53,18 +58,38 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     protected void registerData() {
         super.registerData();
         dataManager.register(FUEL, 0);
+        dataManager.register(FUEL_TYPE, "");
     }
 
     @Override
     protected void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setFuel(compound.getInt("Fuel"));
+        setFuelType(compound.getString("FuelType"));
     }
 
     @Override
     protected void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("Fuel", getFuel());
+        compound.putString("FuelType", getFuelType().getRegistryName().toString());
+    }
+
+    @Nullable
+    public Fluid getFuelType() {
+        String type = dataManager.get(FUEL_TYPE);
+        if (type.isEmpty()) {
+            return null;
+        }
+        return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(type));
+    }
+
+    public void setFuelType(Fluid fluid) {
+        setFuelType(fluid.getRegistryName().toString());
+    }
+
+    public void setFuelType(String fluid) {
+        dataManager.set(FUEL_TYPE, fluid);
     }
 
     public int getFuel() {
@@ -87,7 +112,8 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     @Nonnull
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return FluidStack.EMPTY;
+        Fluid fluid = getFuelType();
+        return new FluidStack(fluid == null ? Fluids.EMPTY : fluid, getFuel());
     }
 
     @Override
@@ -106,6 +132,12 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
             return 0;
         }
 
+        Fluid fluid = getFuelType();
+
+        if (fluid != null && getFuel() > 0 && !resource.getFluid().equals(fluid)) {
+            return 0;
+        }
+
         int amount = Math.min(resource.getAmount(), MAX_FUEL - getFuel());
 
         if (action.execute()) {
@@ -114,6 +146,7 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
                 i = MAX_FUEL;
             }
             setFuel(i);
+            setFuelType(resource.getFluid());
         }
 
         return amount;
