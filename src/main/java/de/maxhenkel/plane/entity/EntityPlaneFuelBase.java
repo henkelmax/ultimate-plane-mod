@@ -1,16 +1,16 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.FluidStackWrapper;
+import de.maxhenkel.plane.Config;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+
+import javax.annotation.Nonnull;
 
 public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
@@ -38,7 +38,6 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
         if (world.getGameTime() % 20L == 0L) {
             int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * MAX_FUEL_USAGE), 1);
             setFuel(Math.max(getFuel() - consumeAmount, 0));
-            //System.out.println(getFuel());
         }
     }
 
@@ -77,54 +76,39 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     }
 
     public boolean isValidFuel(FluidStack fluid) {
-        return fluid.getFluid().getName().equals("bio_diesel"); //TODO check for valid fuel
+        return Config.VALID_FUEL_LIST.contains(fluid.getFluid());
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return new IFluidTankProperties[]{new IFluidTankProperties() {
+    public int getTanks() {
+        return 1;
+    }
 
-            @Override
-            public FluidStack getContents() {
-                return new FluidStackWrapper(new Fluid("bio_diesel", null, null, 0), getFuel()); // TODO
-            }
-
-            @Override
-            public int getCapacity() {
-                return MAX_FUEL;
-            }
-
-            @Override
-            public boolean canFillFluidType(FluidStack fluidStack) {
-                return isValidFuel(fluidStack);
-            }
-
-            @Override
-            public boolean canFill() {
-                return true;
-            }
-
-            @Override
-            public boolean canDrainFluidType(FluidStack fluidStack) {
-                return false;
-            }
-
-            @Override
-            public boolean canDrain() {
-                return false;
-            }
-        }};
+    @Nonnull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return FluidStack.EMPTY;
     }
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
+    public int getTankCapacity(int tank) {
+        return MAX_FUEL;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return isValidFuel(stack);
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
         if (resource == null || !isValidFuel(resource)) {
             return 0;
         }
 
-        int amount = Math.min(resource.amount, MAX_FUEL - getFuel());
+        int amount = Math.min(resource.getAmount(), MAX_FUEL - getFuel());
 
-        if (doFill) {
+        if (action.execute()) {
             int i = getFuel() + amount;
             if (i > MAX_FUEL) {
                 i = MAX_FUEL;
@@ -135,13 +119,15 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
         return amount;
     }
 
+    @Nonnull
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        return null;
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        return FluidStack.EMPTY;
     }
 
+    @Nonnull
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        return null;
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        return FluidStack.EMPTY;
     }
 }

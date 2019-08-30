@@ -68,6 +68,7 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, this::registerRecipes);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
@@ -82,6 +83,13 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
 
         RenderingRegistry.registerEntityRenderingHandler(EntityPlane.class, manager -> new PlaneModel(manager));
+    }
+
+    @SubscribeEvent
+    public void configEvent(ModConfig.ModConfigEvent event) {
+        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
+            Config.loadServer();
+        }
     }
 
     @SubscribeEvent
