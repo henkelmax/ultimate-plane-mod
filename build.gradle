@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.maxhenkel.de/artifactory/public' }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.1'
     }
 }
 
@@ -15,6 +17,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'forge-update'
 
 version = mod_version
 group= mod_packagename
@@ -28,7 +31,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run').canonicalPath
-            //property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args = ['--username', 'henkelmax']
             source sourceSets.main
@@ -36,7 +38,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run/server').canonicalPath
-            //property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             source sourceSets.main
         }
@@ -49,6 +50,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}:api")
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}")
+
+    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 jar {
     manifest {
@@ -90,6 +93,24 @@ curseforge {
     }
 }
 
+forgeUpdate {
+    def messages = []
+    file('changelog.md').eachLine { String line ->
+        if (line.trim().startsWith('-')) {
+            messages.add(line.replaceFirst('-', '').trim())
+        }
+    }
+
+    serverURL = 'https://update.maxhenkel.de/'
+    apiKey = System.env.FORGE_UPDATE_API_KEY != null ? System.env.FORGE_UPDATE_API_KEY : file('forge_update_api_key.txt').text
+    modID = mod_id
+    gameVersion = mod_minecraft_version
+    modVersion = mod_version
+    updateMessages = messages
+    releaseType = curse_release_type
+    tags = recommended == 'true' ? ['recommended'] : []
+}
+
 repositories {
     maven {
         // location of the maven that hosts JEI files
@@ -100,6 +121,10 @@ repositories {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "Hwyla"
+        url "http://tehnut.info/maven"
     }
 }
 

@@ -72,7 +72,8 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     protected void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("Fuel", getFuel());
-        compound.putString("FuelType", getFuelType().getRegistryName().toString());
+        Fluid fuel = getFuelType();
+        compound.putString("FuelType", fuel == null ? "" : fuel.getRegistryName().toString());
     }
 
     @Nullable
