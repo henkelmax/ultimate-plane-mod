@@ -1,12 +1,13 @@
 package de.maxhenkel.plane.events;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.plane.MathTools;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -50,14 +51,15 @@ public class RenderEvents {
     }
 
     public void renderFuelBar(double percent) {
-        int x = mc.mainWindow.getScaledWidth() / 2 - 91;
+        percent = MathHelper.clamp(percent, 0F, 1F);
+        int x = mc.getMainWindow().getScaledWidth() / 2 - 91;
 
         mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
-        int k = mc.mainWindow.getScaledHeight() - 32 + 3;
+        int k = mc.getMainWindow().getScaledHeight() - 32 + 3;
         mc.ingameGUI.blit(x, k, 0, 64, 182, 5);
 
-        int j = (int) (percent * 182.0F);
+        int j = (int) (percent * 182F);
 
         if (j > 0) {
             mc.ingameGUI.blit(x, k, 0, 69, j, 5);
@@ -66,8 +68,8 @@ public class RenderEvents {
 
     public void renderSpeed(double speed) {
         String s = String.valueOf(MathTools.round(Math.abs(speed), 2));
-        int i1 = (mc.mainWindow.getScaledWidth() - mc.ingameGUI.getFontRenderer().getStringWidth(s)) / 2;
-        int j1 = mc.mainWindow.getScaledHeight() - 31 - 4;
+        int i1 = (mc.getMainWindow().getScaledWidth() - mc.ingameGUI.getFontRenderer().getStringWidth(s)) / 2;
+        int j1 = mc.getMainWindow().getScaledHeight() - 31 - 4;
         mc.ingameGUI.getFontRenderer().drawString(s, i1 + 1, j1, 0);
         mc.ingameGUI.getFontRenderer().drawString(s, i1 - 1, j1, 0);
         mc.ingameGUI.getFontRenderer().drawString(s, i1, j1 + 1, 0);
@@ -78,24 +80,22 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         if (player.getRidingEntity() instanceof EntityPlane) {
-            EntityPlane plane = (EntityPlane) event.getEntityPlayer().getRidingEntity();
-            GlStateManager.pushMatrix();
-            GlStateManager.translated(event.getX(), event.getY(), event.getZ());
-            GlStateManager.rotatef(-(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick()), 0F, 1F, 0F);
-            GlStateManager.rotatef(plane.rotationPitch + (plane.rotationPitch - plane.prevRotationPitch) * event.getPartialRenderTick(), 1F, 0F, 0F);
-            GlStateManager.scalef(EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR);
-            GlStateManager.translatef(0F, (event.getEntityPlayer().getHeight() - (event.getEntityPlayer().getHeight() * EntityPlane.SCALE_FACTOR)) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
-            GlStateManager.rotatef(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick(), 0F, 1F, 0F);
-            GlStateManager.translated(-event.getX(), -event.getY(), -event.getZ());
+            EntityPlane plane = (EntityPlane) event.getPlayer().getRidingEntity();
+            event.getMatrixStack().push();
+            event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick())));
+            event.getMatrixStack().rotate(Vector3f.XP.rotationDegrees(plane.rotationPitch + (plane.rotationPitch - plane.prevRotationPitch) * event.getPartialRenderTick()));
+            event.getMatrixStack().scale(EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR);
+            event.getMatrixStack().translate(0F, (player.getHeight() - (player.getHeight() * EntityPlane.SCALE_FACTOR)) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+            event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick()));
         }
     }
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getEntityPlayer().getRidingEntity() instanceof EntityPlane) {
-            GlStateManager.popMatrix();
+        if (event.getPlayer().getRidingEntity() instanceof EntityPlane) {
+            event.getMatrixStack().pop();
         }
     }
 

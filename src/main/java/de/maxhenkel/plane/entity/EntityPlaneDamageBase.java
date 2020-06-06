@@ -59,7 +59,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
         Vec3d lookVec = getLookVec().normalize();
         double offX = lookVec.x;
         double offY = lookVec.y;
-        double offZ = lookVec.z - 0.5D;
+        double offZ = lookVec.z + 0.5D;
 
         float damage = getPlaneDamage();
 
@@ -72,9 +72,9 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
 
     private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ, double random) {
         world.addParticle(particleTypes,
-                posX + offX + (rand.nextDouble() * random - random / 2D),
-                posY + offY + (rand.nextDouble() * random - random / 2D),
-                posZ + offZ + (rand.nextDouble() * random - random / 2D),
+                getPosX() + offX + (rand.nextDouble() * random - random / 2D),
+                getPosY() + offY + (rand.nextDouble() * random - random / 2D),
+                getPosZ() + offZ + (rand.nextDouble() * random - random / 2D),
                 0D, 0D, 0D);
     }
 

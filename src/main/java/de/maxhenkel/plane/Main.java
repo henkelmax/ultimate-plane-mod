@@ -81,8 +81,6 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientStart() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
-
-        RenderingRegistry.registerEntityRenderingHandler(EntityPlane.class, manager -> new PlaneModel(manager));
     }
 
     @SubscribeEvent
@@ -151,6 +149,8 @@ public class Main {
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
+
+        RenderingRegistry.registerEntityRenderingHandler(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
     }
 
     @SubscribeEvent
@@ -210,7 +210,7 @@ public class Main {
     @Nullable
     public static EntityPlane getPlaneByUUID(PlayerEntity player, UUID uuid) {
         double distance = 10D;
-        return player.world.getEntitiesWithinAABB(EntityPlane.class, new AxisAlignedBB(player.posX - distance, player.posY - distance, player.posZ - distance, player.posX + distance, player.posY + distance, player.posZ + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
+        return player.world.getEntitiesWithinAABB(EntityPlane.class, new AxisAlignedBB(player.getPosX() - distance, player.getPosY() - distance, player.getPosZ() - distance, player.getPosX() + distance, player.getPosY() + distance, player.getPosZ() + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
     }
 
     @SubscribeEvent

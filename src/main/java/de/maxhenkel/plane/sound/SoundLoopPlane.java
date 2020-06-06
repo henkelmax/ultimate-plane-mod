@@ -25,9 +25,9 @@ public abstract class SoundLoopPlane extends TickableSound {
     }
 
     public void updatePos() {
-        this.x = (float) plane.posX;
-        this.y = (float) plane.posY;
-        this.z = (float) plane.posZ;
+        this.x = (float) plane.getPosX();
+        this.y = (float) plane.getPosY();
+        this.z = (float) plane.getPosZ();
     }
 
     @Override

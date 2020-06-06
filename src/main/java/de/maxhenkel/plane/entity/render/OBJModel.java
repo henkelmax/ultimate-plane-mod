@@ -1,47 +1,101 @@
 package de.maxhenkel.plane.entity.render;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraft.util.math.Vec2f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class OBJModel {
 
-    private net.minecraftforge.client.model.obj.OBJModel objModel;
     private ResourceLocation model;
-    private ResourceLocation texture;
-    private boolean culling;
 
-    public OBJModel(ResourceLocation model, ResourceLocation texture, boolean culling) {
+    private OBJModelData data;
+
+    public OBJModel(ResourceLocation model) {
         this.model = model;
-        this.texture = texture;
-        this.culling = culling;
     }
 
-    public OBJModel(ResourceLocation model, ResourceLocation texture) {
-        this(model, texture, true);
-    }
-
-    public net.minecraftforge.client.model.obj.OBJModel getModel() {
-        if (objModel == null) {
-            try {
-                //TODO This is just a hotfix
-                OBJLoader.INSTANCE.onResourceManagerReload(Minecraft.getInstance().getResourceManager());
-                this.objModel = (net.minecraftforge.client.model.obj.OBJModel) OBJLoader.INSTANCE.loadModel(model);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e.getMessage());
-            }
-            //this.objModel = (OBJModel) ModelLoaderRegistry.getModelOrLogError(model, "Error loading Model");
+    @OnlyIn(Dist.CLIENT)
+    private void load() {
+        if (data == null) {
+            data = OBJLoader.load(model);
         }
-        return this.objModel;
     }
 
-    public boolean hasCulling() {
-        return culling;
+    @OnlyIn(Dist.CLIENT)
+    public void render(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light) {
+        load();
+        matrixStack.push();
+
+        IVertexBuilder builder = buffer.getBuffer(getRenderType(texture, true));
+
+        for (int i = 0; i < data.faces.size(); i++) {
+            int[][] face = data.faces.get(i);
+            RenderTools.vertex(builder, matrixStack, data.positions.get(face[0][0]), data.texCoords.get(face[0][1]), data.normals.get(face[0][2]), light, OverlayTexture.NO_OVERLAY);
+            RenderTools.vertex(builder, matrixStack, data.positions.get(face[1][0]), data.texCoords.get(face[1][1]), data.normals.get(face[1][2]), light, OverlayTexture.NO_OVERLAY);
+            RenderTools.vertex(builder, matrixStack, data.positions.get(face[2][0]), data.texCoords.get(face[2][1]), data.normals.get(face[2][2]), light, OverlayTexture.NO_OVERLAY);
+        }
+        matrixStack.pop();
     }
 
-    public ResourceLocation getTexture() {
-        return texture;
+    @OnlyIn(Dist.CLIENT)
+    private static RenderType getRenderType(ResourceLocation resourceLocation, boolean culling) {
+        RenderType.State state = RenderType.State
+                .getBuilder()
+                .texture(new RenderState.TextureState(resourceLocation, false, false))
+                .transparency(new RenderState.TransparencyState("no_transparency", () -> {
+                    RenderSystem.disableBlend();
+                }, () -> {
+                }))
+                .diffuseLighting(new RenderState.DiffuseLightingState(true))
+                .alpha(new RenderState.AlphaState(0.003921569F))
+                .lightmap(new RenderState.LightmapState(true))
+                .overlay(new RenderState.OverlayState(true))
+                .cull(new RenderState.CullState(culling))
+                .build(true);
+        return RenderType.makeType("entity_cutout", DefaultVertexFormats.ENTITY, GL11.GL_TRIANGLES, 256, true, false, state);
+    }
+
+    static class OBJModelData {
+        private List<Vector3f> positions;
+        private List<Vec2f> texCoords;
+        private List<Vector3f> normals;
+        private List<int[][]> faces;
+
+        public OBJModelData(List<Vector3f> positions, List<Vec2f> texCoords, List<Vector3f> normals, List<int[][]> faces) {
+            this.positions = positions;
+            this.texCoords = texCoords;
+            this.normals = normals;
+            this.faces = faces;
+        }
+
+        public List<Vector3f> getPositions() {
+            return positions;
+        }
+
+        public List<Vec2f> getTexCoords() {
+            return texCoords;
+        }
+
+        public List<Vector3f> getNormals() {
+            return normals;
+        }
+
+        public List<int[][]> getFaces() {
+            return faces;
+        }
     }
 
 }

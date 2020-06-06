@@ -74,7 +74,7 @@ public abstract class EntityVehicleBase extends Entity {
                 facing = facing.rotateY();
             }
 
-            player.setPositionAndUpdate(posX + offsetX, posY, posZ + offsetZ);
+            player.setPositionAndUpdate(getPosX() + offsetX, getPosY(), getPosZ() + offsetZ);
         }
     }
 
@@ -117,13 +117,12 @@ public abstract class EntityVehicleBase extends Entity {
 
     private void tickLerp() {
         if (this.steps > 0 && !this.canPassengerSteer()) {
-            double x = posX + (clientX - posX) / (double) steps;
-            double y = posY + (clientY - posY) / (double) steps;
-            double z = posZ + (clientZ - posZ) / (double) steps;
+            double x = getPosX() + (clientX - getPosX()) / (double) steps;
+            double y = getPosY() + (clientY - getPosY()) / (double) steps;
+            double z = getPosZ() + (clientZ - getPosZ()) / (double) steps;
             double d3 = MathHelper.wrapDegrees(clientYaw - (double) rotationYaw);
             this.rotationYaw = (float) ((double) rotationYaw + d3 / (double) steps);
-            this.rotationPitch = (float) ((double) rotationPitch
-                    + (clientPitch - (double) rotationPitch) / (double) steps);
+            this.rotationPitch = (float) ((double) rotationPitch + (clientPitch - (double) rotationPitch) / (double) steps);
             steps--;
             setPosition(x, y, z);
             setRotation(rotationYaw, rotationPitch);
@@ -180,12 +179,12 @@ public abstract class EntityVehicleBase extends Entity {
             offset = offset.rotateYaw((float) -Math.toRadians(rotationYaw));
             offset = offset.rotatePitch((float) -Math.toRadians(rotationPitch));
 
-            passenger.setPosition(posX + offset.x, posY + offset.y, posZ + offset.z);
+            passenger.setPosition(getPosX() + offset.x, getPosY() + offset.y, getPosZ() + offset.z);
             passenger.rotationYaw += deltaRotation;
             passenger.setRotationYawHead(passenger.getRotationYawHead() + deltaRotation);
         }
 
-        this.applyOriantationsToEntity(passenger);
+        applyOriantationsToEntity(passenger);
     }
 
     @Override
