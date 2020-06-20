@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -15,6 +16,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEvents {
@@ -84,10 +87,21 @@ public class RenderEvents {
         if (player.getRidingEntity() instanceof EntityPlane) {
             EntityPlane plane = (EntityPlane) event.getPlayer().getRidingEntity();
             event.getMatrixStack().push();
+
             event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick())));
             event.getMatrixStack().rotate(Vector3f.XP.rotationDegrees(plane.rotationPitch + (plane.rotationPitch - plane.prevRotationPitch) * event.getPartialRenderTick()));
+
+            List<Entity> passengers = plane.getPassengers();
+            int i = passengers.indexOf(player);
+            if (i >= 0) {
+                Vec3d offset = plane.getPlayerOffsets()[i];
+                offset = offset.rotatePitch((float) -Math.toRadians(plane.rotationPitch));
+                event.getMatrixStack().translate(0F, offset.y, 0F);
+            }
+
             event.getMatrixStack().scale(EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR);
             event.getMatrixStack().translate(0F, (player.getHeight() - (player.getHeight() * EntityPlane.SCALE_FACTOR)) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+
             event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick()));
         }
     }

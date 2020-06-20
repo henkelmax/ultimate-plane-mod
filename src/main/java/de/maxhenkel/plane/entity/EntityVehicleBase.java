@@ -177,7 +177,6 @@ public abstract class EntityVehicleBase extends Entity {
 
             Vec3d offset = getPlayerOffsets()[i];
             offset = offset.rotateYaw((float) -Math.toRadians(rotationYaw));
-            offset = offset.rotatePitch((float) -Math.toRadians(rotationPitch));
 
             passenger.setPosition(getPosX() + offset.x, getPosY() + offset.y, getPosZ() + offset.z);
             passenger.rotationYaw += deltaRotation;

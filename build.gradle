@@ -30,9 +30,10 @@ minecraft {
 
     runs {
         client {
+            Random rnd = new Random()
             workingDirectory project.file('run').canonicalPath
             property 'forge.logging.console.level', 'debug'
-            args = ['--username', 'henkelmax']
+            args = ['--username', 'henkelmax' + rnd.nextInt(1000)]
             source sourceSets.main
         }
 

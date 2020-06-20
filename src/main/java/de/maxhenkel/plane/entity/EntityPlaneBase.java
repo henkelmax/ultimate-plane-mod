@@ -44,10 +44,10 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
     }
 
     public int getPassengerSize() {
-        return 2;
+        return 3;
     }
 
     public Vec3d[] getPlayerOffsets() {
-        return new Vec3d[]{new Vec3d(0D, 0D, 0.5D), new Vec3d(0D, 0D, -0.5D)};
+        return new Vec3d[]{new Vec3d(0D, 0D, 1D), new Vec3d(0D, 0D, 0.5D), new Vec3d(0D, 0D, 0D)};
     }
 }

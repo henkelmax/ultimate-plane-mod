@@ -120,31 +120,31 @@ public class Main {
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerPlane, GuiPlane>) (container, playerInventory, name) -> new GuiPlane(container, playerInventory, name);
         ScreenManager.registerFactory(Main.PLANE_CONTAINER_TYPE, factory);
 
-        this.PLANE_KEY = new KeyBinding("key.plane", GLFW.GLFW_KEY_P, "category.plane");
+        PLANE_KEY = new KeyBinding("key.plane", GLFW.GLFW_KEY_P, "category.plane");
         ClientRegistry.registerKeyBinding(PLANE_KEY);
 
-        this.FORWARD_KEY = new KeyBinding("key.plane_add_thrust", GLFW.GLFW_KEY_I, "category.plane");
+        FORWARD_KEY = new KeyBinding("key.plane_add_thrust", GLFW.GLFW_KEY_I, "category.plane");
         ClientRegistry.registerKeyBinding(FORWARD_KEY);
 
-        this.BACK_KEY = new KeyBinding("key.plane_remove_thrust", GLFW.GLFW_KEY_K, "category.plane");
+        BACK_KEY = new KeyBinding("key.plane_remove_thrust", GLFW.GLFW_KEY_K, "category.plane");
         ClientRegistry.registerKeyBinding(BACK_KEY);
 
-        this.LEFT_KEY = new KeyBinding("key.plane_left", GLFW.GLFW_KEY_A, "category.plane");
+        LEFT_KEY = new KeyBinding("key.plane_left", GLFW.GLFW_KEY_A, "category.plane");
         ClientRegistry.registerKeyBinding(LEFT_KEY);
 
-        this.RIGHT_KEY = new KeyBinding("key.plane_right", GLFW.GLFW_KEY_D, "category.plane");
+        RIGHT_KEY = new KeyBinding("key.plane_right", GLFW.GLFW_KEY_D, "category.plane");
         ClientRegistry.registerKeyBinding(RIGHT_KEY);
 
-        this.UP_KEY = new KeyBinding("key.plane_up", GLFW.GLFW_KEY_S, "category.plane");
+        UP_KEY = new KeyBinding("key.plane_up", GLFW.GLFW_KEY_S, "category.plane");
         ClientRegistry.registerKeyBinding(UP_KEY);
 
-        this.DOWN_KEY = new KeyBinding("key.plane_down", GLFW.GLFW_KEY_W, "category.plane");
+        DOWN_KEY = new KeyBinding("key.plane_down", GLFW.GLFW_KEY_W, "category.plane");
         ClientRegistry.registerKeyBinding(DOWN_KEY);
 
-        this.START_KEY = new KeyBinding("key.plane_start", GLFW.GLFW_KEY_R, "category.plane");
+        START_KEY = new KeyBinding("key.plane_start", GLFW.GLFW_KEY_R, "category.plane");
         ClientRegistry.registerKeyBinding(START_KEY);
 
-        this.BRAKE_KEY = new KeyBinding("key.plane_brake", GLFW.GLFW_KEY_B, "category.plane");
+        BRAKE_KEY = new KeyBinding("key.plane_brake", GLFW.GLFW_KEY_B, "category.plane");
         ClientRegistry.registerKeyBinding(BRAKE_KEY);
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
