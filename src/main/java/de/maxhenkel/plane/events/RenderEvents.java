@@ -53,10 +53,8 @@ public class RenderEvents {
 
         EntityPlane plane = (EntityPlane) e;
 
-        if (player.equals(plane.getDriver())) {
-            if (Config.SHOW_PLANE_INFO.get()) {
-                renderPlaneInfo(plane);
-            }
+        if (Config.SHOW_PLANE_INFO.get()) {
+            renderPlaneInfo(plane);
         }
     }
 
