@@ -96,12 +96,12 @@ public class ItemPlane extends Item {
 
         if (planeData != null) {
             tooltip.add(
-                    new TranslationTextComponent("plane.tooltip.plane.damage",
+                    new TranslationTextComponent("tooltip.plane.damage",
                             new StringTextComponent(String.valueOf(planeData.getFloat("Damage")))
                                     .applyTextStyle(TextFormatting.DARK_GRAY)
                     ).applyTextStyle(TextFormatting.GRAY));
             tooltip.add(
-                    new TranslationTextComponent("plane.tooltip.plane.fuel",
+                    new TranslationTextComponent("tooltip.plane.fuel",
                             new StringTextComponent(String.valueOf(planeData.getInt("Fuel")))
                                     .applyTextStyle(TextFormatting.DARK_GRAY)
                     ).applyTextStyle(TextFormatting.GRAY));

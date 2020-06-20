@@ -15,13 +15,13 @@
   "gui.plane.damage": "Damage",
   "gui.plane.throttle": "Throttle",
 
-  "tooltip.fuel": "Fuel: %s mb",
-  "tooltip.damage": "Damage: %s %%",
-  "tooltip.throttle": "Throttle: %s %%",
-  "tooltip.vertical_speed": "VSpeed: %s km/h",
-  "tooltip.speed": "Speed: %s km/h",
-  "tooltip.height": "Height: %s blocks",
-  "tooltip.relative_height": "RHeight: %s blocks",
+  "tooltip.plane.fuel": "Fuel: %s mb",
+  "tooltip.plane.damage": "Damage: %s %%",
+  "tooltip.plane.throttle": "Throttle: %s %%",
+  "tooltip.plane.vertical_speed": "VSpeed: %s km/h",
+  "tooltip.plane.speed": "Speed: %s km/h",
+  "tooltip.plane.height": "Height: %s blocks",
+  "tooltip.plane.relative_height": "RHeight: %s blocks",
 
   "category.plane": "Plane",
 
@@ -34,9 +34,6 @@
   "key.plane_down": "Down",
   "key.plane_start": "Start",
   "key.plane_brake": "Brake",
-
-  "plane.tooltip.plane.damage": "Damage: %s %%",
-  "plane.tooltip.plane.fuel": "Fuel: %s mb",
 
   "death.attack.hit_plane": "%s was run over by a plane"
 }

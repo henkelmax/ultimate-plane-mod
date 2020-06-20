@@ -37,8 +37,8 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
         }
         EntityPlane plane = (EntityPlane) accessor.getEntity();
 
-        tooltip.add(new TranslationTextComponent("tooltip.fuel", new StringTextComponent(String.valueOf(plane.getFuel())).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("tooltip.damage", new StringTextComponent(String.valueOf(MathTools.round(plane.getPlaneDamage(), 2))).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("tooltip.plane.fuel", new StringTextComponent(String.valueOf(plane.getFuel())).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("tooltip.plane.damage", new StringTextComponent(String.valueOf(MathTools.round(plane.getPlaneDamage(), 2))).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));
     }
 
     @Override

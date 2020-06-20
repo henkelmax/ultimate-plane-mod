@@ -40,15 +40,15 @@ public class GuiPlane extends GuiBase<ContainerPlane> {
         font.drawString(TEXT_ENGINE.getFormattedText(), 7, 35, FONT_COLOR);
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
-            renderTooltip(new TranslationTextComponent("tooltip.fuel", plane.getFuel()).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 96 && mouseX < guiLeft + 168 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
-            renderTooltip(new TranslationTextComponent("tooltip.damage", MathTools.round(plane.getPlaneDamage(), 2)).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(new TranslationTextComponent("tooltip.plane.damage", MathTools.round(plane.getPlaneDamage(), 2)).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 46 && mouseY < guiTop + 56) {
-            renderTooltip(new TranslationTextComponent("tooltip.throttle", Math.round(plane.getEngineSpeed() * 100F)).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)).getFormattedText(), mouseX - guiLeft, mouseY - guiTop);
         }
     }
 
