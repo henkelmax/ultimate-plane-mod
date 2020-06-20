@@ -14,26 +14,16 @@ import net.minecraft.world.World;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
-    private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.FLOAT);
-    private static final DataParameter<Boolean> STARTED = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> START_TIME = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.VARINT);
-    private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> LEFT = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> RIGHT = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> UP = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> DOWN = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> BRAKE = EntityDataManager.createKey(EntityPlaneControlBase.class,
-            DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> STARTED = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> START_TIME = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> LEFT = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RIGHT = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> UP = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DOWN = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> BRAKE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
 
     public static final double MAX_ENGINE_SPEED = 1.5D;
     public static final double ENGINE_ACCELERATION = 0.005D;
@@ -196,7 +186,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 move(MoverType.SELF, getMotion());
             }
         } else {
-            double fallSpeed = 0.08D;
+            double fallSpeed = 0.1D;
             Vec3d lookVec = getLookVec();
             float modifiedPitch = (rotationPitch < 0F ? rotationPitch : Math.min(rotationPitch * 1.5F, 90F)) - 5F;
             float pitch = modifiedPitch * ((float) Math.PI / 180F);
@@ -226,7 +216,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 double addSpeed = 0D;
-                addSpeed = addSpeed + engineSpeed * ENGINE_ACCELERATION * 4F;//0.04D;
+                addSpeed = addSpeed + engineSpeed * ENGINE_ACCELERATION * 4F;
                 if (speed + addSpeed > MAX_ENGINE_SPEED * engineSpeed) {
                     addSpeed = (MAX_ENGINE_SPEED * engineSpeed) - speed;
                 }
@@ -240,7 +230,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
                 Vec3d addVec = getLookVec().normalize().scale(addSpeed);
 
-                motionVector = motionVector.add(new Vec3d(addVec.x, 0D/*Math.min(addVec.y, 0.0001D)*/, addVec.z));
+                motionVector = motionVector.add(new Vec3d(addVec.x, 0D, addVec.z));
             }
 
             setMotion(motionVector);
