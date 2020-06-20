@@ -18,10 +18,13 @@
   "tooltip.plane.fuel": "Fuel: %s mb",
   "tooltip.plane.damage": "Damage: %s %%",
   "tooltip.plane.throttle": "Throttle: %s %%",
-  "tooltip.plane.vertical_speed": "VSpeed: %s km/h",
-  "tooltip.plane.speed": "Speed: %s km/h",
+  "tooltip.plane.vertical_speed": "VSpeed: %s",
+  "tooltip.plane.speed": "Speed: %s",
   "tooltip.plane.height": "Height: %s blocks",
   "tooltip.plane.relative_height": "RHeight: %s blocks",
+
+  "plane.speedtype.kmh": "%s km/h",
+  "plane.speedtype.bps": "%s b/s",
 
   "category.plane": "Plane",
 

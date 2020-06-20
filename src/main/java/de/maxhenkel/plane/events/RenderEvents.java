@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.events;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.plane.Config;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.MathTools;
@@ -60,6 +61,8 @@ public class RenderEvents {
     }
 
     public void renderPlaneInfo(EntityPlane plane) {
+        RenderSystem.pushMatrix();
+
         mc.getTextureManager().bindTexture(PLANE_INFO_TEXTURE);
 
         int texWidth = 110;
@@ -67,6 +70,11 @@ public class RenderEvents {
 
         int height = mc.getMainWindow().getScaledHeight();
         int width = mc.getMainWindow().getScaledWidth();
+
+        double scale = Config.PLANE_INFO_SCALE.get();
+        RenderSystem.scaled(scale, scale, 1D);
+        RenderSystem.translated(-width, -height, 0F);
+        RenderSystem.translated(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0F);
 
         int padding = 3;
         int yStart = height - texHeight - padding;
@@ -78,13 +86,15 @@ public class RenderEvents {
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.FONT_HEIGHT + 2) * integer;
 
-        font.drawString(new TranslationTextComponent("tooltip.plane.speed", Math.round((plane.getMotion().length() * 20D * 60D * 60D) / 1000D)).getFormattedText(), xStart + 7, heightFunc.apply(0), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.vertical_speed", Math.round((plane.getMotion().getY() * 20D * 60D * 60D) / 1000D)).getFormattedText(), xStart + 7, heightFunc.apply(1), 0);
+        font.drawString(new TranslationTextComponent("tooltip.plane.speed", Config.PLANE_INFO_SPEED_TYPE.get().getTextComponent(plane.getMotion().length())).getFormattedText(), xStart + 7, heightFunc.apply(0), 0);
+        font.drawString(new TranslationTextComponent("tooltip.plane.vertical_speed", Config.PLANE_INFO_SPEED_TYPE.get().getTextComponent(plane.getMotion().getY())).getFormattedText(), xStart + 7, heightFunc.apply(1), 0);
         font.drawString(new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)).getFormattedText(), xStart + 7, heightFunc.apply(2), 0);
         font.drawString(new TranslationTextComponent("tooltip.plane.height", Math.round(plane.getPosY())).getFormattedText(), xStart + 7, heightFunc.apply(3), 0);
         font.drawString(new TranslationTextComponent("tooltip.plane.relative_height", Math.round(cachedRelativeHeight)).getFormattedText(), xStart + 7, heightFunc.apply(4), 0);
         font.drawString(new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()).getFormattedText(), xStart + 7, heightFunc.apply(5), 0);
         font.drawString(new TranslationTextComponent("tooltip.plane.damage", MathTools.round(plane.getPlaneDamage(), 2)).getFormattedText(), xStart + 7, heightFunc.apply(6), 0);
+
+        RenderSystem.popMatrix();
     }
 
     private double cachedRelativeHeight = 0D;
