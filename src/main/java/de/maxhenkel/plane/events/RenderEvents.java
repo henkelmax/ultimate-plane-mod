@@ -1,14 +1,18 @@
 package de.maxhenkel.plane.events;
 
+import de.maxhenkel.plane.Config;
+import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.MathTools;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -18,9 +22,12 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
+import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEvents {
+
+    private static final ResourceLocation PLANE_INFO_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/plane_info.png");
 
     private Minecraft mc;
     private EntityPlane lastVehicle;
@@ -46,39 +53,54 @@ public class RenderEvents {
         EntityPlane plane = (EntityPlane) e;
 
         if (player.equals(plane.getDriver())) {
-            evt.setCanceled(true);
-            renderFuelBar(plane.getEngineSpeed());
-            renderSpeed((plane.getMotion().mul(1D, 0D, 1D).length() * 20D * 60D * 60D) / 1000D);
-        }
-
-    }
-
-    public void renderFuelBar(double percent) {
-        percent = MathHelper.clamp(percent, 0F, 1F);
-        int x = mc.getMainWindow().getScaledWidth() / 2 - 91;
-
-        mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-
-        int k = mc.getMainWindow().getScaledHeight() - 32 + 3;
-        mc.ingameGUI.blit(x, k, 0, 64, 182, 5);
-
-        int j = (int) (percent * 182F);
-
-        if (j > 0) {
-            mc.ingameGUI.blit(x, k, 0, 69, j, 5);
+            if (Config.SHOW_PLANE_INFO.get()) {
+                renderPlaneInfo(plane);
+            }
         }
     }
 
-    public void renderSpeed(double speed) {
-        String s = String.valueOf(MathTools.round(Math.abs(speed), 2));
-        int i1 = (mc.getMainWindow().getScaledWidth() - mc.ingameGUI.getFontRenderer().getStringWidth(s)) / 2;
-        int j1 = mc.getMainWindow().getScaledHeight() - 31 - 4;
-        mc.ingameGUI.getFontRenderer().drawString(s, i1 + 1, j1, 0);
-        mc.ingameGUI.getFontRenderer().drawString(s, i1 - 1, j1, 0);
-        mc.ingameGUI.getFontRenderer().drawString(s, i1, j1 + 1, 0);
-        mc.ingameGUI.getFontRenderer().drawString(s, i1, j1 - 1, 0);
-        mc.ingameGUI.getFontRenderer().drawString(s, i1, j1, 8453920);
+    public void renderPlaneInfo(EntityPlane plane) {
+        mc.getTextureManager().bindTexture(PLANE_INFO_TEXTURE);
 
+        int texWidth = 110;
+        int texHeight = 90;
+
+        int height = mc.getMainWindow().getScaledHeight();
+        int width = mc.getMainWindow().getScaledWidth();
+
+        int padding = 3;
+        int yStart = height - texHeight - padding;
+        int xStart = width - texWidth - padding;
+
+        mc.ingameGUI.blit(xStart, yStart, 0, 0, texWidth, texHeight);
+
+        FontRenderer font = mc.ingameGUI.getFontRenderer();
+
+        Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.FONT_HEIGHT + 2) * integer;
+
+        font.drawString(new TranslationTextComponent("tooltip.speed", Math.round((plane.getMotion().length() * 20D * 60D * 60D) / 1000D)).getFormattedText(), xStart + 7, heightFunc.apply(0), 0);
+        font.drawString(new TranslationTextComponent("tooltip.vertical_speed", Math.round((plane.getMotion().getY() * 20D * 60D * 60D) / 1000D)).getFormattedText(), xStart + 7, heightFunc.apply(1), 0);
+        font.drawString(new TranslationTextComponent("tooltip.throttle", Math.round(plane.getEngineSpeed() * 100F)).getFormattedText(), xStart + 7, heightFunc.apply(2), 0);
+        font.drawString(new TranslationTextComponent("tooltip.height", Math.round(plane.getPosY())).getFormattedText(), xStart + 7, heightFunc.apply(3), 0);
+        font.drawString(new TranslationTextComponent("tooltip.relative_height", Math.round(cachedRelativeHeight)).getFormattedText(), xStart + 7, heightFunc.apply(4), 0);
+        font.drawString(new TranslationTextComponent("tooltip.fuel", plane.getFuel()).getFormattedText(), xStart + 7, heightFunc.apply(5), 0);
+        font.drawString(new TranslationTextComponent("tooltip.damage", MathTools.round(plane.getPlaneDamage(), 2)).getFormattedText(), xStart + 7, heightFunc.apply(6), 0);
+    }
+
+    private double cachedRelativeHeight = 0D;
+
+    private double getRelativeHeight(EntityPlane plane) {
+        int highestBlock = (int) plane.getPosY();
+        BlockPos.Mutable p = new BlockPos.Mutable(plane.getPosX(), plane.getPosY(), plane.getPosZ());
+        for (int y = highestBlock; y >= 0; y--) {
+            p.setY(y);
+            if (plane.world.getBlockState(p).isSolid()) {
+                highestBlock = y;
+                break;
+            }
+        }
+
+        return plane.getPosY() - (double) (highestBlock + 1);
     }
 
     @SubscribeEvent
@@ -120,6 +142,10 @@ public class RenderEvents {
         }
 
         EntityPlane vehicle = getPlane();
+
+        if (vehicle != null && evt.player.equals(vehicle.getDriver())) {
+            cachedRelativeHeight = getRelativeHeight(vehicle);
+        }
 
         if (vehicle != null && lastVehicle == null) {
             mc.gameSettings.thirdPersonView = 1;

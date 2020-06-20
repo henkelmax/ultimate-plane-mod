@@ -17,6 +17,8 @@ public class Config {
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> VALID_FUELS;
     public static List<Fluid> VALID_FUEL_LIST = new ArrayList<>();
 
+    public static ForgeConfigSpec.BooleanValue SHOW_PLANE_INFO;
+
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
 
@@ -46,7 +48,7 @@ public class Config {
 
     public static class ClientConfig {
         public ClientConfig(ForgeConfigSpec.Builder builder) {
-
+            SHOW_PLANE_INFO = builder.define("show_plane_info", true);
         }
     }
 

@@ -8,6 +8,7 @@ import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.GuiPlane;
+import de.maxhenkel.plane.integration.waila.PluginPlane;
 import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.loottable.CopyPlaneData;
 import de.maxhenkel.plane.net.MessageControlPlane;
@@ -149,6 +150,10 @@ public class Main {
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
+        try {
+            Class.forName("mcp.mobius.waila.api.event.WailaRenderEvent");
+            MinecraftForge.EVENT_BUS.register(new PluginPlane());
+        } catch (ClassNotFoundException e) {}
 
         RenderingRegistry.registerEntityRenderingHandler(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
     }
