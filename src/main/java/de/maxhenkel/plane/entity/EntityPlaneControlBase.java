@@ -229,7 +229,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 motionVector = motionVector.add(new Vec3d(addVec.x, 0D, addVec.z));
             }
 
-            if (motionVector.mul(1D, 0D, 1D).length() / 4D < -motionVector.y) {
+            if (isStalling(motionVector)) {
                 motionVector = motionVector.mul(new Vec3d(0.975D, 1.025D, 0.975D));
             }
 
@@ -260,6 +260,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 System.out.println("dmg vert: " + damage);
             }
         }
+    }
+
+    protected boolean isStalling(Vec3d motionVector) {
+        return motionVector.mul(1D, 0D, 1D).length() / 4D < -motionVector.y;
     }
 
     public abstract double getFallSpeed();

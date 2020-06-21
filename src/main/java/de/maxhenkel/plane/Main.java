@@ -1,8 +1,10 @@
 package de.maxhenkel.plane;
 
+import de.maxhenkel.plane.entity.EntityBushPlane;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
 import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.CapabilityEvents;
@@ -62,6 +64,7 @@ public class Main {
 
     public static EntityType<EntityPlane> PLANE_ENTITY_TYPE;
     public static EntityType<EntityCargoPlane> CARGO_PLANE_ENTITY_TYPE;
+    public static EntityType<EntityBushPlane> BUSH_PLANE_ENTITY_TYPE;
 
     public Main() {
 
@@ -162,16 +165,14 @@ public class Main {
 
         RenderingRegistry.registerEntityRenderingHandler(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
         RenderingRegistry.registerEntityRenderingHandler(CARGO_PLANE_ENTITY_TYPE, manager -> new CargoPlaneModel(manager));
+        RenderingRegistry.registerEntityRenderingHandler(BUSH_PLANE_ENTITY_TYPE, manager -> new BushPlaneModel(manager));
     }
 
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                ModItems.PLANES
-        );
-        event.getRegistry().registerAll(
-                ModItems.CARGO_PLANES
-        );
+        event.getRegistry().registerAll(ModItems.PLANES);
+        event.getRegistry().registerAll(ModItems.CARGO_PLANES);
+        event.getRegistry().registerAll(ModItems.BUSH_PLANES);
         event.getRegistry().registerAll(
                 ModItems.WRENCH,
                 ModItems.PLANE_WHEEL,
@@ -214,6 +215,16 @@ public class Main {
                 .build(Main.MODID + ":cargo_plane");
         CARGO_PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "cargo_plane"));
         event.getRegistry().register(CARGO_PLANE_ENTITY_TYPE);
+
+        BUSH_PLANE_ENTITY_TYPE = EntityType.Builder.<EntityBushPlane>create(EntityBushPlane::new, EntityClassification.MISC)
+                .setTrackingRange(256)
+                .setUpdateInterval(1)
+                .setShouldReceiveVelocityUpdates(true)
+                .size(3.5F, 2F)
+                .setCustomClientFactory((spawnEntity, world) -> new EntityBushPlane(world))
+                .build(Main.MODID + ":bush_plane");
+        BUSH_PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "bush_plane"));
+        event.getRegistry().register(BUSH_PLANE_ENTITY_TYPE);
     }
 
     public static ContainerType<ContainerPlane> PLANE_CONTAINER_TYPE;

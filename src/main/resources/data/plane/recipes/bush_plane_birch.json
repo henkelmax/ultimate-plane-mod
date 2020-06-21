@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "EPS",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:birch_slab"
+    },
+    "P": {
+      "item": "minecraft:birch_planks"
+    },
+    "E": {
+      "item": "plane:plane_engine"
+    },
+    "W": {
+      "item": "plane:plane_wheel"
+    }
+  },
+  "result": {
+    "item": "plane:bush_plane_birch",
+    "count": 1
+  }
+}

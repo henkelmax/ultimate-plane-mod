@@ -28,8 +28,7 @@ import net.minecraft.world.storage.loot.LootTable;
 
 public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityPlaneDamageBase.class,
-            DataSerializers.FLOAT);
+    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityPlaneDamageBase.class, DataSerializers.FLOAT);
 
     public EntityPlaneDamageBase(EntityType type, World worldIn) {
         super(type, worldIn);
@@ -55,10 +54,10 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return;
         }
 
-        Vec3d lookVec = getLookVec().normalize();
+        Vec3d lookVec = getLookVec().normalize().scale(1.5D);
         double offX = lookVec.x;
         double offY = lookVec.y;
-        double offZ = lookVec.z + 0.5D;
+        double offZ = lookVec.z;
 
         float damage = getPlaneDamage();
 

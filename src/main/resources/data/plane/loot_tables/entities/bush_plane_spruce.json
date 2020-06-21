@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "name": "plane",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "plane:bush_plane_spruce",
+          "functions": [
+            {
+              "function": "plane:copy_plane_data"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

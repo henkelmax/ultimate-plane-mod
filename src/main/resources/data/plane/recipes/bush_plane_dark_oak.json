@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "EPS",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:dark_oak_slab"
+    },
+    "P": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "E": {
+      "item": "plane:plane_engine"
+    },
+    "W": {
+      "item": "plane:plane_wheel"
+    }
+  },
+  "result": {
+    "item": "plane:bush_plane_dark_oak",
+    "count": 1
+  }
+}
