@@ -125,7 +125,7 @@ repositories {
     }
     maven {
         name = "Hwyla"
-        url "https://maven.tehnut.info"
+        url "http://tehnut.info/maven"
     }
 }
 

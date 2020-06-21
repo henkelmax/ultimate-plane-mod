@@ -27,7 +27,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     public static final double MAX_ENGINE_SPEED = 1.5D;
     public static final double ENGINE_ACCELERATION = 0.005D;
-    public static final double MIN_TAKEOFF_SPEED = 1.3D;
     public static final double BRAKE_POWER = 0.012D;
 
     public EntityPlaneControlBase(EntityType type, World worldIn) {
@@ -125,6 +124,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         float groundPitchTolerance = 7F;
 
         if (isCollidedVertical()) {
+            // Prevent leaning forwards when on ground
             if (rotationPitch > 0) {
                 rotationPitch -= 10F;
                 if (rotationPitch < 0) {
@@ -132,7 +132,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 }
             }
 
-            if (rotationPitch < -groundPitchTolerance && speed < MIN_TAKEOFF_SPEED) {
+            if (rotationPitch < -groundPitchTolerance) {
                 rotationPitch += 10F;
                 if (rotationPitch > -groundPitchTolerance) {
                     rotationPitch = -groundPitchTolerance;
@@ -177,10 +177,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
 
             Vec3d motion = getLookVec().normalize().scale(speed).mul(1D, 0D, 1D);
-            if (speed < MIN_TAKEOFF_SPEED) {
-                motion.add(0D, -0.1D, 0D);
-            }
-
             setMotion(motion);
             if (speed > 0D) {
                 move(MoverType.SELF, getMotion());
@@ -194,20 +190,20 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
             double lookLength = lookVec.length();
             float cosPitch = MathHelper.cos(pitch);
-            cosPitch = (float) ((double) cosPitch * (double) cosPitch * Math.min(1.0D, lookLength / 0.4D));
-            motionVector = getMotion().add(0.0D, fallSpeed * (-1.0D + (double) cosPitch * 0.75D), 0.0D);
-            if (motionVector.y < 0.0D && horizontalLook > 0.0D) {
+            cosPitch = (float) ((double) cosPitch * (double) cosPitch * Math.min(1D, lookLength / 0.4D));
+            motionVector = getMotion().add(0D, fallSpeed * (-1D + (double) cosPitch * 0.75D), 0D);
+            if (motionVector.y < 0D && horizontalLook > 0D) {
                 double down = motionVector.y * -0.1D * (double) cosPitch;
                 motionVector = motionVector.add(lookVec.x * down / horizontalLook, down, lookVec.z * down / horizontalLook);
             }
 
-            if (pitch < 0.0F && horizontalLook > 0.0D) {
+            if (pitch < 0.0F && horizontalLook > 0D) {
                 double d13 = horizontalMotion * (double) (-MathHelper.sin(pitch)) * 0.04D;
                 motionVector = motionVector.add(-lookVec.x * d13 / horizontalLook, d13 * 3.2D, -lookVec.z * d13 / horizontalLook);
             }
 
-            if (horizontalLook > 0.0D) {
-                motionVector = motionVector.add((lookVec.x / horizontalLook * horizontalMotion - motionVector.x) * 0.1D, 0.0D, (lookVec.z / horizontalLook * horizontalMotion - motionVector.z) * 0.1D);
+            if (horizontalLook > 0D) {
+                motionVector = motionVector.add((lookVec.x / horizontalLook * horizontalMotion - motionVector.x) * 0.1D, 0D, (lookVec.z / horizontalLook * horizontalMotion - motionVector.z) * 0.1D);
             }
 
             motionVector = motionVector.mul(0.99D, 0.98D, 0.99D);
@@ -231,6 +227,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 Vec3d addVec = getLookVec().normalize().scale(addSpeed);
 
                 motionVector = motionVector.add(new Vec3d(addVec.x, 0D, addVec.z));
+            }
+
+            if (motionVector.mul(1D, 0D, 1D).length() / 4D < -motionVector.y) {
+                motionVector = motionVector.mul(new Vec3d(0.975D, 1.025D, 0.975D));
             }
 
             setMotion(motionVector);
