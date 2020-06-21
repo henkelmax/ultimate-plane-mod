@@ -2,7 +2,7 @@ package de.maxhenkel.plane.gui;
 
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.MathTools;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +17,7 @@ public class GuiPlane extends GuiBase<ContainerPlane> {
     private static final ITextComponent TEXT_ENGINE = new TranslationTextComponent("gui.plane.throttle");
 
     private PlayerInventory playerInv;
-    private EntityPlane plane;
+    private EntityPlaneSoundBase plane;
 
     public GuiPlane(ContainerPlane containerCar, PlayerInventory playerInv, ITextComponent title) {
         super(CAR_GUI_TEXTURE, containerCar, playerInv, title);
@@ -56,7 +56,7 @@ public class GuiPlane extends GuiBase<ContainerPlane> {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        drawFuel((float) plane.getFuel() / (float) EntityPlane.MAX_FUEL);
+        drawFuel((float) plane.getFuel() / (float) plane.getMaxFuel());
         drawDamage((100F - Math.min(plane.getPlaneDamage(), 100F)) / 100F);
         drawThrottle(plane.getEngineSpeed());
     }

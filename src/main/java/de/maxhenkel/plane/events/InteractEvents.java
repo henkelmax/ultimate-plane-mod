@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.events;
 
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneDamageBase;
 import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,14 +23,14 @@ public class InteractEvents {
             }
         }
 
-        EntityPlane plane = null;
+        EntityPlaneDamageBase plane = null;
 
-        if (!(evt.getTarget() instanceof EntityPlane)) {
+        if (!(evt.getTarget() instanceof EntityPlaneDamageBase)) {
             return;
         }
 
-        if (evt.getTarget() instanceof EntityPlane) {
-            plane = (EntityPlane) evt.getTarget();
+        if (evt.getTarget() instanceof EntityPlaneDamageBase) {
+            plane = (EntityPlaneDamageBase) evt.getTarget();
         }
 
         if (plane == null) {

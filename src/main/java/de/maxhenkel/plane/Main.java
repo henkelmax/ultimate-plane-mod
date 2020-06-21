@@ -1,6 +1,9 @@
 package de.maxhenkel.plane;
 
+import de.maxhenkel.plane.entity.EntityCargoPlane;
 import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
 import de.maxhenkel.plane.events.CapabilityEvents;
 import de.maxhenkel.plane.events.InteractEvents;
@@ -57,7 +60,8 @@ public class Main {
 
     public static SimpleChannel SIMPLE_CHANNEL;
 
-    public static EntityType PLANE_ENTITY_TYPE;
+    public static EntityType<EntityPlane> PLANE_ENTITY_TYPE;
+    public static EntityType<EntityCargoPlane> CARGO_PLANE_ENTITY_TYPE;
 
     public Main() {
 
@@ -153,15 +157,20 @@ public class Main {
         try {
             Class.forName("mcp.mobius.waila.api.event.WailaRenderEvent");
             MinecraftForge.EVENT_BUS.register(new PluginPlane());
-        } catch (ClassNotFoundException e) {}
+        } catch (ClassNotFoundException e) {
+        }
 
         RenderingRegistry.registerEntityRenderingHandler(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
+        RenderingRegistry.registerEntityRenderingHandler(CARGO_PLANE_ENTITY_TYPE, manager -> new CargoPlaneModel(manager));
     }
 
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 ModItems.PLANES
+        );
+        event.getRegistry().registerAll(
+                ModItems.CARGO_PLANES
         );
         event.getRegistry().registerAll(
                 ModItems.WRENCH,
@@ -195,6 +204,16 @@ public class Main {
                 .build(Main.MODID + ":plane");
         PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
         event.getRegistry().register(PLANE_ENTITY_TYPE);
+
+        CARGO_PLANE_ENTITY_TYPE = EntityType.Builder.<EntityCargoPlane>create(EntityCargoPlane::new, EntityClassification.MISC)
+                .setTrackingRange(256)
+                .setUpdateInterval(1)
+                .setShouldReceiveVelocityUpdates(true)
+                .size(3.5F, 2F)
+                .setCustomClientFactory((spawnEntity, world) -> new EntityCargoPlane(world))
+                .build(Main.MODID + ":cargo_plane");
+        CARGO_PLANE_ENTITY_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "cargo_plane"));
+        event.getRegistry().register(CARGO_PLANE_ENTITY_TYPE);
     }
 
     public static ContainerType<ContainerPlane> PLANE_CONTAINER_TYPE;
@@ -202,7 +221,7 @@ public class Main {
     @SubscribeEvent
     public void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
         PLANE_CONTAINER_TYPE = new ContainerType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
-            EntityPlane plane = getPlaneByUUID(inv.player, data.readUniqueId());
+            EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUniqueId());
             if (plane == null) {
                 return null;
             }
@@ -213,9 +232,9 @@ public class Main {
     }
 
     @Nullable
-    public static EntityPlane getPlaneByUUID(PlayerEntity player, UUID uuid) {
+    public static EntityPlaneSoundBase getPlaneByUUID(PlayerEntity player, UUID uuid) {
         double distance = 10D;
-        return player.world.getEntitiesWithinAABB(EntityPlane.class, new AxisAlignedBB(player.getPosX() - distance, player.getPosY() - distance, player.getPosZ() - distance, player.getPosX() + distance, player.getPosY() + distance, player.getPosZ() + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
+        return player.world.getEntitiesWithinAABB(EntityPlaneSoundBase.class, new AxisAlignedBB(player.getPosX() - distance, player.getPosY() - distance, player.getPosZ() - distance, player.getPosX() + distance, player.getPosY() + distance, player.getPosZ() + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
     }
 
     @SubscribeEvent

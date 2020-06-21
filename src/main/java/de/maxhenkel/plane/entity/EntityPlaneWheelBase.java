@@ -3,7 +3,7 @@ package de.maxhenkel.plane.entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
-public class EntityPlaneWheelBase extends EntityPlaneInventoryBase {
+public abstract class EntityPlaneWheelBase extends EntityPlaneInventoryBase {
 
     private int ticksSinceLiftOff;
     private int ticksSinceEngineOff;

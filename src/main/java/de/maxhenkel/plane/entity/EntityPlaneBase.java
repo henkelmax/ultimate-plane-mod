@@ -43,11 +43,12 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
 
     }
 
+    public abstract float getPlayerScaleFactor();
+
+    @Override
     public int getPassengerSize() {
-        return 3;
+        return getPlayerOffsets().length;
     }
 
-    public Vec3d[] getPlayerOffsets() {
-        return new Vec3d[]{new Vec3d(0D, 0D, 1D), new Vec3d(0D, 0D, 0.5D), new Vec3d(0D, 0D, 0D)};
-    }
+    public abstract Vec3d[] getPlayerOffsets();
 }

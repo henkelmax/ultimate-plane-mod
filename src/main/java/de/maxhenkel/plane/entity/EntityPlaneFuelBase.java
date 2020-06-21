@@ -17,17 +17,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
+public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
     private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.VARINT);
     private static final DataParameter<String> FUEL_TYPE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.STRING);
 
-    private static final float MAX_FUEL_USAGE = 5F;
-    public static final int MAX_FUEL = 5000;
-
     public EntityPlaneFuelBase(EntityType type, World worldIn) {
         super(type, worldIn);
     }
+
+    public abstract float getMaxFuelUsage();
+
+    public abstract int getMaxFuel();
 
     @Override
     public void tick() {
@@ -41,7 +42,7 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
         }
 
         if (world.getGameTime() % 20L == 0L) {
-            int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * MAX_FUEL_USAGE), 1);
+            int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * getMaxFuelUsage()), 1);
             setFuel(Math.max(getFuel() - consumeAmount, 0));
         }
     }
@@ -62,14 +63,14 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setFuel(compound.getInt("Fuel"));
         setFuelType(compound.getString("FuelType"));
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();
@@ -119,7 +120,7 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
 
     @Override
     public int getTankCapacity(int tank) {
-        return MAX_FUEL;
+        return getMaxFuel();
     }
 
     @Override
@@ -139,12 +140,12 @@ public class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFlui
             return 0;
         }
 
-        int amount = Math.min(resource.getAmount(), MAX_FUEL - getFuel());
+        int amount = Math.min(resource.getAmount(), getMaxFuel() - getFuel());
 
         if (action.execute()) {
             int i = getFuel() + amount;
-            if (i > MAX_FUEL) {
-                i = MAX_FUEL;
+            if (i > getMaxFuel()) {
+                i = getMaxFuel();
             }
             setFuel(i);
             setFuelType(resource.getFluid());

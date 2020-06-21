@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.sound;
 
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -9,9 +9,9 @@ import net.minecraft.util.SoundEvent;
 
 public abstract class SoundLoopPlane extends TickableSound {
 
-    protected EntityPlane plane;
+    protected EntityPlaneSoundBase plane;
 
-    public SoundLoopPlane(EntityPlane plane, SoundEvent event, SoundCategory category) {
+    public SoundLoopPlane(EntityPlaneSoundBase plane, SoundEvent event, SoundCategory category) {
         super(event, category);
         this.plane = plane;
         this.repeat = true;

@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
-public abstract class OBJRenderer<T extends EntityPlane> extends EntityRenderer<T> {
+public abstract class OBJRenderer<T extends EntityPlaneSoundBase> extends EntityRenderer<T> {
 
     protected OBJRenderer(EntityRendererManager renderManager) {
         super(renderManager);

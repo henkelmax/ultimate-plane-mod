@@ -1,7 +1,6 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.DamageSourcePlane;
-import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -27,7 +26,7 @@ import net.minecraft.world.storage.loot.LootParameterSets;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraft.world.storage.loot.LootTable;
 
-public class EntityPlaneDamageBase extends EntityPlaneBase {
+public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityPlaneDamageBase.class,
             DataSerializers.FLOAT);
@@ -52,7 +51,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
             return;
         }
 
-        if (!((EntityPlane) this).isStarted()) {
+        if (!((EntityPlaneSoundBase) this).isStarted()) {
             return;
         }
 
@@ -133,8 +132,7 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
         InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
         inventory.clear();
 
-        ResourceLocation resourcelocation = new ResourceLocation(Main.MODID, "entities/plane_" + ((EntityPlane) this).getPlaneType().getTypeName());
-        LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(resourcelocation);
+        LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(getLootTable());
 
         LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
                 .withParameter(LootParameters.POSITION, getPosition())
@@ -146,6 +144,8 @@ public class EntityPlaneDamageBase extends EntityPlaneBase {
 
         remove();
     }
+
+    public abstract ResourceLocation getLootTable();
 
     @Override
     protected void registerData() {

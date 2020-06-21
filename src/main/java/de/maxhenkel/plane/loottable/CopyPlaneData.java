@@ -3,7 +3,7 @@ package de.maxhenkel.plane.loottable;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,11 +21,11 @@ public class CopyPlaneData extends LootFunction {
     @Override
     public ItemStack doApply(ItemStack stack, LootContext context) {
         Entity entity = context.get(LootParameters.THIS_ENTITY);
-        if (!(entity instanceof EntityPlane)) {
+        if (!(entity instanceof EntityPlaneSoundBase)) {
             return stack;
         }
 
-        EntityPlane plane = (EntityPlane) entity;
+        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) entity;
 
         CompoundNBT planeData = new CompoundNBT();
         plane.writeAdditional(planeData);

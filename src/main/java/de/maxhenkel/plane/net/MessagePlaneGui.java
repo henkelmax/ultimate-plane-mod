@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.net;
 
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -11,13 +11,15 @@ import java.util.UUID;
 public class MessagePlaneGui implements Message<MessagePlaneGui> {
 
     private UUID uuid;
+    private boolean outside;
 
     public MessagePlaneGui() {
         this.uuid = new UUID(0, 0);
     }
 
-    public MessagePlaneGui(PlayerEntity player) {
+    public MessagePlaneGui(PlayerEntity player, boolean outside) {
         this.uuid = player.getUniqueID();
+        this.outside = outside;
     }
 
 
@@ -28,8 +30,8 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
         }
 
         Entity e = context.getSender().getRidingEntity();
-        if (e instanceof EntityPlane) {
-            ((EntityPlane) e).openGUI(context.getSender());
+        if (e instanceof EntityPlaneSoundBase) {
+            ((EntityPlaneSoundBase) e).openGUI(context.getSender(), outside);
         }
     }
 
@@ -41,11 +43,13 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     @Override
     public MessagePlaneGui fromBytes(PacketBuffer buf) {
         this.uuid = buf.readUniqueId();
+        this.outside = buf.readBoolean();
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
         buf.writeUniqueId(uuid);
+        buf.writeBoolean(outside);
     }
 }

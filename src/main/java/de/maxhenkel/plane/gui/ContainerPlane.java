@@ -1,15 +1,15 @@
 package de.maxhenkel.plane.gui;
 
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 
 public class ContainerPlane extends ContainerBase {
 
-    protected EntityPlane plane;
+    protected EntityPlaneSoundBase plane;
 
-    public ContainerPlane(int id, EntityPlane plane, PlayerInventory playerInv) {
+    public ContainerPlane(int id, EntityPlaneSoundBase plane, PlayerInventory playerInv) {
         super(Main.PLANE_CONTAINER_TYPE, id, plane.getInventory(), playerInv);
         this.plane = plane;
 
@@ -24,7 +24,7 @@ public class ContainerPlane extends ContainerBase {
         addInvSlots();
     }
 
-    public EntityPlane getPlane() {
+    public EntityPlaneSoundBase getPlane() {
         return plane;
     }
 

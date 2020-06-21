@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.net;
 
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -34,11 +34,11 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         Entity e = context.getSender().getRidingEntity();
-        if (!(e instanceof EntityPlane)) {
+        if (!(e instanceof EntityPlaneControlBase)) {
             return;
         }
 
-        EntityPlane plane = (EntityPlane) e;
+        EntityPlaneControlBase plane = (EntityPlaneControlBase) e;
 
         plane.updateControls(up, down, thrustPos, thrustNeg, left, right, braking, starting);
     }

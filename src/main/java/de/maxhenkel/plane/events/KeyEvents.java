@@ -1,8 +1,8 @@
 package de.maxhenkel.plane.events;
 
 import de.maxhenkel.plane.Config;
-import de.maxhenkel.plane.entity.EntityPlane;
 import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,11 +31,11 @@ public class KeyEvents {
 
         Entity riding = player.getRidingEntity();
 
-        if (!(riding instanceof EntityPlane)) {
+        if (!(riding instanceof EntityPlaneSoundBase)) {
             return;
         }
 
-        EntityPlane plane = (EntityPlane) riding;
+        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) riding;
 
         if (player.equals(plane.getDriver())) {
             plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BRAKE_KEY.isKeyDown(), Main.START_KEY.isKeyDown());
@@ -46,7 +46,7 @@ public class KeyEvents {
                 Config.SHOW_PLANE_INFO.set(!Config.SHOW_PLANE_INFO.get());
                 Config.SHOW_PLANE_INFO.save();
             } else {
-                plane.openGUI(player);
+                plane.openGUI(player, false);
             }
         }
     }

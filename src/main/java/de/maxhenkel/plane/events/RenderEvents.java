@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.plane.Config;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.MathTools;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Vector3f;
@@ -31,7 +31,7 @@ public class RenderEvents {
     private static final ResourceLocation PLANE_INFO_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/plane_info.png");
 
     private Minecraft mc;
-    private EntityPlane lastVehicle;
+    private EntityPlaneSoundBase lastVehicle;
 
     public RenderEvents() {
         mc = Minecraft.getInstance();
@@ -47,18 +47,18 @@ public class RenderEvents {
 
         Entity e = player.getRidingEntity();
 
-        if (!(e instanceof EntityPlane)) {
+        if (!(e instanceof EntityPlaneSoundBase)) {
             return;
         }
 
-        EntityPlane plane = (EntityPlane) e;
+        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) e;
 
         if (Config.SHOW_PLANE_INFO.get()) {
             renderPlaneInfo(plane);
         }
     }
 
-    public void renderPlaneInfo(EntityPlane plane) {
+    public void renderPlaneInfo(EntityPlaneSoundBase plane) {
         RenderSystem.pushMatrix();
 
         mc.getTextureManager().bindTexture(PLANE_INFO_TEXTURE);
@@ -97,7 +97,7 @@ public class RenderEvents {
 
     private double cachedRelativeHeight = 0D;
 
-    private double getRelativeHeight(EntityPlane plane) {
+    private double getRelativeHeight(EntityPlaneSoundBase plane) {
         int highestBlock = (int) plane.getPosY();
         BlockPos.Mutable p = new BlockPos.Mutable(plane.getPosX(), plane.getPosY(), plane.getPosZ());
         for (int y = highestBlock; y >= 0; y--) {
@@ -114,8 +114,8 @@ public class RenderEvents {
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        if (player.getRidingEntity() instanceof EntityPlane) {
-            EntityPlane plane = (EntityPlane) event.getPlayer().getRidingEntity();
+        if (player.getRidingEntity() instanceof EntityPlaneSoundBase) {
+            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getRidingEntity();
             event.getMatrixStack().push();
 
             event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick())));
@@ -129,8 +129,8 @@ public class RenderEvents {
                 event.getMatrixStack().translate(0F, offset.y, 0F);
             }
 
-            event.getMatrixStack().scale(EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR, EntityPlane.SCALE_FACTOR);
-            event.getMatrixStack().translate(0F, (player.getHeight() - (player.getHeight() * EntityPlane.SCALE_FACTOR)) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+            event.getMatrixStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
+            event.getMatrixStack().translate(0F, (player.getHeight() - (player.getHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
             event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick()));
         }
@@ -138,7 +138,7 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getPlayer().getRidingEntity() instanceof EntityPlane) {
+        if (event.getPlayer().getRidingEntity() instanceof EntityPlaneSoundBase) {
             event.getMatrixStack().pop();
         }
     }
@@ -149,7 +149,7 @@ public class RenderEvents {
             return;
         }
 
-        EntityPlane vehicle = getPlane();
+        EntityPlaneSoundBase vehicle = getPlane();
 
         if (vehicle != null && evt.player.equals(vehicle.getDriver())) {
             cachedRelativeHeight = getRelativeHeight(vehicle);
@@ -163,9 +163,9 @@ public class RenderEvents {
         lastVehicle = vehicle;
     }
 
-    private EntityPlane getPlane() {
-        if (mc.player.getRidingEntity() instanceof EntityPlane) {
-            return (EntityPlane) mc.player.getRidingEntity();
+    private EntityPlaneSoundBase getPlane() {
+        if (mc.player.getRidingEntity() instanceof EntityPlaneSoundBase) {
+            return (EntityPlaneSoundBase) mc.player.getRidingEntity();
         }
         return null;
     }

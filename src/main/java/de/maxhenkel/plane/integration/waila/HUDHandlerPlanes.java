@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.integration.waila;
 
 import de.maxhenkel.plane.MathTools;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import mcp.mobius.waila.Waila;
 import mcp.mobius.waila.api.IEntityAccessor;
 import mcp.mobius.waila.api.IEntityComponentProvider;
@@ -32,10 +32,10 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
 
     @Override
     public void appendBody(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
-        if (!(accessor.getEntity() instanceof EntityPlane)) {
+        if (!(accessor.getEntity() instanceof EntityPlaneSoundBase)) {
             return;
         }
-        EntityPlane plane = (EntityPlane) accessor.getEntity();
+        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) accessor.getEntity();
 
         tooltip.add(new TranslationTextComponent("tooltip.plane.fuel", new StringTextComponent(String.valueOf(plane.getFuel())).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));
         tooltip.add(new TranslationTextComponent("tooltip.plane.damage", new StringTextComponent(String.valueOf(MathTools.round(plane.getPlaneDamage(), 2))).applyTextStyle(TextFormatting.DARK_GRAY)).applyTextStyle(TextFormatting.GRAY));

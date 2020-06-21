@@ -186,7 +186,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 move(MoverType.SELF, getMotion());
             }
         } else {
-            double fallSpeed = 0.1D;
+            double fallSpeed = getFallSpeed();
             Vec3d lookVec = getLookVec();
             float modifiedPitch = (rotationPitch < 0F ? rotationPitch : Math.min(rotationPitch * 1.5F, 90F)) - 5F;
             float pitch = modifiedPitch * ((float) Math.PI / 180F);
@@ -261,6 +261,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
         }
     }
+
+    public abstract double getFallSpeed();
 
     @Override
     public void damagePlane(double damage, boolean horizontal) {

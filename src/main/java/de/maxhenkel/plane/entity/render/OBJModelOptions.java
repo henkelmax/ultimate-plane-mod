@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
@@ -62,7 +62,7 @@ public class OBJModelOptions {
     }
 
     public interface RenderListener {
-        void onRender(EntityPlane plane, MatrixStack matrixStack, float partialTicks);
+        void onRender(EntityPlaneSoundBase plane, MatrixStack matrixStack, float partialTicks);
     }
 }
 
