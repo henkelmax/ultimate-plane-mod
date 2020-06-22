@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import net.minecraft.client.renderer.Vector3f;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BushPlaneModel extends OBJRenderer<EntityBushPlane> {
+public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
 
     private static final List<OBJModelInstance> MODELS = Arrays.asList(
             new OBJModelInstance(
@@ -67,13 +68,19 @@ public class BushPlaneModel extends OBJRenderer<EntityBushPlane> {
     }
 
     @Override
-    public List<OBJModelInstance> getModels(EntityBushPlane entity) {
-        return getModelFromType(entity);
+    protected void translateName(EntityBushPlane plane, MatrixStack matrixStack, boolean left) {
+        if (left) {
+            matrixStack.translate(8.01D / 16D, -20D / 16D, 0D);
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(90F));
+        } else {
+            matrixStack.translate(-8.01D / 16D, -20D / 16D, 0D);
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-90F));
+        }
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityBushPlane entity) {
-        return null;
+    public List<OBJModelInstance> getModels(EntityBushPlane entity) {
+        return getModelFromType(entity);
     }
 
     private static List<OBJModelInstance> getModelFromType(EntityBushPlane plane) {

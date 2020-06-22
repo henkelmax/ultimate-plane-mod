@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.renderer.Vector3f;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlaneModel extends OBJRenderer<EntityPlane> {
+public class PlaneModel extends AbstractPlaneModel<EntityPlane> {
 
     private static final List<OBJModelInstance> MODELS = Arrays.asList(
             new OBJModelInstance(
@@ -67,14 +68,21 @@ public class PlaneModel extends OBJRenderer<EntityPlane> {
     }
 
     @Override
+    protected void translateName(EntityPlane plane, MatrixStack matrixStack, boolean left) {
+        if (left) {
+            matrixStack.translate(8.01D / 16D, -20D / 16D, -1D);
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(90F));
+        } else {
+            matrixStack.translate(-8.01D / 16D, -20D / 16D, -1D);
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-90F));
+        }
+    }
+
+    @Override
     public List<OBJModelInstance> getModels(EntityPlane entity) {
         return getModelFromType(entity);
     }
 
-    @Override
-    public ResourceLocation getEntityTexture(EntityPlane entity) {
-        return null;
-    }
 
     private static List<OBJModelInstance> getModelFromType(EntityPlane plane) {
         switch (plane.getPlaneType()) {
@@ -109,5 +117,6 @@ public class PlaneModel extends OBJRenderer<EntityPlane> {
         ));
         return models;
     }
+
 }
 
