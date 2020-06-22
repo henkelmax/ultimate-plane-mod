@@ -2,6 +2,7 @@ package de.maxhenkel.plane.item;
 
 import de.maxhenkel.plane.MathTools;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -38,7 +40,7 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         World world = context.getWorld();
         BlockPos pos = context.getPos();
 
-        if (!world.getBlockState(pos.up()).isAir(world, pos)) {
+        if (!world.getBlockState(pos.up()).getCollisionShape(world, pos).isEmpty()) {
             return ActionResultType.FAIL;
         }
 
@@ -47,7 +49,9 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         EntityPlaneSoundBase plane = createPlane(world);
         plane.setFuel(100);
 
-        plane.setPositionAndRotation(pos.getX() + 0.5D, pos.getY() + 1.01D, pos.getZ() + 0.5D, context.getPlayer().rotationYaw, 0F);
+        BlockState state = world.getBlockState(pos);
+        VoxelShape collisionShape = state.getCollisionShape(world, pos);
+        plane.setPositionAndRotation(pos.getX() + 0.5D, pos.getY() + (collisionShape.isEmpty() ? 0D : state.getCollisionShape(world, pos).getBoundingBox().maxY) + 0.01D, pos.getZ() + 0.5D, context.getPlayer().rotationYaw, 0F);
 
         addData(context.getItem(), plane);
 
