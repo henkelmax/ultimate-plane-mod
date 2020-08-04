@@ -14,7 +14,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -99,8 +99,8 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vec3d[] getPlayerOffsets() {
-        return new Vec3d[]{new Vec3d(0D, 0D, 1D), new Vec3d(0D, 0D, 0.5D), new Vec3d(0D, 0D, 0D)};
+    public Vector3d[] getPlayerOffsets() {
+        return new Vector3d[]{new Vector3d(0D, 0D, 1D), new Vector3d(0D, 0D, 0.5D), new Vector3d(0D, 0D, 0D)};
     }
 
     public Type getPlaneType() {
@@ -138,4 +138,5 @@ public class EntityPlane extends EntityPlaneSoundBase {
             return OAK;
         }
     }
+
 }

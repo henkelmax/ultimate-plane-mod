@@ -1,11 +1,12 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.ItemTools;
+import de.maxhenkel.corelib.item.ItemUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -20,12 +21,12 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
         if (player.isSneaking()) {
             if (!world.isRemote) {
                 openGUI(player, true);
             }
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
         return super.processInitialInteract(player, hand);
@@ -40,12 +41,13 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        ItemTools.readInventory(compound, "Inventory", inventory);
+        ItemUtils.readInventory(compound, "Inventory", inventory);
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        ItemTools.saveInventory(compound, "Inventory", inventory);
+        ItemUtils.saveInventory(compound, "Inventory", inventory);
     }
+
 }

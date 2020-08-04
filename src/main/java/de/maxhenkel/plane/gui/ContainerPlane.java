@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.gui;
 
+import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,7 +22,7 @@ public class ContainerPlane extends ContainerBase {
             }
         }
 
-        addInvSlots();
+        addPlayerInventorySlots();
     }
 
     public EntityPlaneSoundBase getPlane() {

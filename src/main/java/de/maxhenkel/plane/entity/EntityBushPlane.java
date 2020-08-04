@@ -8,7 +8,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class EntityBushPlane extends EntityPlaneSoundBase {
@@ -35,7 +35,7 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected boolean isStalling(Vec3d motionVector) {
+    protected boolean isStalling(Vector3d motionVector) {
         return motionVector.mul(1D, 0D, 1D).length() < -motionVector.y;
     }
 
@@ -77,8 +77,8 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vec3d[] getPlayerOffsets() {
-        return new Vec3d[]{new Vec3d(0D, 0D, 0.5D)};
+    public Vector3d[] getPlayerOffsets() {
+        return new Vector3d[]{new Vector3d(0D, 0D, 0.5D)};
     }
 
     public Type getPlaneType() {
@@ -116,4 +116,5 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
             return OAK;
         }
     }
+
 }

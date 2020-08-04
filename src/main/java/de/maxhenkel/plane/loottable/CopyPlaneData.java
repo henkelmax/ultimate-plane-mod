@@ -6,20 +6,21 @@ import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootFunction;
+import net.minecraft.loot.LootFunctionType;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootFunction;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
 
 public class CopyPlaneData extends LootFunction {
+
     protected CopyPlaneData(ILootCondition[] conditions) {
         super(conditions);
     }
 
     @Override
-    public ItemStack doApply(ItemStack stack, LootContext context) {
+    protected ItemStack doApply(ItemStack stack, LootContext context) {
         Entity entity = context.get(LootParameters.THIS_ENTITY);
         if (!(entity instanceof EntityPlaneSoundBase)) {
             return stack;
@@ -39,15 +40,17 @@ public class CopyPlaneData extends LootFunction {
         return stack;
     }
 
-    public static class Serializer extends net.minecraft.world.storage.loot.LootFunction.Serializer<CopyPlaneData> {
+    @Override
+    public LootFunctionType func_230425_b_() {
+        return Main.COPY_PLANE_DATA;
+    }
 
-        public Serializer() {
-            super(new ResourceLocation(Main.MODID, "copy_plane_data"), CopyPlaneData.class);
-        }
+    public static class Serializer extends LootFunction.Serializer<CopyPlaneData> {
 
         @Override
         public CopyPlaneData deserialize(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, ILootCondition[] iLootConditions) {
             return new CopyPlaneData(iLootConditions);
         }
     }
+
 }

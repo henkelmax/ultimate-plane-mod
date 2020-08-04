@@ -2,16 +2,21 @@ package de.maxhenkel.plane.entity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public abstract class EntityPlaneBase extends EntityVehicleBase {
 
-
     public EntityPlaneBase(EntityType type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public Vector3d func_230268_c_(LivingEntity passenger) {
+        return getPlayerOffsets()[0].add(new Vector3d(getPosX(), getPosY() + 0.1D, getPosZ()));
     }
 
     @Override
@@ -50,5 +55,4 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
         return getPlayerOffsets().length;
     }
 
-    public abstract Vec3d[] getPlayerOffsets();
 }

@@ -1,9 +1,11 @@
 package de.maxhenkel.plane.net;
 
+import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -22,6 +24,10 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
         this.outside = outside;
     }
 
+    @Override
+    public Dist getExecutingSide() {
+        return Dist.DEDICATED_SERVER;
+    }
 
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
@@ -36,11 +42,6 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     }
 
     @Override
-    public void executeClientSide(NetworkEvent.Context context) {
-
-    }
-
-    @Override
     public MessagePlaneGui fromBytes(PacketBuffer buf) {
         this.uuid = buf.readUniqueId();
         this.outside = buf.readBoolean();
@@ -52,4 +53,5 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
         buf.writeUniqueId(uuid);
         buf.writeBoolean(outside);
     }
+
 }

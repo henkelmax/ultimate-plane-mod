@@ -1,8 +1,10 @@
 package de.maxhenkel.plane.net;
 
+import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
@@ -32,6 +34,11 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
+    public Dist getExecutingSide() {
+        return Dist.DEDICATED_SERVER;
+    }
+
+    @Override
     public void executeServerSide(NetworkEvent.Context context) {
         Entity e = context.getSender().getRidingEntity();
         if (!(e instanceof EntityPlaneControlBase)) {
@@ -41,11 +48,6 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         EntityPlaneControlBase plane = (EntityPlaneControlBase) e;
 
         plane.updateControls(up, down, thrustPos, thrustNeg, left, right, braking, starting);
-    }
-
-    @Override
-    public void executeClientSide(NetworkEvent.Context context) {
-
     }
 
     @Override
@@ -72,4 +74,5 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         buf.writeBoolean(braking);
         buf.writeBoolean(starting);
     }
+
 }

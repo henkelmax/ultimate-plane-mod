@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.ItemTools;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
@@ -20,7 +20,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -49,7 +49,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public void destroyPlane(DamageSource source, PlayerEntity player) {
-        InventoryHelper.dropInventoryItems(world, getPosition(), cargoInventory);
+        InventoryHelper.dropInventoryItems(world, func_233580_cy_(), cargoInventory);
         cargoInventory.clear();
         super.destroyPlane(source, player);
     }
@@ -95,14 +95,14 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setPlaneType(EntityCargoPlane.Type.fromTypeName(compound.getString("Type")));
-        ItemTools.readInventory(compound, "CargoInventory", cargoInventory);
+        ItemUtils.readInventory(compound, "CargoInventory", cargoInventory);
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putString("Type", getPlaneType().getTypeName());
-        ItemTools.saveInventory(compound, "CargoInventory", cargoInventory);
+        ItemUtils.saveInventory(compound, "CargoInventory", cargoInventory);
     }
 
     @Override
@@ -132,8 +132,8 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vec3d[] getPlayerOffsets() {
-        return new Vec3d[]{new Vec3d(0.5D, 0D, 0.8D), new Vec3d(-0.5D, 0D, 0.8D)};
+    public Vector3d[] getPlayerOffsets() {
+        return new Vector3d[]{new Vector3d(0.5D, 0D, 0.8D), new Vector3d(-0.5D, 0D, 0.8D)};
     }
 
     public EntityCargoPlane.Type getPlaneType() {
@@ -171,4 +171,5 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
             return OAK;
         }
     }
+
 }

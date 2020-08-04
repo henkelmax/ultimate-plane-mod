@@ -1,18 +1,17 @@
 package de.maxhenkel.plane.events;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import de.maxhenkel.plane.Config;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.MathTools;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -53,13 +52,13 @@ public class RenderEvents {
 
         EntityPlaneSoundBase plane = (EntityPlaneSoundBase) e;
 
-        if (Config.SHOW_PLANE_INFO.get()) {
-            renderPlaneInfo(plane);
+        if (Main.CLIENT_CONFIG.showPlaneInfo.get()) {
+            renderPlaneInfo(evt.getMatrixStack(), plane);
         }
     }
 
-    public void renderPlaneInfo(EntityPlaneSoundBase plane) {
-        RenderSystem.pushMatrix();
+    public void renderPlaneInfo(MatrixStack matrixStack, EntityPlaneSoundBase plane) {
+        matrixStack.push();
 
         mc.getTextureManager().bindTexture(PLANE_INFO_TEXTURE);
 
@@ -69,30 +68,30 @@ public class RenderEvents {
         int height = mc.getMainWindow().getScaledHeight();
         int width = mc.getMainWindow().getScaledWidth();
 
-        double scale = Config.PLANE_INFO_SCALE.get();
-        RenderSystem.scaled(scale, scale, 1D);
-        RenderSystem.translated(-width, -height, 0F);
-        RenderSystem.translated(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0F);
+        float scale = Main.CLIENT_CONFIG.planeInfoScale.get().floatValue();
+        matrixStack.scale(scale, scale, 1F);
+        matrixStack.translate(-width, -height, 0D);
+        matrixStack.translate(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0D);
 
         int padding = 3;
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        mc.ingameGUI.blit(xStart, yStart, 0, 0, texWidth, texHeight);
+        mc.ingameGUI.func_238474_b_(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
 
         FontRenderer font = mc.ingameGUI.getFontRenderer();
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.FONT_HEIGHT + 2) * integer;
 
-        font.drawString(new TranslationTextComponent("tooltip.plane.speed", Config.PLANE_INFO_SPEED_TYPE.get().getTextComponent(plane.getMotion().length())).getFormattedText(), xStart + 7, heightFunc.apply(0), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.vertical_speed", Config.PLANE_INFO_SPEED_TYPE.get().getTextComponent(plane.getMotion().getY())).getFormattedText(), xStart + 7, heightFunc.apply(1), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)).getFormattedText(), xStart + 7, heightFunc.apply(2), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.height", Math.round(plane.getPosY())).getFormattedText(), xStart + 7, heightFunc.apply(3), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.relative_height", Math.round(cachedRelativeHeight)).getFormattedText(), xStart + 7, heightFunc.apply(4), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()).getFormattedText(), xStart + 7, heightFunc.apply(5), 0);
-        font.drawString(new TranslationTextComponent("tooltip.plane.damage", MathTools.round(plane.getPlaneDamage(), 2)).getFormattedText(), xStart + 7, heightFunc.apply(6), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().length())), xStart + 7, heightFunc.apply(0), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().getY())), xStart + 7, heightFunc.apply(1), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)), xStart + 7, heightFunc.apply(2), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.height", Math.round(plane.getPosY())), xStart + 7, heightFunc.apply(3), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.relative_height", Math.round(cachedRelativeHeight)), xStart + 7, heightFunc.apply(4), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()), xStart + 7, heightFunc.apply(5), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.damage", MathUtils.round(plane.getPlaneDamage(), 2)), xStart + 7, heightFunc.apply(6), 0);
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
     }
 
     private double cachedRelativeHeight = 0D;
@@ -124,7 +123,7 @@ public class RenderEvents {
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
             if (i >= 0) {
-                Vec3d offset = plane.getPlayerOffsets()[i];
+                Vector3d offset = plane.getPlayerOffsets()[i];
                 offset = offset.rotatePitch((float) -Math.toRadians(plane.rotationPitch));
                 event.getMatrixStack().translate(0F, offset.y, 0F);
             }
@@ -169,4 +168,5 @@ public class RenderEvents {
         }
         return null;
     }
+
 }

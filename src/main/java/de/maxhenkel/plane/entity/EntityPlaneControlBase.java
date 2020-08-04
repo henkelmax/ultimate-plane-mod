@@ -9,7 +9,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
@@ -155,7 +155,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStartTime(0);
         }
 
-        Vec3d motionVector = getMotion();
+        Vector3d motionVector = getMotion();
         double verticalMotion = Math.abs(motionVector.y);
         double horizontalMotion = getHorizontalMotion(motionVector);
         float engineSpeed = getEngineSpeed();
@@ -176,14 +176,14 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 speed = decreaseToZero(speed, 0.002D); // ground resistance
             }
 
-            Vec3d motion = getLookVec().normalize().scale(speed).mul(1D, 0D, 1D);
+            Vector3d motion = getLookVec().normalize().scale(speed).mul(1D, 0D, 1D);
             setMotion(motion);
             if (speed > 0D) {
                 move(MoverType.SELF, getMotion());
             }
         } else {
             double fallSpeed = getFallSpeed();
-            Vec3d lookVec = getLookVec();
+            Vector3d lookVec = getLookVec();
             float modifiedPitch = (rotationPitch < 0F ? rotationPitch : Math.min(rotationPitch * 1.5F, 90F)) - 5F;
             float pitch = modifiedPitch * ((float) Math.PI / 180F);
             double horizontalLook = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
@@ -224,13 +224,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                     addSpeed = 0D;
                 }
 
-                Vec3d addVec = getLookVec().normalize().scale(addSpeed);
+                Vector3d addVec = getLookVec().normalize().scale(addSpeed);
 
-                motionVector = motionVector.add(new Vec3d(addVec.x, 0D, addVec.z));
+                motionVector = motionVector.add(new Vector3d(addVec.x, 0D, addVec.z));
             }
 
             if (isStalling(motionVector)) {
-                motionVector = motionVector.mul(new Vec3d(0.975D, 1.025D, 0.975D));
+                motionVector = motionVector.mul(new Vector3d(0.975D, 1.025D, 0.975D));
             }
 
             setMotion(motionVector);
@@ -262,7 +262,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
     }
 
-    protected boolean isStalling(Vec3d motionVector) {
+    protected boolean isStalling(Vector3d motionVector) {
         return motionVector.mul(1D, 0D, 1D).length() / 4D < -motionVector.y;
     }
 
@@ -291,11 +291,11 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         return collidedHorizontally;
     }
 
-    public double getHorizontalMotion(Vec3d vec3d) {
+    public double getHorizontalMotion(Vector3d vec3d) {
         return Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z);
     }
 
-    public double getAngle(Vec3d vec1, Vec3d vec2) {
+    public double getAngle(Vector3d vec1, Vector3d vec2) {
         return Math.acos(Math.abs(vec1.dotProduct(vec2)) / (vec1.length() * vec2.length()));
     }
 
@@ -488,4 +488,5 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     public void setStartTime(int startTime) {
         dataManager.set(START_TIME, startTime);
     }
+
 }

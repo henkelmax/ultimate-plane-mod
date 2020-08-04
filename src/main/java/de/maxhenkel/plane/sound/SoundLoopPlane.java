@@ -32,23 +32,23 @@ public abstract class SoundLoopPlane extends TickableSound {
 
     @Override
     public void tick() {
-        if (donePlaying) {
+        if (isDonePlaying()) {
             return;
         }
 
         if (!plane.isAlive()) {
-            donePlaying = true;
+            func_239509_o_();
             return;
         }
 
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null || !player.isAlive()) {
-            donePlaying = true;
+            func_239509_o_();
             return;
         }
 
         if (shouldStopSound()) {
-            donePlaying = true;
+            func_239509_o_();
             return;
         }
 
@@ -56,4 +56,5 @@ public abstract class SoundLoopPlane extends TickableSound {
     }
 
     public abstract boolean shouldStopSound();
+
 }

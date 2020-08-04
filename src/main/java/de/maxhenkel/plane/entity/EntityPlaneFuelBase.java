@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Config;
+import de.maxhenkel.plane.Main;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -103,7 +103,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public boolean isValidFuel(FluidStack fluid) {
-        return Config.VALID_FUEL_LIST.contains(fluid.getFluid());
+        return Main.SERVER_CONFIG.validFuels.contains(fluid.getFluid());
     }
 
     @Override
@@ -165,4 +165,5 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     public FluidStack drain(int maxDrain, FluidAction action) {
         return FluidStack.EMPTY;
     }
+
 }

@@ -9,6 +9,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -18,13 +22,9 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameterSets;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.LootTable;
 
 public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
@@ -54,7 +54,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return;
         }
 
-        Vec3d lookVec = getLookVec().normalize().scale(1.5D);
+        Vector3d lookVec = getLookVec().normalize().scale(1.5D);
         double offX = lookVec.x;
         double offY = lookVec.y;
         double offZ = lookVec.z;
@@ -128,13 +128,13 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     public void destroyPlane(DamageSource source, PlayerEntity player) {
         IInventory inventory = ((EntityPlaneInventoryBase) this).getInventory();
-        InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
+        InventoryHelper.dropInventoryItems(world, func_233580_cy_(), inventory);
         inventory.clear();
 
         LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(getLootTable());
 
         LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
-                .withParameter(LootParameters.POSITION, getPosition())
+                .withParameter(LootParameters.POSITION, func_233580_cy_())
                 .withParameter(LootParameters.THIS_ENTITY, this)
                 .withParameter(LootParameters.DAMAGE_SOURCE, source)
                 .withParameter(LootParameters.KILLER_ENTITY, player)
@@ -186,4 +186,5 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         super.writeAdditional(compound);
         compound.putFloat("Damage", getPlaneDamage());
     }
+
 }

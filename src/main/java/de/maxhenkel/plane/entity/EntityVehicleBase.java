@@ -4,11 +4,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
-import net.minecraft.util.Direction;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,45 +37,10 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public void tick() {
-        setPositionNonDirty();
+        func_233577_ch_();
 
         super.tick();
         this.tickLerp();
-    }
-
-    @Override
-    protected void removePassenger(Entity passenger) {
-        super.removePassenger(passenger);
-        if (passenger instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) passenger;
-            Direction facing = getHorizontalFacing();
-
-            double offsetX = 0;
-            double offsetZ = 0;
-
-            for (int i = 0; i < 4; i++) {
-                AxisAlignedBB playerbb = player.getBoundingBox();
-                double playerHitboxWidth = (playerbb.maxX - playerbb.minX) / 2;
-                double carHitboxWidth = getBoundingBox().getZSize() / 2;
-
-                double offset = playerHitboxWidth + carHitboxWidth + 0.2;
-
-                offsetX += facing.getXOffset() * offset;
-                offsetZ += facing.getZOffset() * offset;
-
-                AxisAlignedBB aabb = player.getBoundingBox().offset(offsetX, 0, offsetZ);
-
-                if (!world.checkBlockCollision(aabb)) {
-                    break;
-                }
-
-                offsetX = 0;
-                offsetZ = 0;
-                facing = facing.rotateY();
-            }
-
-            player.setPositionAndUpdate(getPosX() + offsetX, getPosY(), getPosZ() + offsetZ);
-        }
     }
 
     public PlayerEntity getDriver() {
@@ -162,7 +127,7 @@ public abstract class EntityVehicleBase extends Entity {
         this.applyOriantationsToEntity(entityToUpdate);
     }
 
-    public abstract Vec3d[] getPlayerOffsets();
+    public abstract Vector3d[] getPlayerOffsets();
 
     @Override
     public void updatePassenger(Entity passenger) {
@@ -175,7 +140,7 @@ public abstract class EntityVehicleBase extends Entity {
         if (passengers.size() > 0) {
             int i = passengers.indexOf(passenger);
 
-            Vec3d offset = getPlayerOffsets()[i];
+            Vector3d offset = getPlayerOffsets()[i];
             offset = offset.rotateYaw((float) -Math.toRadians(rotationYaw));
 
             passenger.setPosition(getPosX() + offset.x, getPosY() + offset.y, getPosZ() + offset.z);
@@ -219,20 +184,21 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     @Override
-    public boolean processInitialInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
         if (!player.isSneaking()) {
             if (player.getRidingEntity() != this) {
                 if (!world.isRemote) {
                     player.startRiding(this);
                 }
             }
-            return true;
+            return ActionResultType.SUCCESS;
         }
-        return false;
+        return ActionResultType.FAIL;
     }
 
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
+
 }

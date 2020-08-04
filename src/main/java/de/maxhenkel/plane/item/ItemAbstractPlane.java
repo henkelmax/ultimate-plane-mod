@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.item;
 
-import de.maxhenkel.plane.MathTools;
+import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -96,16 +96,17 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         if (planeData != null) {
             tooltip.add(
                     new TranslationTextComponent("tooltip.plane.damage",
-                            new StringTextComponent(String.valueOf(MathTools.round(planeData.getFloat("Damage"), 2)))
-                                    .applyTextStyle(TextFormatting.DARK_GRAY)
-                    ).applyTextStyle(TextFormatting.GRAY));
+                            new StringTextComponent(String.valueOf(MathUtils.round(planeData.getFloat("Damage"), 2)))
+                                    .func_240699_a_(TextFormatting.DARK_GRAY)
+                    ).func_240699_a_(TextFormatting.GRAY));
             tooltip.add(
                     new TranslationTextComponent("tooltip.plane.fuel",
                             new StringTextComponent(String.valueOf(planeData.getInt("Fuel")))
-                                    .applyTextStyle(TextFormatting.DARK_GRAY)
-                    ).applyTextStyle(TextFormatting.GRAY));
+                                    .func_240699_a_(TextFormatting.DARK_GRAY)
+                    ).func_240699_a_(TextFormatting.GRAY));
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
+
 }

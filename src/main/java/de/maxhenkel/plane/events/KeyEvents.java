@@ -1,6 +1,5 @@
 package de.maxhenkel.plane.events;
 
-import de.maxhenkel.plane.Config;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
@@ -43,8 +42,8 @@ public class KeyEvents {
 
         if (Main.PLANE_KEY.isPressed()) {
             if ((event.getModifiers() & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL) {
-                Config.SHOW_PLANE_INFO.set(!Config.SHOW_PLANE_INFO.get());
-                Config.SHOW_PLANE_INFO.save();
+                Main.CLIENT_CONFIG.showPlaneInfo.set(!Main.CLIENT_CONFIG.showPlaneInfo.get());
+                Main.CLIENT_CONFIG.showPlaneInfo.save();
             } else {
                 plane.openGUI(player, false);
             }
