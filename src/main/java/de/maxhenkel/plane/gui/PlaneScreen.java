@@ -6,8 +6,8 @@ import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -38,28 +38,28 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
     protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
         super.func_230451_b_(matrixStack, mouseX, mouseY);
 
-        field_230712_o_.func_238422_b_(matrixStack, plane.getName(), 7, 61, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, playerInv.getDisplayName(), 8, this.ySize - 96 + 2, FONT_COLOR);
+        field_230712_o_.func_238422_b_(matrixStack, plane.getName().func_241878_f(), 7, 61, FONT_COLOR);
+        field_230712_o_.func_238422_b_(matrixStack, playerInv.getDisplayName().func_241878_f(), 8, this.ySize - 96 + 2, FONT_COLOR);
 
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_FUEL, 7, 9, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_DAMAGE, 95, 9, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_ENGINE, 7, 35, FONT_COLOR);
+        field_230712_o_.func_238422_b_(matrixStack, TEXT_FUEL.func_241878_f(), 7, 9, FONT_COLOR);
+        field_230712_o_.func_238422_b_(matrixStack, TEXT_DAMAGE.func_241878_f(), 95, 9, FONT_COLOR);
+        field_230712_o_.func_238422_b_(matrixStack, TEXT_ENGINE.func_241878_f(), 7, 35, FONT_COLOR);
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
-            List<IFormattableTextComponent> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()));
+            List<IReorderingProcessor> list = new ArrayList<>();
+            list.add(new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).func_241878_f());
             func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 96 && mouseX < guiLeft + 168 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
-            List<IFormattableTextComponent> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.damage", MathUtils.round(plane.getPlaneDamage(), 2)));
+            List<IReorderingProcessor> list = new ArrayList<>();
+            list.add(new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_241878_f());
             func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 46 && mouseY < guiTop + 56) {
-            List<IFormattableTextComponent> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)));
+            List<IReorderingProcessor> list = new ArrayList<>();
+            list.add(new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).func_241878_f());
             func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
     }

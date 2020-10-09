@@ -20,9 +20,7 @@ build
 # other
 eclipse
 run
-
-# Files from Forge MDK
-forge*changelog.txt
+logs
 
 curseforge_api_key.txt
 forge_update_api_key.txt

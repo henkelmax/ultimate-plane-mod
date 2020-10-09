@@ -21,7 +21,6 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -134,7 +133,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(getLootTable());
 
         LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
-                .withParameter(LootParameters.POSITION, func_233580_cy_())
+                .withParameter(LootParameters.field_237457_g_, getPositionVec())
                 .withParameter(LootParameters.THIS_ENTITY, this)
                 .withParameter(LootParameters.DAMAGE_SOURCE, source)
                 .withParameter(LootParameters.KILLER_ENTITY, player)
@@ -161,18 +160,18 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity entityIn) {
-        if (entityIn instanceof LivingEntity) {
-            if (entityIn.getBoundingBox().intersects(getBoundingBox())) {
+    public boolean func_241849_j(Entity entity) {
+        if (entity instanceof LivingEntity && !getPassengers().contains(entity)) {
+            if (entity.getBoundingBox().intersects(getBoundingBox())) {
                 double speed = getMotion().length();
                 if (speed > 0.35F) {
                     float damage = Math.min((float) (speed * 10D), 15F);
-                    entityIn.attackEntityFrom(DamageSourcePlane.DAMAGE_PLANE, damage);
+                    entity.attackEntityFrom(DamageSourcePlane.DAMAGE_PLANE, damage);
                 }
 
             }
         }
-        return super.getCollisionBox(entityIn);
+        return super.func_241849_j(entity);
     }
 
     @Override

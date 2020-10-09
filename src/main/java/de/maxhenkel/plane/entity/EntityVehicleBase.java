@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -15,7 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class EntityVehicleBase extends Entity {
@@ -156,16 +154,14 @@ public abstract class EntityVehicleBase extends Entity {
         return null;
     }
 
-    @Nullable
     @Override
-    public AxisAlignedBB getCollisionBox(Entity entityIn) {
-        return null;
+    public boolean func_241849_j(Entity entity) {
+        return false;
     }
 
-    @Nullable
     @Override
-    public AxisAlignedBB getCollisionBoundingBox() {
-        return null;
+    public boolean func_241845_aY() {
+        return false;
     }
 
     @Override

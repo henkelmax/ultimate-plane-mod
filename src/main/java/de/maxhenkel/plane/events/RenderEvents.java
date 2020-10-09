@@ -1,11 +1,11 @@
 package de.maxhenkel.plane.events;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import de.maxhenkel.corelib.math.MathUtils;
 
 import java.util.List;
 import java.util.function.Function;
@@ -83,13 +84,13 @@ public class RenderEvents {
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.FONT_HEIGHT + 2) * integer;
 
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().length())), xStart + 7, heightFunc.apply(0), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().getY())), xStart + 7, heightFunc.apply(1), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.throttle", Math.round(plane.getEngineSpeed() * 100F)), xStart + 7, heightFunc.apply(2), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.height", Math.round(plane.getPosY())), xStart + 7, heightFunc.apply(3), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.relative_height", Math.round(cachedRelativeHeight)), xStart + 7, heightFunc.apply(4), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.fuel", plane.getFuel()), xStart + 7, heightFunc.apply(5), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.damage", MathUtils.round(plane.getPlaneDamage(), 2)), xStart + 7, heightFunc.apply(6), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().length())).func_241878_f(), xStart + 7, heightFunc.apply(0), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().getY())).func_241878_f(), xStart + 7, heightFunc.apply(1), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).func_241878_f(), xStart + 7, heightFunc.apply(2), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.height", String.valueOf(Math.round(plane.getPosY()))).func_241878_f(), xStart + 7, heightFunc.apply(3), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).func_241878_f(), xStart + 7, heightFunc.apply(4), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).func_241878_f(), xStart + 7, heightFunc.apply(5), 0);
+        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_241878_f(), xStart + 7, heightFunc.apply(6), 0);
 
         matrixStack.pop();
     }
@@ -155,9 +156,9 @@ public class RenderEvents {
         }
 
         if (vehicle != null && lastVehicle == null) {
-            mc.gameSettings.thirdPersonView = 1;
+            mc.gameSettings.func_243229_a(PointOfView.THIRD_PERSON_BACK);
         } else if (vehicle == null && lastVehicle != null) {
-            mc.gameSettings.thirdPersonView = 0;
+            mc.gameSettings.func_243229_a(PointOfView.FIRST_PERSON);
         }
         lastVehicle = vehicle;
     }
