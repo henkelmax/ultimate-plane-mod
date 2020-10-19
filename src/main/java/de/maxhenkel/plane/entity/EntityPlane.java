@@ -117,7 +117,9 @@ public class EntityPlane extends EntityPlaneSoundBase {
         BIRCH("birch"),
         JUNGLE("jungle"),
         ACACIA("acacia"),
-        DARK_OAK("dark_oak");
+        DARK_OAK("dark_oak"),
+        WARPED("warped"),
+        CRIMSON("crimson");
 
         private String name;
 

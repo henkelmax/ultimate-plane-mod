@@ -92,17 +92,13 @@ public abstract class EntityVehicleBase extends Entity {
         }
     }
 
-    /**
-     * Set the position and rotation values directly without any clamping.
-     */
     @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
-                                             int posRotationIncrements, boolean teleport) {
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         this.clientX = x;
         this.clientY = y;
         this.clientZ = z;
-        this.clientYaw = (double) yaw;
-        this.clientPitch = (double) pitch;
+        this.clientYaw = yaw;
+        this.clientPitch = pitch;
         this.steps = 10;
     }
 
@@ -115,10 +111,6 @@ public abstract class EntityVehicleBase extends Entity {
         entityToUpdate.setRotationYawHead(entityToUpdate.rotationYaw);
     }
 
-    /**
-     * Applies this entity's orientation (pitch/yaw) to another entity. Used to
-     * update passenger orientation.
-     */
     @OnlyIn(Dist.CLIENT)
     @Override
     public void applyOrientationToEntity(Entity entityToUpdate) {

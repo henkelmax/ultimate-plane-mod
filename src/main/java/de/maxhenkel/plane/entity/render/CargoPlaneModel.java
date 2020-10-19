@@ -49,8 +49,8 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
                     new OBJModel(
                             new ResourceLocation(Main.MODID, "models/entity/propeller.obj")
                     ),
-                    new OBJModelOptions<EntityCargoPlane>(
-                            new ResourceLocation(Main.MODID, "textures/entity/propeller.png"),
+                    new OBJModelOptions<>(
+                            new ResourceLocation("textures/block/spruce_planks.png"),
                             new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
@@ -66,6 +66,8 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     private static final List<OBJModelInstance<EntityCargoPlane>> JUNGLE_MODEL = getPlaneModel(new ResourceLocation("textures/block/jungle_planks.png"));
     private static final List<OBJModelInstance<EntityCargoPlane>> ACACIA_MODEL = getPlaneModel(new ResourceLocation("textures/block/acacia_planks.png"));
     private static final List<OBJModelInstance<EntityCargoPlane>> SPRUCE_MODEL = getPlaneModel(new ResourceLocation("textures/block/spruce_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(new ResourceLocation("textures/block/warped_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(new ResourceLocation("textures/block/crimson_planks.png"));
 
     public CargoPlaneModel(EntityRendererManager renderManager) {
         super(renderManager);
@@ -102,6 +104,10 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
                 return BIRCH_MODEL;
             case ACACIA:
                 return ACACIA_MODEL;
+            case WARPED:
+                return WARPED_MODEL;
+            case CRIMSON:
+                return CRIMSON_MODEL;
         }
     }
 

@@ -30,7 +30,7 @@ public class ModSounds {
         for (Field field : ModSounds.class.getFields()) {
             try {
                 Object obj = field.get(null);
-                if (obj != null && obj instanceof SoundEvent) {
+                if (obj instanceof SoundEvent) {
                     sounds.add((SoundEvent) obj);
                 }
             } catch (IllegalAccessException e) {

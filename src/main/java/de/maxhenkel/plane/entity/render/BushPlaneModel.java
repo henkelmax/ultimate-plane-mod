@@ -50,7 +50,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new ResourceLocation(Main.MODID, "models/entity/propeller.obj")
                     ),
                     new OBJModelOptions<>(
-                            new ResourceLocation(Main.MODID, "textures/entity/propeller.png"),
+                            new ResourceLocation("textures/block/spruce_planks.png"),
                             new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
@@ -66,6 +66,8 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     private static final List<OBJModelInstance<EntityBushPlane>> JUNGLE_MODEL = getPlaneModel(new ResourceLocation("textures/block/jungle_planks.png"));
     private static final List<OBJModelInstance<EntityBushPlane>> ACACIA_MODEL = getPlaneModel(new ResourceLocation("textures/block/acacia_planks.png"));
     private static final List<OBJModelInstance<EntityBushPlane>> SPRUCE_MODEL = getPlaneModel(new ResourceLocation("textures/block/spruce_planks.png"));
+    private static final List<OBJModelInstance<EntityBushPlane>> WARPED_MODEL = getPlaneModel(new ResourceLocation("textures/block/warped_planks.png"));
+    private static final List<OBJModelInstance<EntityBushPlane>> CRIMSON_MODEL = getPlaneModel(new ResourceLocation("textures/block/crimson_planks.png"));
 
     public BushPlaneModel(EntityRendererManager renderManager) {
         super(renderManager);
@@ -102,6 +104,10 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                 return BIRCH_MODEL;
             case ACACIA:
                 return ACACIA_MODEL;
+            case WARPED:
+                return WARPED_MODEL;
+            case CRIMSON:
+                return CRIMSON_MODEL;
         }
     }
 

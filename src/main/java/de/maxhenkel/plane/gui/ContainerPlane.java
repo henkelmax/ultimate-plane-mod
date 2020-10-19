@@ -11,7 +11,7 @@ public class ContainerPlane extends ContainerBase {
     protected EntityPlaneSoundBase plane;
 
     public ContainerPlane(int id, EntityPlaneSoundBase plane, PlayerInventory playerInv) {
-        super(Main.PLANE_CONTAINER_TYPE, id, plane.getInventory(), playerInv);
+        super(Main.PLANE_CONTAINER_TYPE, id, playerInv, plane.getInventory());
         this.plane = plane;
 
         int numRows = plane.getInventory().getSizeInventory() / 9;
