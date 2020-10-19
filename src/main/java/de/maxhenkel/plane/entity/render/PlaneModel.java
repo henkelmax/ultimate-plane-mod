@@ -51,7 +51,7 @@ public class PlaneModel extends EntityRenderer<EntityPlane> {
             new OBJModelInstance(
                     new de.maxhenkel.plane.entity.render.OBJModel(
                             new ResourceLocation(Main.MODID, "models/entity/propeller.obj"),
-                            new ResourceLocation(Main.MODID, "textures/entity/propeller.png")
+                            new ResourceLocation("textures/block/spruce_planks.png")
                     ),
                     new OBJModelOptions(
                             new Vec3d(0D / 16D, 16D / 16D, -29.5D / 16D),

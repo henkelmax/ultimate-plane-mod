@@ -46,9 +46,7 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
-    // compile against the JEI API but do not include it at runtime
     compileOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}:api")
-    // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}")
 
     compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
@@ -71,8 +69,13 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.toml'
 
-        expand 'mod_id': mod_id, 'mod_version': mod_version, 'mod_vendor': mod_vendor, 'mod_name': mod_name,
-                'mod_forge_version': mod_forge_version, 'mod_minecraft_version': mod_minecraft_version
+        expand 'mod_id': mod_id,
+                'mod_version': mod_version,
+                'mod_vendor': mod_vendor,
+                'mod_name': mod_name,
+                'mod_forge_version': mod_forge_version,
+                'mod_minecraft_version': mod_minecraft_version,
+                'car_version_range': car_version_range
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.toml'
@@ -113,18 +116,16 @@ forgeUpdate {
 
 repositories {
     maven {
-        // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
-        // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
     maven {
         name = "Hwyla"
-        url "http://tehnut.info/maven"
+        url "https://maven.tehnut.info"
     }
 }
 
