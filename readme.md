@@ -76,7 +76,7 @@ Its tank can hold 6000 mb of fuel.
 
 ## Naming Planes
 
-You can name a plane by right-clicking it with a name tag.
+You can name a plane by naming the plane item in an anvil.
 
 ![](https://i.imgur.com/ETclCpI.png)
 
