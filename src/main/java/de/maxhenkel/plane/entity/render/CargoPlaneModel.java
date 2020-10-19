@@ -46,7 +46,7 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
                             new ResourceLocation(Main.MODID, "models/entity/propeller.obj")
                     ),
                     new OBJModelOptions(
-                            new ResourceLocation(Main.MODID, "textures/entity/propeller.png"),
+                            new ResourceLocation("textures/block/spruce_planks.png"),
                             new Vec3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
