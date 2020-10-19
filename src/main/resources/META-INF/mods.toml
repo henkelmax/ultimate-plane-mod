@@ -1,15 +1,15 @@
 modLoader="javafml"
 loaderVersion="${mod_forge_version}"
 license="All rights reserved"
-issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/xxx/issues"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/xxx"
+issueTrackerURL="https://github.com/henkelmax/ultimate-plane-mod/issues"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod"
 authors="${mod_vendor}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="https://maxhenkel.de/update/plane.json"
-description=''' '''
+description='''Planes in Minecraft'''
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
@@ -21,4 +21,10 @@ description=''' '''
     mandatory=true
     versionRange="[${mod_minecraft_version}]"
     ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="car"
+    mandatory=true
+    versionRange="${car_version_range}"
+    ordering="AFTER"
     side="BOTH"
