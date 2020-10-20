@@ -8,7 +8,7 @@
       "item": "minecraft:black_wool"
     },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "tag": "forge:ingots/iron"
     }
   },
   "result": {

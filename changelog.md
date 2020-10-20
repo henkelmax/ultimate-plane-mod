@@ -1,2 +1,1 @@
-- Updated to 1.16.3
-- Added nether wood types
+- Made recipes compatible with tags
