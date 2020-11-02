@@ -41,7 +41,7 @@ public class CopyPlaneData extends LootFunction {
     }
 
     @Override
-    public LootFunctionType func_230425_b_() {
+    public LootFunctionType getFunctionType() {
         return Main.COPY_PLANE_DATA;
     }
 

@@ -97,13 +97,13 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
             tooltip.add(
                     new TranslationTextComponent("tooltip.plane.damage",
                             new StringTextComponent(String.valueOf(MathUtils.round(planeData.getFloat("Damage"), 2)))
-                                    .func_240699_a_(TextFormatting.DARK_GRAY)
-                    ).func_240699_a_(TextFormatting.GRAY));
+                                    .mergeStyle(TextFormatting.DARK_GRAY)
+                    ).mergeStyle(TextFormatting.GRAY));
             tooltip.add(
                     new TranslationTextComponent("tooltip.plane.fuel",
                             new StringTextComponent(String.valueOf(planeData.getInt("Fuel")))
-                                    .func_240699_a_(TextFormatting.DARK_GRAY)
-                    ).func_240699_a_(TextFormatting.GRAY));
+                                    .mergeStyle(TextFormatting.DARK_GRAY)
+                    ).mergeStyle(TextFormatting.GRAY));
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);

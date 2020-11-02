@@ -53,7 +53,7 @@ public class InteractEvents {
         float newDamage = plane.getPlaneDamage();
 
         if (Math.round(newDamage) % 10 == 0) {
-            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.func_233580_cy_(), null, SoundCategory.NEUTRAL, 1F);
+            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.getPosition(), null, SoundCategory.NEUTRAL, 1F);
         }
     }
 

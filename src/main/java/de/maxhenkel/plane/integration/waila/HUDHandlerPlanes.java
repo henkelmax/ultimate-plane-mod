@@ -26,7 +26,7 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
         ITaggableList<ResourceLocation, ITextComponent> tooltip = (ITaggableList<ResourceLocation, ITextComponent>) tip;
         tooltip.setTag(OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getEntityName(), accessor.getEntity().getDisplayName().getString())));
         if (config.get(CONFIG_SHOW_REGISTRY)) {
-            tooltip.setTag(REGISTRY_NAME_TAG, new StringTextComponent(accessor.getEntity().getType().getRegistryName().toString()).func_240699_a_(TextFormatting.GRAY));
+            tooltip.setTag(REGISTRY_NAME_TAG, new StringTextComponent(accessor.getEntity().getType().getRegistryName().toString()).mergeStyle(TextFormatting.GRAY));
         }
     }
 
@@ -37,8 +37,8 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
         }
         EntityPlaneSoundBase plane = (EntityPlaneSoundBase) accessor.getEntity();
 
-        tooltip.add(new TranslationTextComponent("tooltip.plane.fuel", new StringTextComponent(String.valueOf(plane.getFuel())).func_240699_a_(TextFormatting.DARK_GRAY)).func_240699_a_(TextFormatting.GRAY));
-        tooltip.add(new TranslationTextComponent("tooltip.plane.damage", new StringTextComponent(String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_240699_a_(TextFormatting.DARK_GRAY)).func_240699_a_(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("tooltip.plane.fuel", new StringTextComponent(String.valueOf(plane.getFuel())).mergeStyle(TextFormatting.DARK_GRAY)).mergeStyle(TextFormatting.GRAY));
+        tooltip.add(new TranslationTextComponent("tooltip.plane.damage", new StringTextComponent(String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).mergeStyle(TextFormatting.DARK_GRAY)).mergeStyle(TextFormatting.GRAY));
     }
 
     @Override

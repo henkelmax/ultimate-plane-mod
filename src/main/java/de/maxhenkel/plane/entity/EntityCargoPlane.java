@@ -49,7 +49,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public void destroyPlane(DamageSource source, PlayerEntity player) {
-        InventoryHelper.dropInventoryItems(world, func_233580_cy_(), cargoInventory);
+        InventoryHelper.dropInventoryItems(world, getPosition(), cargoInventory);
         cargoInventory.clear();
         super.destroyPlane(source, player);
     }

@@ -78,7 +78,7 @@ public class RenderEvents {
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        mc.ingameGUI.func_238474_b_(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
+        mc.ingameGUI.blit(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
 
         FontRenderer font = mc.ingameGUI.getFontRenderer();
 
@@ -156,9 +156,9 @@ public class RenderEvents {
         }
 
         if (vehicle != null && lastVehicle == null) {
-            mc.gameSettings.func_243229_a(PointOfView.THIRD_PERSON_BACK);
+            mc.gameSettings.setPointOfView(PointOfView.THIRD_PERSON_BACK);
         } else if (vehicle == null && lastVehicle != null) {
-            mc.gameSettings.func_243229_a(PointOfView.FIRST_PERSON);
+            mc.gameSettings.setPointOfView(PointOfView.FIRST_PERSON);
         }
         lastVehicle = vehicle;
     }

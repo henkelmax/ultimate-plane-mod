@@ -127,7 +127,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     public void destroyPlane(DamageSource source, PlayerEntity player) {
         IInventory inventory = ((EntityPlaneInventoryBase) this).getInventory();
-        InventoryHelper.dropInventoryItems(world, func_233580_cy_(), inventory);
+        InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
         inventory.clear();
 
         LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(getLootTable());
@@ -160,7 +160,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     @Override
-    public boolean func_241849_j(Entity entity) {
+    public boolean canCollide(Entity entity) {
         if (entity instanceof LivingEntity && !getPassengers().contains(entity)) {
             if (entity.getBoundingBox().intersects(getBoundingBox())) {
                 double speed = getMotion().length();
@@ -171,7 +171,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
             }
         }
-        return super.func_241849_j(entity);
+        return super.canCollide(entity);
     }
 
     @Override

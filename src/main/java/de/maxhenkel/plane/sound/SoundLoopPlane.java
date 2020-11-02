@@ -37,18 +37,18 @@ public abstract class SoundLoopPlane extends TickableSound {
         }
 
         if (!plane.isAlive()) {
-            func_239509_o_();
+            finishPlaying();
             return;
         }
 
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null || !player.isAlive()) {
-            func_239509_o_();
+            finishPlaying();
             return;
         }
 
         if (shouldStopSound()) {
-            func_239509_o_();
+            finishPlaying();
             return;
         }
 

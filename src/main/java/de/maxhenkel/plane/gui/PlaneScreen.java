@@ -35,38 +35,38 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
-        super.func_230451_b_(matrixStack, mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
 
-        field_230712_o_.func_238422_b_(matrixStack, plane.getName().func_241878_f(), 7, 61, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, playerInv.getDisplayName().func_241878_f(), 8, this.ySize - 96 + 2, FONT_COLOR);
+        font.func_238422_b_(matrixStack, plane.getName().func_241878_f(), 7, 61, FONT_COLOR);
+        font.func_238422_b_(matrixStack, playerInv.getDisplayName().func_241878_f(), 8, this.ySize - 96 + 2, FONT_COLOR);
 
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_FUEL.func_241878_f(), 7, 9, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_DAMAGE.func_241878_f(), 95, 9, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, TEXT_ENGINE.func_241878_f(), 7, 35, FONT_COLOR);
+        font.func_238422_b_(matrixStack, TEXT_FUEL.func_241878_f(), 7, 9, FONT_COLOR);
+        font.func_238422_b_(matrixStack, TEXT_DAMAGE.func_241878_f(), 95, 9, FONT_COLOR);
+        font.func_238422_b_(matrixStack, TEXT_ENGINE.func_241878_f(), 7, 35, FONT_COLOR);
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
             List<IReorderingProcessor> list = new ArrayList<>();
             list.add(new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).func_241878_f());
-            func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 96 && mouseX < guiLeft + 168 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
             List<IReorderingProcessor> list = new ArrayList<>();
             list.add(new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_241878_f());
-            func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
 
         if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 46 && mouseY < guiTop + 56) {
             List<IReorderingProcessor> list = new ArrayList<>();
             list.add(new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).func_241878_f());
-            func_238654_b_(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
         }
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        super.func_230450_a_(matrixStack, partialTicks, mouseX, mouseY);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
 
         drawFuel(matrixStack, (float) plane.getFuel() / (float) plane.getMaxFuel());
         drawDamage(matrixStack, (100F - Math.min(plane.getPlaneDamage(), 100F)) / 100F);
@@ -77,21 +77,21 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
         int scaled = (int) (72F * percent);
         int i = guiLeft;
         int j = guiTop;
-        func_238474_b_(matrixStack, i + 8, j + 20, 176, 0, scaled, 10);
+        blit(matrixStack, i + 8, j + 20, 176, 0, scaled, 10);
     }
 
     public void drawThrottle(MatrixStack matrixStack, float percent) {
         int scaled = (int) (72F * percent);
         int i = guiLeft;
         int j = guiTop;
-        func_238474_b_(matrixStack, i + 8, j + 46, 176, 10, scaled, 10);
+        blit(matrixStack, i + 8, j + 46, 176, 10, scaled, 10);
     }
 
     public void drawDamage(MatrixStack matrixStack, float percent) {
         int scaled = (int) (72F * percent);
         int i = guiLeft;
         int j = guiTop;
-        func_238474_b_(matrixStack, i + 96, j + 20, 176, 20, scaled, 10);
+        blit(matrixStack, i + 96, j + 20, 176, 20, scaled, 10);
     }
 
 }
