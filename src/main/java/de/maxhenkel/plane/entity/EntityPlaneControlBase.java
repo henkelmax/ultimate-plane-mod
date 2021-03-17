@@ -14,16 +14,16 @@ import net.minecraft.world.World;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
-    private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.FLOAT);
-    private static final DataParameter<Boolean> STARTED = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> START_TIME = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> LEFT = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> RIGHT = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> UP = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> DOWN = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> BRAKE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> STARTED = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> START_TIME = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.INT);
+    private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> LEFT = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> RIGHT = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> UP = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DOWN = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> BRAKE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
 
     public static final double MAX_ENGINE_SPEED = 1.5D;
     public static final double ENGINE_ACCELERATION = 0.005D;
@@ -47,7 +47,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStarted(false);
         }
 
-        if (!world.isRemote) {
+        if (!level.isClientSide) {
             if (isStarted()) {
                 if (isThrustPositive()) {
                     setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
@@ -79,7 +79,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     private void handleRotation() {
 
-        double speed = getMotion().length();
+        double speed = getDeltaMovement().length();
 
         float rotationSpeed = 0;
         if (Math.abs(speed) > 0F) {
@@ -99,43 +99,43 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         // ----- YAW ------
-        rotationYaw += deltaRotation;
-        float delta = Math.abs(rotationYaw - prevRotationYaw);
-        while (rotationYaw > 180F) {
-            rotationYaw -= 360F;
-            prevRotationYaw = rotationYaw - delta;
+        yRot += deltaRotation;
+        float delta = Math.abs(yRot - yRotO);
+        while (yRot > 180F) {
+            yRot -= 360F;
+            yRotO = yRot - delta;
         }
-        while (rotationYaw <= -180F) {
-            rotationYaw += 360F;
-            prevRotationYaw = delta + rotationYaw;
+        while (yRot <= -180F) {
+            yRot += 360F;
+            yRotO = delta + yRot;
         }
         // ----- YAW ------
 
         // ----- PITCH ------
         if (isUp()) {
-            rotationPitch -= 1F;
+            xRot -= 1F;
         } else if (isDown()) {
-            rotationPitch += 1F;
+            xRot += 1F;
         }
 
-        rotationPitch = Math.max(rotationPitch, -90F);
-        rotationPitch = Math.min(rotationPitch, 90F);
+        xRot = Math.max(xRot, -90F);
+        xRot = Math.min(xRot, 90F);
 
         float groundPitchTolerance = 7F;
 
         if (isCollidedVertical()) {
             // Prevent leaning forwards when on ground
-            if (rotationPitch > 0) {
-                rotationPitch -= 10F;
-                if (rotationPitch < 0) {
-                    rotationPitch = 0;
+            if (xRot > 0) {
+                xRot -= 10F;
+                if (xRot < 0) {
+                    xRot = 0;
                 }
             }
 
-            if (rotationPitch < -groundPitchTolerance) {
-                rotationPitch += 10F;
-                if (rotationPitch > -groundPitchTolerance) {
-                    rotationPitch = -groundPitchTolerance;
+            if (xRot < -groundPitchTolerance) {
+                xRot += 10F;
+                if (xRot > -groundPitchTolerance) {
+                    xRot = -groundPitchTolerance;
                 }
             }
         }
@@ -144,7 +144,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     private void controlPlane() {
 
-        if (!isBeingRidden()) {
+        if (!isVehicle()) {
             setThrustPositive(false);
             setThrustNegative(false);
             setLeft(false);
@@ -155,13 +155,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStartTime(0);
         }
 
-        Vector3d motionVector = getMotion();
+        Vector3d motionVector = getDeltaMovement();
         double verticalMotion = Math.abs(motionVector.y);
         double horizontalMotion = getHorizontalMotion(motionVector);
         float engineSpeed = getEngineSpeed();
 
         if (isCollidedVertical()) {
-            double speed = getMotion().length();
+            double speed = getDeltaMovement().length();
             double maxEngineSpeed = MAX_ENGINE_SPEED * engineSpeed;
 
             if (speed < maxEngineSpeed) {
@@ -176,22 +176,22 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 speed = decreaseToZero(speed, 0.002D); // ground resistance
             }
 
-            Vector3d motion = getLookVec().normalize().scale(speed).mul(1D, 0D, 1D);
-            setMotion(motion);
+            Vector3d motion = getLookAngle().normalize().scale(speed).multiply(1D, 0D, 1D);
+            setDeltaMovement(motion);
             if (speed > 0D) {
-                move(MoverType.SELF, getMotion());
+                move(MoverType.SELF, getDeltaMovement());
             }
         } else {
             double fallSpeed = getFallSpeed();
-            Vector3d lookVec = getLookVec();
-            float modifiedPitch = (rotationPitch < 0F ? rotationPitch : Math.min(rotationPitch * 1.5F, 90F)) - 5F;
+            Vector3d lookVec = getLookAngle();
+            float modifiedPitch = (xRot < 0F ? xRot : Math.min(xRot * 1.5F, 90F)) - 5F;
             float pitch = modifiedPitch * ((float) Math.PI / 180F);
             double horizontalLook = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
 
             double lookLength = lookVec.length();
             float cosPitch = MathHelper.cos(pitch);
             cosPitch = (float) ((double) cosPitch * (double) cosPitch * Math.min(1D, lookLength / 0.4D));
-            motionVector = getMotion().add(0D, fallSpeed * (-1D + (double) cosPitch * 0.75D), 0D);
+            motionVector = getDeltaMovement().add(0D, fallSpeed * (-1D + (double) cosPitch * 0.75D), 0D);
             if (motionVector.y < 0D && horizontalLook > 0D) {
                 double down = motionVector.y * -0.1D * (double) cosPitch;
                 motionVector = motionVector.add(lookVec.x * down / horizontalLook, down, lookVec.z * down / horizontalLook);
@@ -206,7 +206,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 motionVector = motionVector.add((lookVec.x / horizontalLook * horizontalMotion - motionVector.x) * 0.1D, 0D, (lookVec.z / horizontalLook * horizontalMotion - motionVector.z) * 0.1D);
             }
 
-            motionVector = motionVector.mul(0.99D, 0.98D, 0.99D);
+            motionVector = motionVector.multiply(0.99D, 0.98D, 0.99D);
 
             double speed = motionVector.length();
 
@@ -224,25 +224,25 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                     addSpeed = 0D;
                 }
 
-                Vector3d addVec = getLookVec().normalize().scale(addSpeed);
+                Vector3d addVec = getLookAngle().normalize().scale(addSpeed);
 
                 motionVector = motionVector.add(new Vector3d(addVec.x, 0D, addVec.z));
             }
 
             if (isStalling(motionVector)) {
-                motionVector = motionVector.mul(new Vector3d(0.975D, 1.025D, 0.975D));
+                motionVector = motionVector.multiply(new Vector3d(0.975D, 1.025D, 0.975D));
             }
 
-            setMotion(motionVector);
+            setDeltaMovement(motionVector);
 
-            move(MoverType.SELF, getMotion());
+            move(MoverType.SELF, getDeltaMovement());
         }
 
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
         if (isCollidedHorizontal()) {
-            double newHorizontalMotion = getHorizontalMotion(getMotion());
+            double newHorizontalMotion = getHorizontalMotion(getDeltaMovement());
             double motionDifference = horizontalMotion - newHorizontalMotion;
             double damage = motionDifference * 100D - 12D;
             if (damage > 0D) {
@@ -252,7 +252,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         if (isCollidedVertical()) {
-            double newVerticalMotion = Math.abs(getMotion().y);
+            double newVerticalMotion = Math.abs(getDeltaMovement().y);
             double motionDifference = verticalMotion - newVerticalMotion;
             double damage = motionDifference * 100D - 10D;
             if (damage > 0D) {
@@ -263,7 +263,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     protected boolean isStalling(Vector3d motionVector) {
-        return motionVector.mul(1D, 0D, 1D).length() / 4D < -motionVector.y;
+        return motionVector.multiply(1D, 0D, 1D).length() / 4D < -motionVector.y;
     }
 
     public abstract double getFallSpeed();
@@ -288,7 +288,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     public boolean isCollidedHorizontal() {
-        return collidedHorizontally;
+        return horizontalCollision;
     }
 
     public double getHorizontalMotion(Vector3d vec3d) {
@@ -296,7 +296,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     public double getAngle(Vector3d vec1, Vector3d vec2) {
-        return Math.acos(Math.abs(vec1.dotProduct(vec2)) / (vec1.length() * vec2.length()));
+        return Math.acos(Math.abs(vec1.dot(vec2)) / (vec1.length() * vec2.length()));
     }
 
     private static double decreaseToZero(double num, double amount) {
@@ -317,22 +317,22 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     public float getPitchPercentage() {
-        return rotationPitch / 90F;
+        return xRot / 90F;
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(STARTED, false);
-        dataManager.register(START_TIME, 0);
-        dataManager.register(ENGINE_SPEED, 0F);
-        dataManager.register(THRUST_POSITIVE, false);
-        dataManager.register(THRUST_NEGATIVE, false);
-        dataManager.register(LEFT, false);
-        dataManager.register(RIGHT, false);
-        dataManager.register(UP, false);
-        dataManager.register(DOWN, false);
-        dataManager.register(BRAKE, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(STARTED, false);
+        entityData.define(START_TIME, 0);
+        entityData.define(ENGINE_SPEED, 0F);
+        entityData.define(THRUST_POSITIVE, false);
+        entityData.define(THRUST_NEGATIVE, false);
+        entityData.define(LEFT, false);
+        entityData.define(RIGHT, false);
+        entityData.define(UP, false);
+        entityData.define(DOWN, false);
+        entityData.define(BRAKE, false);
     }
 
     public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean braking, boolean starting) {
@@ -390,103 +390,103 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
         }
 
-        if (world.isRemote && needsUpdate) {
+        if (level.isClientSide && needsUpdate) {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    protected void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putFloat("EngineSpeed", getEngineSpeed());
         compound.putBoolean("Started", isStarted());
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    protected void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setEngineSpeed(compound.getFloat("EngineSpeed"));
         ((EntityPlaneSoundBase) this).setStarted(compound.getBoolean("Started"), false);
     }
 
     public boolean isStarted() {
-        return dataManager.get(STARTED);
+        return entityData.get(STARTED);
     }
 
     public void setStarted(boolean started) {
-        dataManager.set(STARTED, started);
+        entityData.set(STARTED, started);
     }
 
     public boolean isBrake() {
-        return dataManager.get(BRAKE);
+        return entityData.get(BRAKE);
     }
 
     public void setBrake(boolean breaking) {
-        dataManager.set(BRAKE, breaking);
+        entityData.set(BRAKE, breaking);
     }
 
     public boolean isThrustPositive() {
-        return dataManager.get(THRUST_POSITIVE);
+        return entityData.get(THRUST_POSITIVE);
     }
 
     public void setThrustPositive(boolean thrustPositive) {
-        dataManager.set(THRUST_POSITIVE, thrustPositive);
+        entityData.set(THRUST_POSITIVE, thrustPositive);
     }
 
     public boolean isThrustNegative() {
-        return dataManager.get(THRUST_NEGATIVE);
+        return entityData.get(THRUST_NEGATIVE);
     }
 
     public void setThrustNegative(boolean thrustNegative) {
-        dataManager.set(THRUST_NEGATIVE, thrustNegative);
+        entityData.set(THRUST_NEGATIVE, thrustNegative);
     }
 
     public boolean isLeft() {
-        return dataManager.get(LEFT);
+        return entityData.get(LEFT);
     }
 
     public void setLeft(boolean left) {
-        dataManager.set(LEFT, left);
+        entityData.set(LEFT, left);
     }
 
     public boolean isRight() {
-        return dataManager.get(RIGHT);
+        return entityData.get(RIGHT);
     }
 
     public void setRight(boolean right) {
-        dataManager.set(RIGHT, right);
+        entityData.set(RIGHT, right);
     }
 
     public boolean isUp() {
-        return dataManager.get(UP);
+        return entityData.get(UP);
     }
 
     public void setUp(boolean up) {
-        dataManager.set(UP, up);
+        entityData.set(UP, up);
     }
 
     public boolean isDown() {
-        return dataManager.get(DOWN);
+        return entityData.get(DOWN);
     }
 
     public void setDown(boolean down) {
-        dataManager.set(DOWN, down);
+        entityData.set(DOWN, down);
     }
 
     public float getEngineSpeed() {
-        return dataManager.get(ENGINE_SPEED);
+        return entityData.get(ENGINE_SPEED);
     }
 
     public void setEngineSpeed(float speed) {
-        dataManager.set(ENGINE_SPEED, speed);
+        entityData.set(ENGINE_SPEED, speed);
     }
 
     public int getStartTime() {
-        return dataManager.get(START_TIME);
+        return entityData.get(START_TIME);
     }
 
     public void setStartTime(int startTime) {
-        dataManager.set(START_TIME, startTime);
+        entityData.set(START_TIME, startTime);
     }
 
 }

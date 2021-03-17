@@ -8,7 +8,7 @@ public class SoundLoopStop extends SoundLoopPlane {
 
     public SoundLoopStop(EntityPlaneSoundBase plane, SoundEvent event, SoundCategory category) {
         super(plane, event, category);
-        this.repeat = false;
+        this.looping = false;
     }
 
     @Override

@@ -30,43 +30,43 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
         this.playerInv = playerInv;
         this.plane = containerCar.getPlane();
 
-        xSize = 176;
-        ySize = 222;
+        imageWidth = 176;
+        imageHeight = 222;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
+        super.renderLabels(matrixStack, mouseX, mouseY);
 
-        font.func_238422_b_(matrixStack, plane.getName().func_241878_f(), 7, 61, FONT_COLOR);
-        font.func_238422_b_(matrixStack, playerInv.getDisplayName().func_241878_f(), 8, this.ySize - 96 + 2, FONT_COLOR);
+        font.draw(matrixStack, plane.getName().getVisualOrderText(), 7, 61, FONT_COLOR);
+        font.draw(matrixStack, playerInv.getDisplayName().getVisualOrderText(), 8, this.imageHeight - 96 + 2, FONT_COLOR);
 
-        font.func_238422_b_(matrixStack, TEXT_FUEL.func_241878_f(), 7, 9, FONT_COLOR);
-        font.func_238422_b_(matrixStack, TEXT_DAMAGE.func_241878_f(), 95, 9, FONT_COLOR);
-        font.func_238422_b_(matrixStack, TEXT_ENGINE.func_241878_f(), 7, 35, FONT_COLOR);
+        font.draw(matrixStack, TEXT_FUEL.getVisualOrderText(), 7, 9, FONT_COLOR);
+        font.draw(matrixStack, TEXT_DAMAGE.getVisualOrderText(), 95, 9, FONT_COLOR);
+        font.draw(matrixStack, TEXT_ENGINE.getVisualOrderText(), 7, 35, FONT_COLOR);
 
-        if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
+        if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<IReorderingProcessor> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).func_241878_f());
-            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            list.add(new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText());
+            renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
 
-        if (mouseX >= guiLeft + 96 && mouseX < guiLeft + 168 && mouseY >= guiTop + 20 && mouseY < guiTop + 30) {
+        if (mouseX >= leftPos + 96 && mouseX < leftPos + 168 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<IReorderingProcessor> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_241878_f());
-            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            list.add(new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText());
+            renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
 
-        if (mouseX >= guiLeft + 8 && mouseX < guiLeft + 80 && mouseY >= guiTop + 46 && mouseY < guiTop + 56) {
+        if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 46 && mouseY < topPos + 56) {
             List<IReorderingProcessor> list = new ArrayList<>();
-            list.add(new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).func_241878_f());
-            renderTooltip(matrixStack, list, mouseX - guiLeft, mouseY - guiTop);
+            list.add(new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText());
+            renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(matrixStack, partialTicks, mouseX, mouseY);
 
         drawFuel(matrixStack, (float) plane.getFuel() / (float) plane.getMaxFuel());
         drawDamage(matrixStack, (100F - Math.min(plane.getPlaneDamage(), 100F)) / 100F);
@@ -75,22 +75,22 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
     public void drawFuel(MatrixStack matrixStack, float percent) {
         int scaled = (int) (72F * percent);
-        int i = guiLeft;
-        int j = guiTop;
+        int i = leftPos;
+        int j = topPos;
         blit(matrixStack, i + 8, j + 20, 176, 0, scaled, 10);
     }
 
     public void drawThrottle(MatrixStack matrixStack, float percent) {
         int scaled = (int) (72F * percent);
-        int i = guiLeft;
-        int j = guiTop;
+        int i = leftPos;
+        int j = topPos;
         blit(matrixStack, i + 8, j + 46, 176, 10, scaled, 10);
     }
 
     public void drawDamage(MatrixStack matrixStack, float percent) {
         int scaled = (int) (72F * percent);
-        int i = guiLeft;
-        int j = guiTop;
+        int i = leftPos;
+        int j = topPos;
         blit(matrixStack, i + 96, j + 20, 176, 20, scaled, 10);
     }
 

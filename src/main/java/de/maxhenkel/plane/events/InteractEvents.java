@@ -15,9 +15,9 @@ public class InteractEvents {
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.EntityInteract evt) {
         PlayerEntity player = evt.getPlayer();
-        ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
+        ItemStack stack = player.getItemInHand(Hand.MAIN_HAND);
         if (!stack.getItem().equals(ModItems.WRENCH)) {
-            stack = player.getHeldItem(Hand.OFF_HAND);
+            stack = player.getItemInHand(Hand.OFF_HAND);
             if (!stack.getItem().equals(ModItems.WRENCH)) {
                 return;
             }
@@ -45,7 +45,7 @@ public class InteractEvents {
             return;
         }
 
-        stack.damageItem(1, player, playerEntity -> {
+        stack.hurtAndBreak(1, player, playerEntity -> {
         });
 
         plane.setPlaneDamage(Math.max(damage - 1F, 0F));
@@ -53,7 +53,7 @@ public class InteractEvents {
         float newDamage = plane.getPlaneDamage();
 
         if (Math.round(newDamage) % 10 == 0) {
-            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.getPosition(), null, SoundCategory.NEUTRAL, 1F);
+            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.blockPosition(), null, SoundCategory.NEUTRAL, 1F);
         }
     }
 

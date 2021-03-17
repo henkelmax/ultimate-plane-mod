@@ -117,7 +117,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
 
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
-        ScreenManager.registerFactory(Main.PLANE_CONTAINER_TYPE, factory);
+        ScreenManager.register(Main.PLANE_CONTAINER_TYPE, factory);
 
         PLANE_KEY = ClientRegistry.registerKeyBinding("key.plane", "category.plane", GLFW.GLFW_KEY_P);
         FORWARD_KEY = ClientRegistry.registerKeyBinding("key.plane_add_thrust", "category.plane", GLFW.GLFW_KEY_I);
@@ -168,7 +168,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .size(3.5F, 2F)
+                    .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world));
         });
         event.getRegistry().register(PLANE_ENTITY_TYPE);
@@ -178,7 +178,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .size(3.5F, 2F)
+                    .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityCargoPlane(world));
         });
         event.getRegistry().register(CARGO_PLANE_ENTITY_TYPE);
@@ -188,7 +188,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .size(3.5F, 2F)
+                    .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityBushPlane(world));
         });
         event.getRegistry().register(BUSH_PLANE_ENTITY_TYPE);
@@ -199,7 +199,7 @@ public class Main {
     @SubscribeEvent
     public void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
         PLANE_CONTAINER_TYPE = new ContainerType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
-            EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUniqueId());
+            EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUUID());
             if (plane == null) {
                 return null;
             }
@@ -212,7 +212,7 @@ public class Main {
     @Nullable
     public static EntityPlaneSoundBase getPlaneByUUID(PlayerEntity player, UUID uuid) {
         double distance = 10D;
-        return player.world.getEntitiesWithinAABB(EntityPlaneSoundBase.class, new AxisAlignedBB(player.getPosX() - distance, player.getPosY() - distance, player.getPosZ() - distance, player.getPosX() + distance, player.getPosY() + distance, player.getPosZ() + distance), entity -> entity.getUniqueID().equals(uuid)).stream().findAny().orElse(null);
+        return player.level.getEntitiesOfClass(EntityPlaneSoundBase.class, new AxisAlignedBB(player.getX() - distance, player.getY() - distance, player.getZ() - distance, player.getX() + distance, player.getY() + distance, player.getZ() + distance), entity -> entity.getUUID().equals(uuid)).stream().findAny().orElse(null);
     }
 
 }

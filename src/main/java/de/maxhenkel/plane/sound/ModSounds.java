@@ -55,7 +55,7 @@ public class ModSounds {
         if (entity != null) {
             world.playSound(entity, pos, evt, category, volume, pitch);
         } else {
-            if (!world.isRemote) {
+            if (!world.isClientSide) {
                 world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, evt, category, volume, pitch);
             }
         }
@@ -63,15 +63,15 @@ public class ModSounds {
 
     @OnlyIn(Dist.CLIENT)
     public static void playSoundLoop(TickableSound loop, World world) {
-        if (world.isRemote) {
-            Minecraft.getInstance().getSoundHandler().play(loop);
+        if (world.isClientSide) {
+            Minecraft.getInstance().getSoundManager().play(loop);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     public static void playSoundLoopDelayed(TickableSound loop, World world, int delay) {
-        if (world.isRemote) {
-            Minecraft.getInstance().getSoundHandler().playDelayed(loop, delay);
+        if (world.isClientSide) {
+            Minecraft.getInstance().getSoundManager().playDelayed(loop, delay);
         }
     }
 

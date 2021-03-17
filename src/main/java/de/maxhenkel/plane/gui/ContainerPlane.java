@@ -14,7 +14,7 @@ public class ContainerPlane extends ContainerBase {
         super(Main.PLANE_CONTAINER_TYPE, id, playerInv, plane.getInventory());
         this.plane = plane;
 
-        int numRows = plane.getInventory().getSizeInventory() / 9;
+        int numRows = plane.getInventory().getContainerSize() / 9;
 
         for (int j = 0; j < numRows; j++) {
             for (int k = 0; k < 9; k++) {

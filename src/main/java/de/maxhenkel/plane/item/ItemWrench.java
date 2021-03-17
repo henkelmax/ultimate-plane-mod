@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 public class ItemWrench extends Item {
 
     public ItemWrench() {
-        super(new Properties().maxStackSize(1).group(ItemGroup.MISC).maxDamage(1024));
+        super(new Properties().stacksTo(1).tab(ItemGroup.TAB_MISC).durability(1024));
         setRegistryName(new ResourceLocation(Main.MODID, "wrench"));
     }
 }

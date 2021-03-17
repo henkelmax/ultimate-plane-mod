@@ -15,32 +15,32 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
     }
 
     @Override
-    public Vector3d func_230268_c_(LivingEntity passenger) {
-        return getPlayerOffsets()[0].add(new Vector3d(getPosX(), getPosY() + 0.1D, getPosZ()));
+    public Vector3d getDismountLocationForPassenger(LivingEntity passenger) {
+        return getPlayerOffsets()[0].add(new Vector3d(getX(), getY() + 0.1D, getZ()));
     }
 
     @Override
-    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
 
     }
 
     @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier) {
         return false;
     }
 
     @Override
-    protected void registerData() {
+    protected void defineSynchedData() {
 
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
 
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
 
     }
 

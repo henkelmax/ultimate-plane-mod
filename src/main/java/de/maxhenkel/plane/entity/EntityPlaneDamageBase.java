@@ -27,7 +27,7 @@ import net.minecraft.world.server.ServerWorld;
 
 public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.createKey(EntityPlaneDamageBase.class, DataSerializers.FLOAT);
+    private static final DataParameter<Float> DAMAGE = EntityDataManager.defineId(EntityPlaneDamageBase.class, DataSerializers.FLOAT);
 
     public EntityPlaneDamageBase(EntityType type, World worldIn) {
         super(type, worldIn);
@@ -45,7 +45,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     protected void handleParticles() {
-        if (!world.isRemote) {
+        if (!level.isClientSide) {
             return;
         }
 
@@ -53,7 +53,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return;
         }
 
-        Vector3d lookVec = getLookVec().normalize().scale(1.5D);
+        Vector3d lookVec = getLookAngle().normalize().scale(1.5D);
         double offX = lookVec.x;
         double offY = lookVec.y;
         double offZ = lookVec.z;
@@ -62,16 +62,16 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
         float chance = Math.max(damage - 25F, 0) / 100F;
 
-        if (rand.nextFloat() < chance) {
+        if (random.nextFloat() < chance) {
             spawnParticle(ParticleTypes.LARGE_SMOKE, offX, offY, offZ);
         }
     }
 
-    private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ, double random) {
-        world.addParticle(particleTypes,
-                getPosX() + offX + (rand.nextDouble() * random - random / 2D),
-                getPosY() + offY + (rand.nextDouble() * random - random / 2D),
-                getPosZ() + offZ + (rand.nextDouble() * random - random / 2D),
+    private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ, double rand) {
+        level.addParticle(particleTypes,
+                getX() + offX + (random.nextDouble() * rand - rand / 2D),
+                getY() + offY + (random.nextDouble() * rand - rand / 2D),
+                getZ() + offZ + (random.nextDouble() * rand - rand / 2D),
                 0D, 0D, 0D);
     }
 
@@ -86,38 +86,38 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (isInvulnerable()) {
             return false;
         }
 
-        if (world.isRemote || !isAlive()) {
+        if (level.isClientSide || !isAlive()) {
             return false;
         }
 
-        if (!(source.getImmediateSource() instanceof PlayerEntity)) {
+        if (!(source.getDirectEntity() instanceof PlayerEntity)) {
             return false;
         }
-        PlayerEntity player = (PlayerEntity) source.getImmediateSource();
+        PlayerEntity player = (PlayerEntity) source.getDirectEntity();
 
         if (player == null) {
             return false;
         }
 
-        if (isPassenger(player)) {
+        if (hasPassenger(player)) {
             return false;
         }
 
-        if (player.abilities.isCreativeMode) {
-            if (player.isSneaking()) {
+        if (player.abilities.instabuild) {
+            if (player.isShiftKeyDown()) {
                 destroyPlane(source, player);
                 return true;
             }
         }
 
-        ItemStack heldItem = player.getHeldItemMainhand();
-        if (heldItem.getItem().equals(ModItems.WRENCH) && (heldItem.getMaxDamage() - heldItem.getDamage()) >= 512) {
-            heldItem.damageItem(512, player, playerEntity -> {
+        ItemStack heldItem = player.getMainHandItem();
+        if (heldItem.getItem().equals(ModItems.WRENCH) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
+            heldItem.hurtAndBreak(512, player, playerEntity -> {
             });
             destroyPlane(source, player);
         }
@@ -127,18 +127,18 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     public void destroyPlane(DamageSource source, PlayerEntity player) {
         IInventory inventory = ((EntityPlaneInventoryBase) this).getInventory();
-        InventoryHelper.dropInventoryItems(world, getPosition(), inventory);
-        inventory.clear();
+        InventoryHelper.dropContents(level, blockPosition(), inventory);
+        inventory.clearContent();
 
-        LootTable loottable = this.world.getServer().getLootTableManager().getLootTableFromLocation(getLootTable());
+        LootTable loottable = this.level.getServer().getLootTables().get(getLootTable());
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world)
-                .withParameter(LootParameters.field_237457_g_, getPositionVec())
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) level)
+                .withParameter(LootParameters.ORIGIN, position())
                 .withParameter(LootParameters.THIS_ENTITY, this)
                 .withParameter(LootParameters.DAMAGE_SOURCE, source)
                 .withParameter(LootParameters.KILLER_ENTITY, player)
                 .withParameter(LootParameters.DIRECT_KILLER_ENTITY, player);
-        loottable.generate(context.build(LootParameterSets.ENTITY), this::entityDropItem);
+        loottable.getRandomItems(context.create(LootParameterSets.ENTITY), this::spawnAtLocation);
 
         remove();
     }
@@ -146,43 +146,43 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     public abstract ResourceLocation getLootTable();
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(DAMAGE, 0F);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(DAMAGE, 0F);
     }
 
     public float getPlaneDamage() {
-        return dataManager.get(DAMAGE);
+        return entityData.get(DAMAGE);
     }
 
     public void setPlaneDamage(float damage) {
-        dataManager.set(DAMAGE, damage);
+        entityData.set(DAMAGE, damage);
     }
 
     @Override
-    public boolean canCollide(Entity entity) {
+    public boolean canCollideWith(Entity entity) {
         if (entity instanceof LivingEntity && !getPassengers().contains(entity)) {
             if (entity.getBoundingBox().intersects(getBoundingBox())) {
-                double speed = getMotion().length();
+                double speed = getDeltaMovement().length();
                 if (speed > 0.35F) {
                     float damage = Math.min((float) (speed * 10D), 15F);
-                    entity.attackEntityFrom(DamageSourcePlane.DAMAGE_PLANE, damage);
+                    entity.hurt(DamageSourcePlane.DAMAGE_PLANE, damage);
                 }
 
             }
         }
-        return super.canCollide(entity);
+        return super.canCollideWith(entity);
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    protected void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setPlaneDamage(compound.getFloat("Damage"));
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    protected void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putFloat("Damage", getPlaneDamage());
     }
 

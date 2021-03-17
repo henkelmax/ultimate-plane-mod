@@ -14,41 +14,41 @@ public abstract class SoundLoopPlane extends TickableSound {
     public SoundLoopPlane(EntityPlaneSoundBase plane, SoundEvent event, SoundCategory category) {
         super(event, category);
         this.plane = plane;
-        this.repeat = true;
-        this.repeatDelay = 0;
+        this.looping = true;
+        this.delay = 0;
         this.volume = 1F;
         this.pitch = 1F;
         this.priority = true;
-        this.global = false;
-        this.attenuationType = AttenuationType.LINEAR;
+        this.relative = false;
+        this.attenuation = AttenuationType.LINEAR;
         this.updatePos();
     }
 
     public void updatePos() {
-        this.x = (float) plane.getPosX();
-        this.y = (float) plane.getPosY();
-        this.z = (float) plane.getPosZ();
+        this.x = (float) plane.getX();
+        this.y = (float) plane.getY();
+        this.z = (float) plane.getZ();
     }
 
     @Override
     public void tick() {
-        if (isDonePlaying()) {
+        if (isStopped()) {
             return;
         }
 
         if (!plane.isAlive()) {
-            finishPlaying();
+            stop();
             return;
         }
 
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null || !player.isAlive()) {
-            finishPlaying();
+            stop();
             return;
         }
 
         if (shouldStopSound()) {
-            finishPlaying();
+            stop();
             return;
         }
 

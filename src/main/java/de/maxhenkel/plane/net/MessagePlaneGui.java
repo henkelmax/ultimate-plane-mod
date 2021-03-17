@@ -20,7 +20,7 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     }
 
     public MessagePlaneGui(PlayerEntity player, boolean outside) {
-        this.uuid = player.getUniqueID();
+        this.uuid = player.getUUID();
         this.outside = outside;
     }
 
@@ -31,11 +31,11 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
 
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
-        if (!context.getSender().getUniqueID().equals(uuid)) {
+        if (!context.getSender().getUUID().equals(uuid)) {
             return;
         }
 
-        Entity e = context.getSender().getRidingEntity();
+        Entity e = context.getSender().getVehicle();
         if (e instanceof EntityPlaneSoundBase) {
             ((EntityPlaneSoundBase) e).openGUI(context.getSender(), outside);
         }
@@ -43,14 +43,14 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
 
     @Override
     public MessagePlaneGui fromBytes(PacketBuffer buf) {
-        this.uuid = buf.readUniqueId();
+        this.uuid = buf.readUUID();
         this.outside = buf.readBoolean();
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(uuid);
+        buf.writeUUID(uuid);
         buf.writeBoolean(outside);
     }
 

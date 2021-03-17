@@ -25,30 +25,30 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
     }
 
     protected String trimName(String name, float textScale, float maxLength) {
-        while (getFontRendererFromRenderManager().getStringWidth(name) * textScale > maxLength) {
+        while (getFont().width(name) * textScale > maxLength) {
             name = name.substring(0, name.length() - 1);
         }
         return name;
     }
 
     protected void drawName(T plane, String txt, MatrixStack matrixStack, IRenderTypeBuffer buffer, float yaw, int light, boolean left) {
-        matrixStack.push();
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-yaw));
+        matrixStack.pushPose();
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
         RenderSystem.color4f(1F, 1F, 1F, 1F);
         matrixStack.scale(1.0F, -1.0F, 1.0F);
 
         translateName(plane, matrixStack, left);
 
-        int textWidth = getFontRendererFromRenderManager().getStringWidth(txt);
+        int textWidth = getFont().width(txt);
         float textScale = 0.02F;
 
         matrixStack.translate(-(textScale * textWidth) / 2.0F, 0F, 0F);
 
         matrixStack.scale(textScale, textScale, textScale);
 
-        getFontRendererFromRenderManager().renderString(txt, 0F, 0F, 0xFFFFFF, false, matrixStack.getLast().getMatrix(), buffer, false, 0, light);
+        getFont().drawInBatch(txt, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, false, 0, light);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     protected abstract void translateName(T plane, MatrixStack matrixStack, boolean left);

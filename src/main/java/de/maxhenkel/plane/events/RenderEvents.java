@@ -45,7 +45,7 @@ public class RenderEvents {
 
         PlayerEntity player = mc.player;
 
-        Entity e = player.getRidingEntity();
+        Entity e = player.getVehicle();
 
         if (!(e instanceof EntityPlaneSoundBase)) {
             return;
@@ -59,15 +59,15 @@ public class RenderEvents {
     }
 
     public void renderPlaneInfo(MatrixStack matrixStack, EntityPlaneSoundBase plane) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
-        mc.getTextureManager().bindTexture(PLANE_INFO_TEXTURE);
+        mc.getTextureManager().bind(PLANE_INFO_TEXTURE);
 
         int texWidth = 110;
         int texHeight = 90;
 
-        int height = mc.getMainWindow().getScaledHeight();
-        int width = mc.getMainWindow().getScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
+        int width = mc.getWindow().getGuiScaledWidth();
 
         float scale = Main.CLIENT_CONFIG.planeInfoScale.get().floatValue();
         matrixStack.scale(scale, scale, 1F);
@@ -78,68 +78,68 @@ public class RenderEvents {
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        mc.ingameGUI.blit(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
+        mc.gui.blit(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
 
-        FontRenderer font = mc.ingameGUI.getFontRenderer();
+        FontRenderer font = mc.gui.getFont();
 
-        Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.FONT_HEIGHT + 2) * integer;
+        Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.lineHeight + 2) * integer;
 
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().length())).func_241878_f(), xStart + 7, heightFunc.apply(0), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getMotion().getY())).func_241878_f(), xStart + 7, heightFunc.apply(1), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).func_241878_f(), xStart + 7, heightFunc.apply(2), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.height", String.valueOf(Math.round(plane.getPosY()))).func_241878_f(), xStart + 7, heightFunc.apply(3), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).func_241878_f(), xStart + 7, heightFunc.apply(4), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).func_241878_f(), xStart + 7, heightFunc.apply(5), 0);
-        font.func_238422_b_(matrixStack, new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).func_241878_f(), xStart + 7, heightFunc.apply(6), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText(), xStart + 7, heightFunc.apply(5), 0);
+        font.draw(matrixStack, new TranslationTextComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText(), xStart + 7, heightFunc.apply(6), 0);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     private double cachedRelativeHeight = 0D;
 
     private double getRelativeHeight(EntityPlaneSoundBase plane) {
-        int highestBlock = (int) plane.getPosY();
-        BlockPos.Mutable p = new BlockPos.Mutable(plane.getPosX(), plane.getPosY(), plane.getPosZ());
+        int highestBlock = (int) plane.getY();
+        BlockPos.Mutable p = new BlockPos.Mutable(plane.getX(), plane.getY(), plane.getZ());
         for (int y = highestBlock; y >= 0; y--) {
             p.setY(y);
-            if (plane.world.getBlockState(p).isSolid()) {
+            if (plane.level.getBlockState(p).canOcclude()) {
                 highestBlock = y;
                 break;
             }
         }
 
-        return plane.getPosY() - (double) (highestBlock + 1);
+        return plane.getY() - (double) (highestBlock + 1);
     }
 
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
         PlayerEntity player = event.getPlayer();
-        if (player.getRidingEntity() instanceof EntityPlaneSoundBase) {
-            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getRidingEntity();
-            event.getMatrixStack().push();
+        if (player.getVehicle() instanceof EntityPlaneSoundBase) {
+            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getVehicle();
+            event.getMatrixStack().pushPose();
 
-            event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(-(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick())));
-            event.getMatrixStack().rotate(Vector3f.XP.rotationDegrees(plane.rotationPitch + (plane.rotationPitch - plane.prevRotationPitch) * event.getPartialRenderTick()));
+            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRot + (plane.yRot - plane.yRotO) * event.getPartialRenderTick())));
+            event.getMatrixStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRot + (plane.xRot - plane.xRotO) * event.getPartialRenderTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
             if (i >= 0) {
                 Vector3d offset = plane.getPlayerOffsets()[i];
-                offset = offset.rotatePitch((float) -Math.toRadians(plane.rotationPitch));
+                offset = offset.xRot((float) -Math.toRadians(plane.xRot));
                 event.getMatrixStack().translate(0F, offset.y, 0F);
             }
 
             event.getMatrixStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
-            event.getMatrixStack().translate(0F, (player.getHeight() - (player.getHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+            event.getMatrixStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            event.getMatrixStack().rotate(Vector3f.YP.rotationDegrees(plane.rotationYaw + (plane.rotationYaw - plane.prevRotationYaw) * event.getPartialRenderTick()));
+            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRot + (plane.yRot - plane.yRotO) * event.getPartialRenderTick()));
         }
     }
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getPlayer().getRidingEntity() instanceof EntityPlaneSoundBase) {
-            event.getMatrixStack().pop();
+        if (event.getPlayer().getVehicle() instanceof EntityPlaneSoundBase) {
+            event.getMatrixStack().popPose();
         }
     }
 
@@ -156,16 +156,16 @@ public class RenderEvents {
         }
 
         if (vehicle != null && lastVehicle == null) {
-            mc.gameSettings.setPointOfView(PointOfView.THIRD_PERSON_BACK);
+            mc.options.setCameraType(PointOfView.THIRD_PERSON_BACK);
         } else if (vehicle == null && lastVehicle != null) {
-            mc.gameSettings.setPointOfView(PointOfView.FIRST_PERSON);
+            mc.options.setCameraType(PointOfView.FIRST_PERSON);
         }
         lastVehicle = vehicle;
     }
 
     private EntityPlaneSoundBase getPlane() {
-        if (mc.player.getRidingEntity() instanceof EntityPlaneSoundBase) {
-            return (EntityPlaneSoundBase) mc.player.getRidingEntity();
+        if (mc.player.getVehicle() instanceof EntityPlaneSoundBase) {
+            return (EntityPlaneSoundBase) mc.player.getVehicle();
         }
         return null;
     }

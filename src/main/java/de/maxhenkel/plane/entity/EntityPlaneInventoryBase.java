@@ -21,15 +21,15 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     }
 
     @Override
-    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
-        if (player.isSneaking()) {
-            if (!world.isRemote) {
+    public ActionResultType interact(PlayerEntity player, Hand hand) {
+        if (player.isShiftKeyDown()) {
+            if (!level.isClientSide) {
                 openGUI(player, true);
             }
             return ActionResultType.SUCCESS;
         }
 
-        return super.processInitialInteract(player, hand);
+        return super.interact(player, hand);
     }
 
     public abstract void openGUI(PlayerEntity player, boolean outside);
@@ -39,14 +39,14 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         ItemUtils.readInventory(compound, "Inventory", inventory);
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         ItemUtils.saveInventory(compound, "Inventory", inventory);
     }
 

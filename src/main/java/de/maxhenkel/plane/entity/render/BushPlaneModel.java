@@ -28,7 +28,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(-10D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.rotate(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
+                                matrixStack.mulPose(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
                             }
                     )
             ),
@@ -41,7 +41,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(10D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.rotate(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
+                                matrixStack.mulPose(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
                             }
                     )
             ),
@@ -54,7 +54,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.rotate(Vector3f.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
+                                matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
                             }
                     )
             )
@@ -77,10 +77,10 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     protected void translateName(EntityBushPlane plane, MatrixStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(90F));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));
         } else {
             matrixStack.translate(-8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-90F));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90F));
         }
     }
 

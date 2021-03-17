@@ -52,7 +52,7 @@ public abstract class EntityPlaneWheelBase extends EntityPlaneInventoryBase {
     }
 
     public float getWheelRotationAmount() {
-        float amount = WHEEL_ROTATION * (float) getMotion().length();
+        float amount = WHEEL_ROTATION * (float) getDeltaMovement().length();
         if (!isCollidedVertical()) {
             amount = Math.max(amount - ticksSinceLiftOff, 0F);
         }

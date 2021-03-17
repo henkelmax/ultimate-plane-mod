@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 
 public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
-    private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.VARINT);
-    private static final DataParameter<String> FUEL_TYPE = EntityDataManager.createKey(EntityPlaneControlBase.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> FUEL = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.INT);
+    private static final DataParameter<String> FUEL_TYPE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.STRING);
 
     public EntityPlaneFuelBase(EntityType type, World worldIn) {
         super(type, worldIn);
@@ -41,7 +41,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
             return;
         }
 
-        if (world.getGameTime() % 20L == 0L) {
+        if (level.getGameTime() % 20L == 0L) {
             int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * getMaxFuelUsage()), 1);
             setFuel(Math.max(getFuel() - consumeAmount, 0));
         }
@@ -56,22 +56,22 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(FUEL, 0);
-        dataManager.register(FUEL_TYPE, "");
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(FUEL, 0);
+        entityData.define(FUEL_TYPE, "");
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setFuel(compound.getInt("Fuel"));
         setFuelType(compound.getString("FuelType"));
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();
         compound.putString("FuelType", fuel == null ? "" : fuel.getRegistryName().toString());
@@ -79,7 +79,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
 
     @Nullable
     public Fluid getFuelType() {
-        String type = dataManager.get(FUEL_TYPE);
+        String type = entityData.get(FUEL_TYPE);
         if (type.isEmpty()) {
             return null;
         }
@@ -91,15 +91,15 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public void setFuelType(String fluid) {
-        dataManager.set(FUEL_TYPE, fluid);
+        entityData.set(FUEL_TYPE, fluid);
     }
 
     public int getFuel() {
-        return dataManager.get(FUEL);
+        return entityData.get(FUEL);
     }
 
     public void setFuel(int fuel) {
-        dataManager.set(FUEL, fuel);
+        entityData.set(FUEL, fuel);
     }
 
     public boolean isValidFuel(FluidStack fluid) {

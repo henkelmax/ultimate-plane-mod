@@ -30,7 +30,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void tick() {
         super.tick();
 
-        if (world.isRemote) {
+        if (level.isClientSide) {
             updateSounds();
         }
     }
@@ -64,7 +64,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
 
     public void setStarted(boolean started, boolean playSound) {
         super.setStarted(started);
-        if (world.isRemote && playSound) {
+        if (level.isClientSide && playSound) {
             if (!started) {
                 checkStopLoop();
             } else {
@@ -77,14 +77,14 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void damagePlane(double damage, boolean horizontal) {
         super.damagePlane(damage, horizontal);
 
-        ModSounds.playSound(ModSounds.CRASH, world, getPosition(), null, SoundCategory.NEUTRAL, 1.0F);
+        ModSounds.playSound(ModSounds.CRASH, level, blockPosition(), null, SoundCategory.NEUTRAL, 1.0F);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void checkIdleLoop() {
         if (!isSoundPlaying(idleLoop)) {
             idleLoop = new SoundLoopIdle(this, ModSounds.ENGINE_IDLE, SoundCategory.NEUTRAL);
-            ModSounds.playSoundLoop(idleLoop, world);
+            ModSounds.playSoundLoop(idleLoop, level);
         }
     }
 
@@ -92,7 +92,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void checkHighLoop() {
         if (!isSoundPlaying(highLoop)) {
             highLoop = new SoundLoopHigh(this, ModSounds.ENGINE_HIGH, SoundCategory.NEUTRAL);
-            ModSounds.playSoundLoop(highLoop, world);
+            ModSounds.playSoundLoop(highLoop, level);
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void checkStartLoop() {
         if (!isSoundPlaying(startLoop)) {
             startLoop = new SoundLoopStart(this, ModSounds.ENGINE_START, SoundCategory.NEUTRAL);
-            ModSounds.playSoundLoop(startLoop, world);
+            ModSounds.playSoundLoop(startLoop, level);
         }
     }
 
@@ -108,7 +108,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void checkStopLoop() {
         if (!isSoundPlaying(stopLoop)) {
             stopLoop = new SoundLoopStop(this, ModSounds.ENGINE_STOP, SoundCategory.NEUTRAL);
-            ModSounds.playSoundLoop(stopLoop, world);
+            ModSounds.playSoundLoop(stopLoop, level);
         }
     }
 
@@ -116,7 +116,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void checkStartingLoop() {
         if (!isSoundPlaying(startingLoop)) {
             startingLoop = new SoundLoopStarting(this, ModSounds.ENGINE_STARTING, SoundCategory.NEUTRAL);
-            ModSounds.playSoundLoop(startingLoop, world);
+            ModSounds.playSoundLoop(startingLoop, level);
         }
     }
 
@@ -125,7 +125,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
         if (sound == null) {
             return false;
         }
-        return Minecraft.getInstance().getSoundHandler().isPlaying(sound);
+        return Minecraft.getInstance().getSoundManager().isActive(sound);
     }
 
 }

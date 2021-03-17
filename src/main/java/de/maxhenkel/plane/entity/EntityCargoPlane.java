@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 
 public class EntityCargoPlane extends EntityPlaneSoundBase {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityPlaneSoundBase.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(EntityPlaneSoundBase.class, DataSerializers.INT);
     private IInventory cargoInventory;
 
     public EntityCargoPlane(World world) {
@@ -49,8 +49,8 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public void destroyPlane(DamageSource source, PlayerEntity player) {
-        InventoryHelper.dropInventoryItems(world, getPosition(), cargoInventory);
-        cargoInventory.clear();
+        InventoryHelper.dropContents(level, blockPosition(), cargoInventory);
+        cargoInventory.clearContent();
         super.destroyPlane(source, player);
     }
 
@@ -67,7 +67,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
                     @Nullable
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return ChestContainer.createGeneric9X6(i, playerInventory, cargoInventory);
+                        return ChestContainer.sixRows(i, playerInventory, cargoInventory);
                     }
                 });
             } else {
@@ -83,7 +83,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
                         return new ContainerPlane(i, EntityCargoPlane.this, playerInventory);
                     }
                 }, packetBuffer -> {
-                    packetBuffer.writeUniqueId(getUniqueID());
+                    packetBuffer.writeUUID(getUUID());
                 });
             }
         } else {
@@ -92,15 +92,15 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setPlaneType(EntityCargoPlane.Type.fromTypeName(compound.getString("Type")));
         ItemUtils.readInventory(compound, "CargoInventory", cargoInventory);
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putString("Type", getPlaneType().getTypeName());
         ItemUtils.saveInventory(compound, "CargoInventory", cargoInventory);
     }
@@ -126,9 +126,9 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(TYPE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(TYPE, 0);
     }
 
     @Override
@@ -137,11 +137,11 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     public EntityCargoPlane.Type getPlaneType() {
-        return EntityCargoPlane.Type.values()[dataManager.get(TYPE)];
+        return EntityCargoPlane.Type.values()[entityData.get(TYPE)];
     }
 
     public void setPlaneType(EntityCargoPlane.Type type) {
-        dataManager.set(TYPE, type.ordinal());
+        entityData.set(TYPE, type.ordinal());
     }
 
     public static enum Type {

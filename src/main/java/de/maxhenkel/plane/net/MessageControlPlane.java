@@ -40,7 +40,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
 
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
-        Entity e = context.getSender().getRidingEntity();
+        Entity e = context.getSender().getVehicle();
         if (!(e instanceof EntityPlaneControlBase)) {
             return;
         }

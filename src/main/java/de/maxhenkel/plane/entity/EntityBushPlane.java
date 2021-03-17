@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class EntityBushPlane extends EntityPlaneSoundBase {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.createKey(EntityBushPlane.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(EntityBushPlane.class, DataSerializers.INT);
 
     public EntityBushPlane(World world) {
         this(Main.BUSH_PLANE_ENTITY_TYPE, world);
@@ -24,8 +24,8 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putString("Type", getPlaneType().getTypeName());
     }
 
@@ -36,7 +36,7 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
 
     @Override
     protected boolean isStalling(Vector3d motionVector) {
-        return motionVector.mul(1D, 0D, 1D).length() < -motionVector.y;
+        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y;
     }
 
     @Override
@@ -45,8 +45,8 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setPlaneType(Type.fromTypeName(compound.getString("Type")));
     }
 
@@ -71,9 +71,9 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(TYPE, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(TYPE, 0);
     }
 
     @Override
@@ -82,11 +82,11 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     public Type getPlaneType() {
-        return Type.values()[dataManager.get(TYPE)];
+        return Type.values()[entityData.get(TYPE)];
     }
 
     public void setPlaneType(Type type) {
-        dataManager.set(TYPE, type.ordinal());
+        entityData.set(TYPE, type.ordinal());
     }
 
     public static enum Type {

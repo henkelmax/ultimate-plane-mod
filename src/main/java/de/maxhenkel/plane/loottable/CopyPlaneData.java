@@ -20,8 +20,8 @@ public class CopyPlaneData extends LootFunction {
     }
 
     @Override
-    protected ItemStack doApply(ItemStack stack, LootContext context) {
-        Entity entity = context.get(LootParameters.THIS_ENTITY);
+    protected ItemStack run(ItemStack stack, LootContext context) {
+        Entity entity = context.getParamOrNull(LootParameters.THIS_ENTITY);
         if (!(entity instanceof EntityPlaneSoundBase)) {
             return stack;
         }
@@ -29,19 +29,19 @@ public class CopyPlaneData extends LootFunction {
         EntityPlaneSoundBase plane = (EntityPlaneSoundBase) entity;
 
         CompoundNBT planeData = new CompoundNBT();
-        plane.writeAdditional(planeData);
+        plane.addAdditionalSaveData(planeData);
 
         stack.getOrCreateTag().put("PlaneData", planeData);
 
         if (plane.hasCustomName()) {
-            stack.setDisplayName(plane.getCustomName());
+            stack.setHoverName(plane.getCustomName());
         }
 
         return stack;
     }
 
     @Override
-    public LootFunctionType getFunctionType() {
+    public LootFunctionType getType() {
         return Main.COPY_PLANE_DATA;
     }
 

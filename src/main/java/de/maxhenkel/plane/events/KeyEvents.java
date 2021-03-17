@@ -28,7 +28,7 @@ public class KeyEvents {
             return;
         }
 
-        Entity riding = player.getRidingEntity();
+        Entity riding = player.getVehicle();
 
         if (!(riding instanceof EntityPlaneSoundBase)) {
             return;
@@ -37,10 +37,10 @@ public class KeyEvents {
         EntityPlaneSoundBase plane = (EntityPlaneSoundBase) riding;
 
         if (player.equals(plane.getDriver())) {
-            plane.updateControls(Main.UP_KEY.isKeyDown(), Main.DOWN_KEY.isKeyDown(), Main.FORWARD_KEY.isKeyDown(), Main.BACK_KEY.isKeyDown(), Main.LEFT_KEY.isKeyDown(), Main.RIGHT_KEY.isKeyDown(), Main.BRAKE_KEY.isKeyDown(), Main.START_KEY.isKeyDown());
+            plane.updateControls(Main.UP_KEY.isDown(), Main.DOWN_KEY.isDown(), Main.FORWARD_KEY.isDown(), Main.BACK_KEY.isDown(), Main.LEFT_KEY.isDown(), Main.RIGHT_KEY.isDown(), Main.BRAKE_KEY.isDown(), Main.START_KEY.isDown());
         }
 
-        if (Main.PLANE_KEY.isPressed()) {
+        if (Main.PLANE_KEY.consumeClick()) {
             if ((event.getModifiers() & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL) {
                 Main.CLIENT_CONFIG.showPlaneInfo.set(!Main.CLIENT_CONFIG.showPlaneInfo.get());
                 Main.CLIENT_CONFIG.showPlaneInfo.save();
