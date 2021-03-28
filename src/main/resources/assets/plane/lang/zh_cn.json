@@ -54,9 +54,9 @@
   "key.plane_left": "左舵",
   "key.plane_right": "右舵",
   "key.plane_up": "拉杆（抬头）",
-  "key.plane_down": "压杆（低头）",
+  "key.plane_down": "推杆（低头）",
   "key.plane_start": "启动引擎",
   "key.plane_brake": "刹车",
 
-  "death.attack.hit_plane": "%s被飞机撞扁了。"
+  "death.attack.hit_plane": "%s被飞机送上了西天。"
 }
