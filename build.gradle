@@ -129,6 +129,9 @@ curseforge {
         addGameVersion mod_minecraft_version
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
+            relations {
+                requiredDependency 'ultimate-car-mod'
+            }
         }
     }
 }
