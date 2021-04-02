@@ -71,8 +71,8 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
             plane.setStarted(false, false);
         }
 
-        if (!stack.getItem().getName(stack).equals(stack.getDisplayName())) {
-            plane.setCustomName(stack.getDisplayName());
+        if (!stack.getItem().getName(stack).equals(stack.getHoverName())) {
+            plane.setCustomName(stack.getHoverName());
         }
     }
 
