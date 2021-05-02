@@ -11,19 +11,18 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.List;
 
 public abstract class EntityVehicleBase extends Entity {
 
-    private int steps;
-    private double clientX;
-    private double clientY;
-    private double clientZ;
-    private double clientYaw;
-    private double clientPitch;
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
 
     protected float deltaRotation;
 
@@ -35,8 +34,6 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public void tick() {
-        checkAndResetForcedChunkAdditionFlag();
-
         super.tick();
         this.tickLerp();
     }
@@ -56,19 +53,12 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     protected void addPassenger(Entity passenger) {
-        List<Entity> passengers;
-        try {
-            passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "field_184244_h");
-        } catch (ObfuscationReflectionHelper.UnableToFindFieldException x1) {
-            try {
-                passengers = ObfuscationReflectionHelper.getPrivateValue(Entity.class, this, "passengers");
-            } catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
-                super.addPassenger(passenger);
-                e.printStackTrace();
-                return;
-            }
-        }
         passengers.add(passenger);
+
+        if (isControlledByLocalInstance() && lerpSteps > 0) {
+            lerpSteps = 0;
+            absMoveTo(lerpX, lerpY, lerpZ, (float) lerpYRot, (float) lerpXRot);
+        }
     }
 
     public abstract int getPassengerSize();
@@ -79,27 +69,33 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     private void tickLerp() {
-        if (this.steps > 0 && !this.isControlledByLocalInstance()) {
-            double x = getX() + (clientX - getX()) / (double) steps;
-            double y = getY() + (clientY - getY()) / (double) steps;
-            double z = getZ() + (clientZ - getZ()) / (double) steps;
-            double d3 = MathHelper.wrapDegrees(clientYaw - (double) yRot);
-            this.yRot = (float) ((double) yRot + d3 / (double) steps);
-            this.xRot = (float) ((double) xRot + (clientPitch - (double) xRot) / (double) steps);
-            steps--;
+        if (isControlledByLocalInstance()) {
+            lerpSteps = 0;
+            setPacketCoordinates(this.getX(), this.getY(), this.getZ());
+        }
+
+        if (lerpSteps > 0) {
+            double x = getX() + (lerpX - getX()) / (double) lerpSteps;
+            double y = getY() + (lerpY - getY()) / (double) lerpSteps;
+            double z = getZ() + (lerpZ - getZ()) / (double) lerpSteps;
+            double ry = MathHelper.wrapDegrees(lerpYRot - (double) yRot);
+            yRot = (float) ((double) yRot + ry / (double) lerpSteps);
+            xRot = (float) ((double) xRot + (lerpXRot - (double) xRot) / (double) lerpSteps);
+            --lerpSteps;
             setPos(x, y, z);
             setRot(yRot, xRot);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-        this.clientX = x;
-        this.clientY = y;
-        this.clientZ = z;
-        this.clientYaw = yaw;
-        this.clientPitch = pitch;
-        this.steps = 10;
+    @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYRot = yaw;
+        this.lerpXRot = pitch;
+        this.lerpSteps = 10;
     }
 
     protected void applyOriantationsToEntity(Entity entityToUpdate) {
@@ -143,7 +139,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public Entity getControllingPassenger() {
-        return null;
+        return getDriver();
     }
 
     @Override
