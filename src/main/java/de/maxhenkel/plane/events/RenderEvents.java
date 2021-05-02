@@ -118,8 +118,8 @@ public class RenderEvents {
             EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getVehicle();
             event.getMatrixStack().pushPose();
 
-            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRot + (plane.yRot - plane.yRotO) * event.getPartialRenderTick())));
-            event.getMatrixStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRot + (plane.xRot - plane.xRotO) * event.getPartialRenderTick()));
+            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRotO + (plane.yRot - plane.yRotO) * event.getPartialRenderTick())));
+            event.getMatrixStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRotO + (plane.xRot - plane.xRotO) * event.getPartialRenderTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
@@ -132,7 +132,7 @@ public class RenderEvents {
             event.getMatrixStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
             event.getMatrixStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRot + (plane.yRot - plane.yRotO) * event.getPartialRenderTick()));
+            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRotO + (plane.yRot - plane.yRotO) * event.getPartialRenderTick()));
         }
     }
 

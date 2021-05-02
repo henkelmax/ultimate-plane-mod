@@ -1,1 +1,1 @@
-- Fixed plane name
+- Fixed rendering issues
