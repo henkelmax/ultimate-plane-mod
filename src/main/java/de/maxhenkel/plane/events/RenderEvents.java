@@ -15,6 +15,8 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -35,6 +37,22 @@ public class RenderEvents {
 
     public RenderEvents() {
         mc = Minecraft.getInstance();
+    }
+
+    @SubscribeEvent
+    public void onRender(EntityViewRenderEvent.CameraSetup evt) {
+        if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
+            evt.getInfo().move(-evt.getInfo().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get()) + 4D, 0D, 0D);
+        }
+    }
+
+    @SubscribeEvent
+    public void onRender(InputEvent.MouseScrollEvent evt) {
+        if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
+            Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDelta())));
+            Main.CLIENT_CONFIG.planeZoom.save();
+            evt.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

@@ -1,1 +1,1 @@
-- Fixed rendering issues
+- Added zoomable third person view
