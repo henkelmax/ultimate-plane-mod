@@ -1,1 +1,1 @@
-- Added zoomable third person view
+- Added missing plane recipes

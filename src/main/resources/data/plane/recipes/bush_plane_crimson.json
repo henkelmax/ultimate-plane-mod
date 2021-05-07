@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "EPS",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:crimson_slab"
+    },
+    "P": {
+      "item": "minecraft:crimson_planks"
+    },
+    "E": {
+      "item": "plane:plane_engine"
+    },
+    "W": {
+      "item": "plane:plane_wheel"
+    }
+  },
+  "result": {
+    "item": "plane:bush_plane_crimson",
+    "count": 1
+  }
+}

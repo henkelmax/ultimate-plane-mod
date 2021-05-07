@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "ECC",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:warped_slab"
+    },
+    "C": {
+      "tag": "forge:chests/wooden"
+    },
+    "E": {
+      "item": "plane:plane_engine"
+    },
+    "W": {
+      "item": "plane:plane_wheel"
+    }
+  },
+  "result": {
+    "item": "plane:cargo_plane_warped",
+    "count": 1
+  }
+}
