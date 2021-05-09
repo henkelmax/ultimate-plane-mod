@@ -15,5 +15,6 @@ public class ModItems {
     public static ItemWrench WRENCH = new ItemWrench();
     public static final ItemCraftingComponent PLANE_WHEEL = new ItemCraftingComponent("plane_wheel");
     public static final ItemCraftingComponent PLANE_ENGINE = new ItemCraftingComponent("plane_engine");
+    public static final ItemCraftingComponent DIAMOND_REINFORCED_IRON = new ItemCraftingComponent("diamond_reinforced_iron");
 
 }

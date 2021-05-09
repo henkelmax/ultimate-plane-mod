@@ -47,7 +47,7 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         PlayerEntity player = context.getPlayer();
 
         EntityPlaneSoundBase plane = createPlane(world);
-        plane.setFuel(100);
+        plane.setFuel(500);
 
         BlockState state = world.getBlockState(pos);
         VoxelShape collisionShape = state.getCollisionShape(world, pos);

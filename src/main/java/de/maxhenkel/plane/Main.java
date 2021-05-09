@@ -150,7 +150,8 @@ public class Main {
         event.getRegistry().registerAll(
                 ModItems.WRENCH,
                 ModItems.PLANE_WHEEL,
-                ModItems.PLANE_ENGINE
+                ModItems.PLANE_ENGINE,
+                ModItems.DIAMOND_REINFORCED_IRON
         );
     }
 

@@ -1,1 +1,4 @@
-- Added missing plane recipes
+- Fixed smoke particle offset
+- Made recipes more expensive
+- Increased fuel capacity
+- Increased fuel usage

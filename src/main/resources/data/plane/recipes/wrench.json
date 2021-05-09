@@ -1,16 +1,16 @@
 {
   "type": "crafting_shaped",
   "pattern": [
-    " I ",
-    " SI",
+    " D ",
+    " SD",
     "S  "
   ],
   "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
+    "D": {
+      "item": "plane:diamond_reinforced_iron"
     },
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "forge:rods/iron"
     }
   },
   "result": {

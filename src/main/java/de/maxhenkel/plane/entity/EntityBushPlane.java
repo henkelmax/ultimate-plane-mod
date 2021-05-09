@@ -57,12 +57,12 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
 
     @Override
     public float getMaxFuelUsage() {
-        return 5F;
+        return 15F;
     }
 
     @Override
     public int getMaxFuel() {
-        return 2000;
+        return 6000;
     }
 
     @Override

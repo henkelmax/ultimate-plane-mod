@@ -107,12 +107,12 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public float getMaxFuelUsage() {
-        return 7F;
+        return 21F;
     }
 
     @Override
     public int getMaxFuel() {
-        return 6000;
+        return 18000;
     }
 
     @Override
