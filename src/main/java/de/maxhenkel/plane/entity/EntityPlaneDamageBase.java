@@ -53,24 +53,20 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return;
         }
 
-        Vector3d lookVec = getLookAngle().normalize().scale(1.5D);
-        double offX = lookVec.x;
-        double offY = lookVec.y;
-        double offZ = lookVec.z;
-
         float damage = getPlaneDamage();
 
         float chance = Math.max(damage - 25F, 0) / 100F;
 
         if (random.nextFloat() < chance) {
-            spawnParticle(ParticleTypes.LARGE_SMOKE, offX, offY, offZ);
+            Vector3d lookVec = getLookAngle().normalize().scale(1.5D);
+            spawnParticle(ParticleTypes.LARGE_SMOKE, lookVec.x, lookVec.y, lookVec.z);
         }
     }
 
     private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ, double rand) {
         level.addParticle(particleTypes,
                 getX() + offX + (random.nextDouble() * rand - rand / 2D),
-                getY() + offY + (random.nextDouble() * rand - rand / 2D),
+                getY() + getBbHeight() / 2D + offY + (random.nextDouble() * rand - rand / 2D),
                 getZ() + offZ + (random.nextDouble() * rand - rand / 2D),
                 0D, 0D, 0D);
     }
@@ -138,7 +134,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
                 .withParameter(LootParameters.DAMAGE_SOURCE, source)
                 .withParameter(LootParameters.KILLER_ENTITY, player)
                 .withParameter(LootParameters.DIRECT_KILLER_ENTITY, player);
-        loottable.getRandomItems(context.create(LootParameterSets.ENTITY), this::spawnAtLocation);
+        loottable.getRandomItems(context.create(LootParameterSets.ENTITY)).forEach(this::spawnAtLocation);
 
         remove();
     }
