@@ -42,7 +42,7 @@ public class RenderEvents {
     @SubscribeEvent
     public void onRender(EntityViewRenderEvent.CameraSetup evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            evt.getInfo().move(-evt.getInfo().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get()) + 4D, 0D, 0D);
+            evt.getInfo().move(-evt.getInfo().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get() - 4D), 0D, 0D);
         }
     }
 

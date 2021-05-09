@@ -1,4 +1,1 @@
-- Fixed smoke particle offset
-- Made recipes more expensive
-- Increased fuel capacity
-- Increased fuel usage
+- Fixed third person view distance clipping
