@@ -1,1 +1,1 @@
-- Fixed third person view distance clipping
+- Increased plane damage

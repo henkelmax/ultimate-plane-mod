@@ -244,20 +244,18 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         if (isCollidedHorizontal()) {
             double newHorizontalMotion = getHorizontalMotion(getDeltaMovement());
             double motionDifference = horizontalMotion - newHorizontalMotion;
-            double damage = motionDifference * 100D - 12D;
+            double damage = motionDifference * 1000D - 150D;
             if (damage > 0D) {
                 damagePlane(damage, true);
-                System.out.println("dmg: " + damage);
             }
         }
 
         if (isCollidedVertical()) {
             double newVerticalMotion = Math.abs(getDeltaMovement().y);
             double motionDifference = verticalMotion - newVerticalMotion;
-            double damage = motionDifference * 100D - 10D;
+            double damage = motionDifference * 1000D - 100D;
             if (damage > 0D) {
                 damagePlane(damage, false);
-                System.out.println("dmg vert: " + damage);
             }
         }
     }
