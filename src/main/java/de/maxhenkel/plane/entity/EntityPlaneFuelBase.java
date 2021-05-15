@@ -22,8 +22,12 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     private static final DataParameter<Integer> FUEL = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.INT);
     private static final DataParameter<String> FUEL_TYPE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.STRING);
 
+    private double fuelConsumptionFactor;
+    private double consumeAmount = 0D;
+
     public EntityPlaneFuelBase(EntityType type, World worldIn) {
         super(type, worldIn);
+        fuelConsumptionFactor = (double) Main.CLIENT_CONFIG.fuelConsumptionFactor.get();
     }
 
     public abstract float getMaxFuelUsage();
@@ -37,13 +41,17 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public void fuelTick() {
-        if (!isStarted()) {
+        if (!isStarted() || fuelConsumptionFactor == 0D) {
             return;
         }
 
         if (level.getGameTime() % 20L == 0L) {
-            int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * getMaxFuelUsage()), 1);
-            setFuel(Math.max(getFuel() - consumeAmount, 0));
+            consumeAmount += getEngineSpeed() * getMaxFuelUsage() * fuelConsumptionFactor;
+            if (consumeAmount >= 1D) {
+                int roundedConsumeAmount = (int)Math.floor(consumeAmount);
+                consumeAmount -= (double)roundedConsumeAmount;
+                setFuel(Math.max(getFuel() - roundedConsumeAmount, 0));
+            }
         }
     }
 

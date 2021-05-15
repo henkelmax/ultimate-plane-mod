@@ -13,6 +13,7 @@ public class ClientConfig extends ConfigBase {
     public final ForgeConfigSpec.DoubleValue planeInfoScale;
     public final ForgeConfigSpec.EnumValue<SpeedType> planeInfoSpeedType;
     public final ForgeConfigSpec.DoubleValue planeZoom;
+    public final ForgeConfigSpec.DoubleValue fuelConsumptionFactor;
 
     public ClientConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -20,6 +21,7 @@ public class ClientConfig extends ConfigBase {
         planeInfoScale = builder.defineInRange("plane_info.scale", 0.75D, 0.1D, 2D);
         planeInfoSpeedType = builder.defineEnum("plane_info.speed_type", SpeedType.KILOMETERS_PER_HOUR);
         planeZoom = builder.defineInRange("plane.third_person_zoom", 6D, 1D, 20D);
+        fuelConsumptionFactor = builder.defineInRange("plane.fuel_consumption_factor", 1D, 0D, 100D);
     }
 
     public static enum SpeedType {
