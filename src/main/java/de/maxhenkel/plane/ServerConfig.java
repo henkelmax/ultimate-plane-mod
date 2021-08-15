@@ -1,10 +1,10 @@
 package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfig.ModConfigEvent event) {
+    public void onReload(ModConfigEvent event) {
         super.onReload(event);
         validFuels = validFuelsSpec.get().stream().map(ResourceLocation::new).map(ForgeRegistries.FLUIDS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }

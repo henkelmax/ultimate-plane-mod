@@ -1,18 +1,20 @@
 package de.maxhenkel.plane.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EntityVehicleBase extends Entity {
@@ -26,7 +28,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     protected float deltaRotation;
 
-    public EntityVehicleBase(EntityType type, World worldIn) {
+    public EntityVehicleBase(EntityType type, Level worldIn) {
         super(type, worldIn);
         this.blocksBuilding = true;
         this.maxUpStep = 0.6F;
@@ -38,14 +40,14 @@ public abstract class EntityVehicleBase extends Entity {
         this.tickLerp();
     }
 
-    public PlayerEntity getDriver() {
+    public Player getDriver() {
         List<Entity> passengers = getPassengers();
         if (passengers.size() <= 0) {
             return null;
         }
 
-        if (passengers.get(0) instanceof PlayerEntity) {
-            return (PlayerEntity) passengers.get(0);
+        if (passengers.get(0) instanceof Player) {
+            return (Player) passengers.get(0);
         }
 
         return null;
@@ -53,7 +55,9 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     protected void addPassenger(Entity passenger) {
-        passengers.add(passenger);
+        List<Entity> p = new ArrayList<>(passengers);
+        p.add(passenger);
+        passengers = ImmutableList.copyOf(p);
 
         if (isControlledByLocalInstance() && lerpSteps > 0) {
             lerpSteps = 0;
@@ -78,12 +82,12 @@ public abstract class EntityVehicleBase extends Entity {
             double x = getX() + (lerpX - getX()) / (double) lerpSteps;
             double y = getY() + (lerpY - getY()) / (double) lerpSteps;
             double z = getZ() + (lerpZ - getZ()) / (double) lerpSteps;
-            double ry = MathHelper.wrapDegrees(lerpYRot - (double) yRot);
-            yRot = (float) ((double) yRot + ry / (double) lerpSteps);
-            xRot = (float) ((double) xRot + (lerpXRot - (double) xRot) / (double) lerpSteps);
+            double ry = Mth.wrapDegrees(lerpYRot - (double) getYRot());
+            setYRot((float) ((double) getYRot() + ry / (double) lerpSteps));
+            setXRot((float) ((double) getXRot() + (lerpXRot - (double) getXRot()) / (double) lerpSteps));
             --lerpSteps;
             setPos(x, y, z);
-            setRot(yRot, xRot);
+            setRot(getYRot(), getXRot());
         }
     }
 
@@ -99,12 +103,12 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     protected void applyOriantationsToEntity(Entity entityToUpdate) {
-        entityToUpdate.setYBodyRot(yRot);
-        float f = MathHelper.wrapDegrees(entityToUpdate.yRot - yRot);
-        float f1 = MathHelper.clamp(f, -130.0F, 130.0F);
+        entityToUpdate.setYBodyRot(getYRot());
+        float f = Mth.wrapDegrees(entityToUpdate.getYRot() - getYRot());
+        float f1 = Mth.clamp(f, -130.0F, 130.0F);
         entityToUpdate.yRotO += f1 - f;
-        entityToUpdate.yRot += f1 - f;
-        entityToUpdate.setYHeadRot(entityToUpdate.yRot);
+        entityToUpdate.setYRot(entityToUpdate.getYRot() + f1 - f);
+        entityToUpdate.setYHeadRot(entityToUpdate.getYRot());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -113,7 +117,7 @@ public abstract class EntityVehicleBase extends Entity {
         this.applyOriantationsToEntity(entityToUpdate);
     }
 
-    public abstract Vector3d[] getPlayerOffsets();
+    public abstract Vec3[] getPlayerOffsets();
 
     @Override
     public void positionRider(Entity passenger) {
@@ -126,11 +130,11 @@ public abstract class EntityVehicleBase extends Entity {
         if (passengers.size() > 0) {
             int i = passengers.indexOf(passenger);
 
-            Vector3d offset = getPlayerOffsets()[i];
-            offset = offset.yRot((float) -Math.toRadians(yRot));
+            Vec3 offset = getPlayerOffsets()[i];
+            offset = offset.yRot((float) -Math.toRadians(getYRot()));
 
             passenger.setPos(getX() + offset.x, getY() + offset.y, getZ() + offset.z);
-            passenger.yRot += deltaRotation;
+            passenger.setYRot(passenger.getYRot() + deltaRotation);
             passenger.setYHeadRot(passenger.getYHeadRot() + deltaRotation);
         }
 
@@ -163,25 +167,25 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     @Override
-    protected boolean isMovementNoisy() {
-        return false;
+    protected MovementEmission getMovementEmission() {
+        return MovementEmission.NONE;
     }
 
     @Override
-    public ActionResultType interact(PlayerEntity player, Hand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (!player.isShiftKeyDown()) {
             if (player.getVehicle() != this) {
                 if (!level.isClientSide) {
                     player.startRiding(this);
                 }
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

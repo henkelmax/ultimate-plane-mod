@@ -1,15 +1,15 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 
 public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
-    private static final DataParameter<Integer> FUEL = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.INT);
-    private static final DataParameter<String> FUEL_TYPE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.STRING);
 
-    public EntityPlaneFuelBase(EntityType type, World worldIn) {
+    public EntityPlaneFuelBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -63,14 +63,14 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setFuel(compound.getInt("Fuel"));
         setFuelType(compound.getString("FuelType"));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();

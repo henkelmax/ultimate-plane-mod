@@ -1,21 +1,21 @@
 package de.maxhenkel.plane.entity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.corelib.client.obj.OBJEntityRenderer;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends OBJEntityRenderer<T> {
 
-    public AbstractPlaneModel(EntityRendererManager renderManager) {
+    protected AbstractPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
     @Override
-    public void render(T plane, float yRot, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light) {
+    public void render(T plane, float yRot, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
         super.render(plane, yRot, partialTicks, matrixStack, buffer, light);
         if (plane.hasCustomName()) {
             String name = trimName(plane.getCustomName().getString(), 0.02F, 1F);
@@ -31,12 +31,12 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
         return name;
     }
 
-    protected void drawName(T plane, String txt, MatrixStack matrixStack, IRenderTypeBuffer buffer, float partialTicks, float yRot, int light, boolean left) {
+    protected void drawName(T plane, String txt, PoseStack matrixStack, MultiBufferSource buffer, float partialTicks, float yRot, int light, boolean left) {
         matrixStack.pushPose();
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yRot));
-        float xRot = plane.xRotO + (plane.xRot - plane.xRotO) * partialTicks;
+        float xRot = plane.xRotO + (plane.getXRot() - plane.xRotO) * partialTicks;
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(xRot));
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
 
         translateName(plane, matrixStack, left);
@@ -53,6 +53,6 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
         matrixStack.popPose();
     }
 
-    protected abstract void translateName(T plane, MatrixStack matrixStack, boolean left);
+    protected abstract void translateName(T plane, PoseStack matrixStack, boolean left);
 
 }

@@ -2,10 +2,10 @@ package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.sound.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,7 +22,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     private SoundLoopStop stopLoop;
 
-    public EntityPlaneSoundBase(EntityType type, World worldIn) {
+    public EntityPlaneSoundBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -77,13 +77,13 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void damagePlane(double damage, boolean horizontal) {
         super.damagePlane(damage, horizontal);
 
-        ModSounds.playSound(ModSounds.CRASH, level, blockPosition(), null, SoundCategory.NEUTRAL, 1.0F);
+        ModSounds.playSound(ModSounds.CRASH, level, blockPosition(), null, SoundSource.NEUTRAL, 1.0F);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void checkIdleLoop() {
         if (!isSoundPlaying(idleLoop)) {
-            idleLoop = new SoundLoopIdle(this, ModSounds.ENGINE_IDLE, SoundCategory.NEUTRAL);
+            idleLoop = new SoundLoopIdle(this, ModSounds.ENGINE_IDLE, SoundSource.NEUTRAL);
             ModSounds.playSoundLoop(idleLoop, level);
         }
     }
@@ -91,7 +91,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkHighLoop() {
         if (!isSoundPlaying(highLoop)) {
-            highLoop = new SoundLoopHigh(this, ModSounds.ENGINE_HIGH, SoundCategory.NEUTRAL);
+            highLoop = new SoundLoopHigh(this, ModSounds.ENGINE_HIGH, SoundSource.NEUTRAL);
             ModSounds.playSoundLoop(highLoop, level);
         }
     }
@@ -99,7 +99,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStartLoop() {
         if (!isSoundPlaying(startLoop)) {
-            startLoop = new SoundLoopStart(this, ModSounds.ENGINE_START, SoundCategory.NEUTRAL);
+            startLoop = new SoundLoopStart(this, ModSounds.ENGINE_START, SoundSource.NEUTRAL);
             ModSounds.playSoundLoop(startLoop, level);
         }
     }
@@ -107,7 +107,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStopLoop() {
         if (!isSoundPlaying(stopLoop)) {
-            stopLoop = new SoundLoopStop(this, ModSounds.ENGINE_STOP, SoundCategory.NEUTRAL);
+            stopLoop = new SoundLoopStop(this, ModSounds.ENGINE_STOP, SoundSource.NEUTRAL);
             ModSounds.playSoundLoop(stopLoop, level);
         }
     }
@@ -115,13 +115,13 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @OnlyIn(Dist.CLIENT)
     public void checkStartingLoop() {
         if (!isSoundPlaying(startingLoop)) {
-            startingLoop = new SoundLoopStarting(this, ModSounds.ENGINE_STARTING, SoundCategory.NEUTRAL);
+            startingLoop = new SoundLoopStarting(this, ModSounds.ENGINE_STARTING, SoundSource.NEUTRAL);
             ModSounds.playSoundLoop(startingLoop, level);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    public boolean isSoundPlaying(ISound sound) {
+    public boolean isSoundPlaying(SoundInstance sound) {
         if (sound == null) {
             return false;
         }

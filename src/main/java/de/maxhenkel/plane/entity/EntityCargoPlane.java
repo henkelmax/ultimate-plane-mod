@@ -4,42 +4,42 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.ChestContainer;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 public class EntityCargoPlane extends EntityPlaneSoundBase {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(EntityPlaneSoundBase.class, DataSerializers.INT);
-    private IInventory cargoInventory;
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityPlaneSoundBase.class, EntityDataSerializers.INT);
+    private Container cargoInventory;
 
-    public EntityCargoPlane(World world) {
+    public EntityCargoPlane(Level world) {
         this(Main.CARGO_PLANE_ENTITY_TYPE, world);
     }
 
-    public EntityCargoPlane(EntityType<?> type, World world) {
+    public EntityCargoPlane(EntityType<?> type, Level world) {
         super(type, world);
-        cargoInventory = new Inventory(54);
+        cargoInventory = new SimpleContainer(54);
     }
 
     @Override
@@ -48,38 +48,38 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void destroyPlane(DamageSource source, PlayerEntity player) {
-        InventoryHelper.dropContents(level, blockPosition(), cargoInventory);
+    public void destroyPlane(DamageSource source, Player player) {
+        Containers.dropContents(level, blockPosition(), cargoInventory);
         cargoInventory.clearContent();
         super.destroyPlane(source, player);
     }
 
     @Override
-    public void openGUI(PlayerEntity player, boolean outside) {
-        if (player instanceof ServerPlayerEntity) {
+    public void openGUI(Player player, boolean outside) {
+        if (player instanceof ServerPlayer) {
             if (outside) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
+                NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
                     @Override
-                    public ITextComponent getDisplayName() {
-                        return new TranslationTextComponent("gui.plane.cargo_inventory");
+                    public Component getDisplayName() {
+                        return new TranslatableComponent("gui.plane.cargo_inventory");
                     }
 
                     @Nullable
                     @Override
-                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return ChestContainer.sixRows(i, playerInventory, cargoInventory);
+                    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
+                        return ChestMenu.sixRows(i, playerInventory, cargoInventory);
                     }
                 });
             } else {
-                NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
+                NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
                     @Override
-                    public ITextComponent getDisplayName() {
+                    public Component getDisplayName() {
                         return getName();
                     }
 
                     @Nullable
                     @Override
-                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
                         return new ContainerPlane(i, EntityCargoPlane.this, playerInventory);
                     }
                 }, packetBuffer -> {
@@ -92,14 +92,14 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setPlaneType(EntityCargoPlane.Type.fromTypeName(compound.getString("Type")));
         ItemUtils.readInventory(compound, "CargoInventory", cargoInventory);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("Type", getPlaneType().getTypeName());
         ItemUtils.saveInventory(compound, "CargoInventory", cargoInventory);
@@ -132,8 +132,8 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vector3d[] getPlayerOffsets() {
-        return new Vector3d[]{new Vector3d(0.5D, 0D, 0.8D), new Vector3d(-0.5D, 0D, 0.8D)};
+    public Vec3[] getPlayerOffsets() {
+        return new Vec3[]{new Vec3(0.5D, 0D, 0.8D), new Vec3(-0.5D, 0D, 0.8D)};
     }
 
     public EntityCargoPlane.Type getPlaneType() {

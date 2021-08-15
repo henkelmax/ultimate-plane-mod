@@ -1,23 +1,23 @@
 package de.maxhenkel.plane.events;
 
 import de.maxhenkel.plane.entity.EntityPlaneDamageBase;
-import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.sound.ModSounds;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import de.maxhenkel.plane.item.ModItems;
 
 public class InteractEvents {
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.EntityInteract evt) {
-        PlayerEntity player = evt.getPlayer();
-        ItemStack stack = player.getItemInHand(Hand.MAIN_HAND);
+        Player player = evt.getPlayer();
+        ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!stack.getItem().equals(ModItems.WRENCH)) {
-            stack = player.getItemInHand(Hand.OFF_HAND);
+            stack = player.getItemInHand(InteractionHand.OFF_HAND);
             if (!stack.getItem().equals(ModItems.WRENCH)) {
                 return;
             }
@@ -53,7 +53,7 @@ public class InteractEvents {
         float newDamage = plane.getPlaneDamage();
 
         if (Math.round(newDamage) % 10 == 0) {
-            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.blockPosition(), null, SoundCategory.NEUTRAL, 1F);
+            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.blockPosition(), null, SoundSource.NEUTRAL, 1F);
         }
     }
 

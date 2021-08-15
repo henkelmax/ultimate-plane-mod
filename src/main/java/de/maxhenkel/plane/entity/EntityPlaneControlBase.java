@@ -2,34 +2,34 @@ package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.net.MessageControlPlane;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
-    private static final DataParameter<Float> ENGINE_SPEED = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.FLOAT);
-    private static final DataParameter<Boolean> STARTED = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> START_TIME = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.INT);
-    private static final DataParameter<Boolean> THRUST_POSITIVE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> THRUST_NEGATIVE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> LEFT = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> RIGHT = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> UP = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> DOWN = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> BRAKE = EntityDataManager.defineId(EntityPlaneControlBase.class, DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> ENGINE_SPEED = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> STARTED = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> START_TIME = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> THRUST_POSITIVE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> THRUST_NEGATIVE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> LEFT = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> RIGHT = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> UP = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DOWN = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> BRAKE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
 
     public static final double MAX_ENGINE_SPEED = 1.5D;
     public static final double ENGINE_ACCELERATION = 0.005D;
     public static final double BRAKE_POWER = 0.012D;
 
-    public EntityPlaneControlBase(EntityType type, World worldIn) {
+    public EntityPlaneControlBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -83,8 +83,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
         float rotationSpeed = 0;
         if (Math.abs(speed) > 0F) {
-            rotationSpeed = MathHelper.abs(0.5F / (float) Math.pow(speed, 2)); //rotation modifier+0.5
-            rotationSpeed = MathHelper.clamp(rotationSpeed, 1.0F, 5.0F);
+            rotationSpeed = Mth.abs(0.5F / (float) Math.pow(speed, 2)); //rotation modifier+0.5
+            rotationSpeed = Mth.clamp(rotationSpeed, 1.0F, 5.0F);
         }
 
         deltaRotation = 0;
@@ -99,43 +99,43 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         // ----- YAW ------
-        yRot += deltaRotation;
-        float delta = Math.abs(yRot - yRotO);
-        while (yRot > 180F) {
-            yRot -= 360F;
-            yRotO = yRot - delta;
+        setYRot(getYRot() + deltaRotation);
+        float delta = Math.abs(getYRot() - yRotO);
+        while (getYRot() > 180F) {
+            setYRot(getYRot() - 360F);
+            yRotO = getYRot() - delta;
         }
-        while (yRot <= -180F) {
-            yRot += 360F;
-            yRotO = delta + yRot;
+        while (getYRot() <= -180F) {
+            setYRot(getYRot() + 360F);
+            yRotO = delta + getYRot();
         }
         // ----- YAW ------
 
         // ----- PITCH ------
         if (isUp()) {
-            xRot -= 1F;
+            setXRot(getXRot() - 1F);
         } else if (isDown()) {
-            xRot += 1F;
+            setXRot(getXRot() + 1F);
         }
 
-        xRot = Math.max(xRot, -90F);
-        xRot = Math.min(xRot, 90F);
+        setXRot(Math.max(getXRot(), -90F));
+        setXRot(Math.min(getXRot(), 90F));
 
         float groundPitchTolerance = 7F;
 
         if (isCollidedVertical()) {
             // Prevent leaning forwards when on ground
-            if (xRot > 0) {
-                xRot -= 10F;
-                if (xRot < 0) {
-                    xRot = 0;
+            if (getXRot() > 0) {
+                setXRot(getXRot() - 10F);
+                if (getXRot() < 0) {
+                    setXRot(0);
                 }
             }
 
-            if (xRot < -groundPitchTolerance) {
-                xRot += 10F;
-                if (xRot > -groundPitchTolerance) {
-                    xRot = -groundPitchTolerance;
+            if (getXRot() < -groundPitchTolerance) {
+                setXRot(getXRot() + 10F);
+                if (getXRot() > -groundPitchTolerance) {
+                    setXRot(getXRot() - groundPitchTolerance);
                 }
             }
         }
@@ -155,7 +155,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStartTime(0);
         }
 
-        Vector3d motionVector = getDeltaMovement();
+        Vec3 motionVector = getDeltaMovement();
         double verticalMotion = Math.abs(motionVector.y);
         double horizontalMotion = getHorizontalMotion(motionVector);
         float engineSpeed = getEngineSpeed();
@@ -176,20 +176,20 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 speed = decreaseToZero(speed, 0.002D); // ground resistance
             }
 
-            Vector3d motion = getLookAngle().normalize().scale(speed).multiply(1D, 0D, 1D);
+            Vec3 motion = getLookAngle().normalize().scale(speed).multiply(1D, 0D, 1D);
             setDeltaMovement(motion);
             if (speed > 0D) {
                 move(MoverType.SELF, getDeltaMovement());
             }
         } else {
             double fallSpeed = getFallSpeed();
-            Vector3d lookVec = getLookAngle();
-            float modifiedPitch = (xRot < 0F ? xRot : Math.min(xRot * 1.5F, 90F)) - 5F;
+            Vec3 lookVec = getLookAngle();
+            float modifiedPitch = (getXRot() < 0F ? getXRot() : Math.min(getXRot() * 1.5F, 90F)) - 5F;
             float pitch = modifiedPitch * ((float) Math.PI / 180F);
             double horizontalLook = Math.sqrt(lookVec.x * lookVec.x + lookVec.z * lookVec.z);
 
             double lookLength = lookVec.length();
-            float cosPitch = MathHelper.cos(pitch);
+            float cosPitch = Mth.cos(pitch);
             cosPitch = (float) ((double) cosPitch * (double) cosPitch * Math.min(1D, lookLength / 0.4D));
             motionVector = getDeltaMovement().add(0D, fallSpeed * (-1D + (double) cosPitch * 0.75D), 0D);
             if (motionVector.y < 0D && horizontalLook > 0D) {
@@ -198,7 +198,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
 
             if (pitch < 0.0F && horizontalLook > 0D) {
-                double d13 = horizontalMotion * (double) (-MathHelper.sin(pitch)) * 0.04D;
+                double d13 = horizontalMotion * (double) (-Mth.sin(pitch)) * 0.04D;
                 motionVector = motionVector.add(-lookVec.x * d13 / horizontalLook, d13 * 3.2D, -lookVec.z * d13 / horizontalLook);
             }
 
@@ -224,13 +224,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                     addSpeed = 0D;
                 }
 
-                Vector3d addVec = getLookAngle().normalize().scale(addSpeed);
+                Vec3 addVec = getLookAngle().normalize().scale(addSpeed);
 
-                motionVector = motionVector.add(new Vector3d(addVec.x, 0D, addVec.z));
+                motionVector = motionVector.add(new Vec3(addVec.x, 0D, addVec.z));
             }
 
             if (isStalling(motionVector)) {
-                motionVector = motionVector.multiply(new Vector3d(0.975D, 1.025D, 0.975D));
+                motionVector = motionVector.multiply(new Vec3(0.975D, 1.025D, 0.975D));
             }
 
             setDeltaMovement(motionVector);
@@ -260,7 +260,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
     }
 
-    protected boolean isStalling(Vector3d motionVector) {
+    protected boolean isStalling(Vec3 motionVector) {
         return motionVector.multiply(1D, 0D, 1D).length() / 4D < -motionVector.y;
     }
 
@@ -289,11 +289,11 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         return horizontalCollision;
     }
 
-    public double getHorizontalMotion(Vector3d vec3d) {
+    public double getHorizontalMotion(Vec3 vec3d) {
         return Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z);
     }
 
-    public double getAngle(Vector3d vec1, Vector3d vec2) {
+    public double getAngle(Vec3 vec1, Vec3 vec2) {
         return Math.acos(Math.abs(vec1.dot(vec2)) / (vec1.length() * vec2.length()));
     }
 
@@ -315,7 +315,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     public float getPitchPercentage() {
-        return xRot / 90F;
+        return getXRot() / 90F;
     }
 
     @Override
@@ -394,14 +394,14 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("EngineSpeed", getEngineSpeed());
         compound.putBoolean("Started", isStarted());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setEngineSpeed(compound.getFloat("EngineSpeed"));
         ((EntityPlaneSoundBase) this).setStarted(compound.getBoolean("Started"), false);

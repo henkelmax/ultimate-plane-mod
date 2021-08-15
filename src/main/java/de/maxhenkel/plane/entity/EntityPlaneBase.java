@@ -1,22 +1,23 @@
 package de.maxhenkel.plane.entity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class EntityPlaneBase extends EntityVehicleBase {
 
-    public EntityPlaneBase(EntityType type, World worldIn) {
+    public EntityPlaneBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public Vector3d getDismountLocationForPassenger(LivingEntity passenger) {
-        return getPlayerOffsets()[0].add(new Vector3d(getX(), getY() + 0.1D, getZ()));
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        return getPlayerOffsets()[0].add(new Vec3(getX(), getY() + 0.1D, getZ()));
     }
 
     @Override
@@ -25,7 +26,7 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
     }
 
     @Override
-    public boolean causeFallDamage(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
@@ -35,12 +36,12 @@ public abstract class EntityPlaneBase extends EntityVehicleBase {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
 
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
 
     }
 

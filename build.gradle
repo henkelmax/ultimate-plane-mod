@@ -1,25 +1,23 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://maven.maxhenkel.de/repository/public' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.2'
-        classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '4.0.4'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.19', changing: true
+        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
     }
 }
 
 plugins {
     // https://github.com/matthewprenger/CurseGradle
     id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'forge-update'
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'idea'
 
 idea {
@@ -33,7 +31,7 @@ version = mod_version
 group= mod_packagename
 archivesBaseName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
     mappings channel: 'official', version: mod_minecraft_version
@@ -81,14 +79,14 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
+//    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
+//    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 
-    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
@@ -105,11 +103,7 @@ jar {
 }
 
 processResources {
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.toml'
-
+    filesMatching("**/*.toml") {
         expand 'mod_id': mod_id,
                 'mod_version': mod_version,
                 'mod_vendor': mod_vendor,
@@ -117,9 +111,6 @@ processResources {
                 'mod_forge_version': mod_forge_version,
                 'mod_minecraft_version': mod_minecraft_version,
                 'car_version_range': car_version_range
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.toml'
     }
 }
 
@@ -131,6 +122,8 @@ curseforge {
         changelog = file('changelog.md')
         releaseType = curse_release_type
         addGameVersion mod_minecraft_version
+        addGameVersion 'Forge'
+        addGameVersion 'Java 16'
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
             relations {
@@ -159,6 +152,7 @@ forgeUpdate {
 }
 
 repositories {
+    mavenLocal()
     maven {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
@@ -168,23 +162,23 @@ repositories {
         url = "https://modmaven.k-4u.nl"
     }
     maven {
-        name = "Hwyla"
-        url "https://maven.tehnut.info/"
-    }
-    maven {
         name = "henkelmax.public"
         url = 'https://maven.maxhenkel.de/repository/public'
     }
-    mavenLocal()
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
-
 
 javadoc {
     failOnError = false
 }
 
 task deobfJar(type: Jar) {
-    classifier = 'deobf'
+    classifier 'deobf'
     from sourceSets.main.output
     manifest {
         attributes(["Specification-Title"     : mod_name,
@@ -198,12 +192,12 @@ task deobfJar(type: Jar) {
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    classifier 'sources'
     from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    classifier 'javadoc'
     from javadoc.getDestinationDir()
 }
 
@@ -219,7 +213,7 @@ jar.finalizedBy('reobfJar')
 shadowJar {
     project.configurations.shadow.setTransitive(true);
     configurations = [project.configurations.shadow]
-    classifier = ""
+    classifier ""
     relocate 'de.maxhenkel.corelib', "de.maxhenkel.${mod_id}.corelib"
 }
 

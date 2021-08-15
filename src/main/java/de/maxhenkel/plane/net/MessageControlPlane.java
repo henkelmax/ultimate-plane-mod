@@ -2,10 +2,10 @@ package de.maxhenkel.plane.net;
 
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
@@ -51,7 +51,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public MessageControlPlane fromBytes(PacketBuffer buf) {
+    public MessageControlPlane fromBytes(FriendlyByteBuf buf) {
         up = buf.readBoolean();
         down = buf.readBoolean();
         thrustPos = buf.readBoolean();
@@ -64,7 +64,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeBoolean(up);
         buf.writeBoolean(down);
         buf.writeBoolean(thrustPos);

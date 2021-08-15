@@ -1,14 +1,14 @@
 package de.maxhenkel.plane.sound;
 
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 public class SoundLoopIdle extends SoundLoopPlane {
 
     private float volumeToReach;
 
-    public SoundLoopIdle(EntityPlaneSoundBase plane, SoundEvent event, SoundCategory category) {
+    public SoundLoopIdle(EntityPlaneSoundBase plane, SoundEvent event, SoundSource category) {
         super(plane, event, category);
         volumeToReach = volume;
         volume = volume / 2.5F;
@@ -31,6 +31,5 @@ public class SoundLoopIdle extends SoundLoopPlane {
         }
         return false;
     }
-
 
 }

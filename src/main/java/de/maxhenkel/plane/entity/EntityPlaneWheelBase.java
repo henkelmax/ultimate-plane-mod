@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 
 public abstract class EntityPlaneWheelBase extends EntityPlaneInventoryBase {
 
@@ -12,7 +12,7 @@ public abstract class EntityPlaneWheelBase extends EntityPlaneInventoryBase {
     private static final float WHEEL_ROTATION = 240F;
     private static final float PROPELLER_ROTATION = 240F;
 
-    public EntityPlaneWheelBase(EntityType type, World world) {
+    public EntityPlaneWheelBase(EntityType type, Level world) {
         super(type, world);
 
         ticksSinceEngineOff = 100000;

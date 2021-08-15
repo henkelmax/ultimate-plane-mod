@@ -1,51 +1,51 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.corelib.item.ItemUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
 
-    private IInventory inventory;
+    private Container inventory;
 
-    public EntityPlaneInventoryBase(EntityType type, World worldIn) {
+    public EntityPlaneInventoryBase(EntityType type, Level worldIn) {
         super(type, worldIn);
 
-        inventory = new Inventory(27);
+        inventory = new SimpleContainer(27);
     }
 
     @Override
-    public ActionResultType interact(PlayerEntity player, Hand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) {
             if (!level.isClientSide) {
                 openGUI(player, true);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         return super.interact(player, hand);
     }
 
-    public abstract void openGUI(PlayerEntity player, boolean outside);
+    public abstract void openGUI(Player player, boolean outside);
 
-    public IInventory getInventory() {
+    public Container getInventory() {
         return inventory;
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         ItemUtils.readInventory(compound, "Inventory", inventory);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         ItemUtils.saveInventory(compound, "Inventory", inventory);
     }

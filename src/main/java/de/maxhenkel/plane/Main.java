@@ -16,38 +16,38 @@ import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.PlaneScreen;
 import de.maxhenkel.plane.integration.waila.PluginPlane;
-import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.loottable.CopyPlaneData;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import de.maxhenkel.plane.sound.ModSounds;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.loot.LootFunctionType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.IContainerFactory;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.IContainerFactory;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import org.lwjgl.glfw.GLFW;
+import de.maxhenkel.plane.item.ModItems;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -63,7 +63,7 @@ public class Main {
     public static EntityType<EntityCargoPlane> CARGO_PLANE_ENTITY_TYPE;
     public static EntityType<EntityBushPlane> BUSH_PLANE_ENTITY_TYPE;
 
-    public static LootFunctionType COPY_PLANE_DATA;
+    public static LootItemFunctionType COPY_PLANE_DATA;
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
@@ -73,7 +73,7 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(SoundEvent.class, this::registerSounds);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::registerContainers);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, this::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
@@ -95,29 +95,29 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new InteractEvents());
         MinecraftForge.EVENT_BUS.register(new CapabilityEvents());
 
-        COPY_PLANE_DATA = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Main.MODID, "copy_plane_data"), new LootFunctionType(new CopyPlaneData.Serializer()));
+        COPY_PLANE_DATA = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Main.MODID, "copy_plane_data"), new LootItemFunctionType(new CopyPlaneData.Serializer()));
 
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageControlPlane.class);
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 1, MessagePlaneGui.class);
     }
 
-    public static KeyBinding PLANE_KEY;
-    public static KeyBinding FORWARD_KEY;
-    public static KeyBinding BACK_KEY;
-    public static KeyBinding LEFT_KEY;
-    public static KeyBinding RIGHT_KEY;
-    public static KeyBinding UP_KEY;
-    public static KeyBinding DOWN_KEY;
-    public static KeyBinding START_KEY;
-    public static KeyBinding BRAKE_KEY;
+    public static KeyMapping PLANE_KEY;
+    public static KeyMapping FORWARD_KEY;
+    public static KeyMapping BACK_KEY;
+    public static KeyMapping LEFT_KEY;
+    public static KeyMapping RIGHT_KEY;
+    public static KeyMapping UP_KEY;
+    public static KeyMapping DOWN_KEY;
+    public static KeyMapping START_KEY;
+    public static KeyMapping BRAKE_KEY;
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
 
-        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
-        ScreenManager.register(Main.PLANE_CONTAINER_TYPE, factory);
+        MenuScreens.ScreenConstructor factory = (MenuScreens.ScreenConstructor<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
+        MenuScreens.register(Main.PLANE_CONTAINER_TYPE, factory);
 
         PLANE_KEY = ClientRegistry.registerKeyBinding("key.plane", "category.plane", GLFW.GLFW_KEY_P);
         FORWARD_KEY = ClientRegistry.registerKeyBinding("key.plane_add_thrust", "category.plane", GLFW.GLFW_KEY_I);
@@ -137,9 +137,9 @@ public class Main {
         } catch (ClassNotFoundException e) {
         }
 
-        RenderingRegistry.registerEntityRenderingHandler(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
-        RenderingRegistry.registerEntityRenderingHandler(CARGO_PLANE_ENTITY_TYPE, manager -> new CargoPlaneModel(manager));
-        RenderingRegistry.registerEntityRenderingHandler(BUSH_PLANE_ENTITY_TYPE, manager -> new BushPlaneModel(manager));
+        EntityRenderers.register(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
+        EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE, manager -> new CargoPlaneModel(manager));
+        EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE, manager -> new BushPlaneModel(manager));
     }
 
     @SubscribeEvent
@@ -164,7 +164,7 @@ public class Main {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "plane", EntityClassification.MISC, EntityPlane.class, builder -> {
+        PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "plane", MobCategory.MISC, EntityPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -174,7 +174,7 @@ public class Main {
         });
         event.getRegistry().register(PLANE_ENTITY_TYPE);
 
-        CARGO_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "cargo_plane", EntityClassification.MISC, EntityCargoPlane.class, builder -> {
+        CARGO_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "cargo_plane", MobCategory.MISC, EntityCargoPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -184,7 +184,7 @@ public class Main {
         });
         event.getRegistry().register(CARGO_PLANE_ENTITY_TYPE);
 
-        BUSH_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "bush_plane", EntityClassification.MISC, EntityBushPlane.class, builder -> {
+        BUSH_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "bush_plane", MobCategory.MISC, EntityBushPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -195,11 +195,11 @@ public class Main {
         event.getRegistry().register(BUSH_PLANE_ENTITY_TYPE);
     }
 
-    public static ContainerType<ContainerPlane> PLANE_CONTAINER_TYPE;
+    public static MenuType<ContainerPlane> PLANE_CONTAINER_TYPE;
 
     @SubscribeEvent
-    public void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
-        PLANE_CONTAINER_TYPE = new ContainerType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
+    public void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
+        PLANE_CONTAINER_TYPE = new MenuType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
             EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUUID());
             if (plane == null) {
                 return null;
@@ -211,9 +211,9 @@ public class Main {
     }
 
     @Nullable
-    public static EntityPlaneSoundBase getPlaneByUUID(PlayerEntity player, UUID uuid) {
+    public static EntityPlaneSoundBase getPlaneByUUID(Player player, UUID uuid) {
         double distance = 10D;
-        return player.level.getEntitiesOfClass(EntityPlaneSoundBase.class, new AxisAlignedBB(player.getX() - distance, player.getY() - distance, player.getZ() - distance, player.getX() + distance, player.getY() + distance, player.getZ() + distance), entity -> entity.getUUID().equals(uuid)).stream().findAny().orElse(null);
+        return player.level.getEntitiesOfClass(EntityPlaneSoundBase.class, new AABB(player.getX() - distance, player.getY() - distance, player.getZ() - distance, player.getX() + distance, player.getY() + distance, player.getZ() + distance), entity -> entity.getUUID().equals(uuid)).stream().findAny().orElse(null);
     }
 
 }

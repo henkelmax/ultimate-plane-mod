@@ -2,8 +2,8 @@ package de.maxhenkel.plane.item;
 
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlane;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class ItemPlane extends ItemAbstractPlane<EntityPlane> {
 
@@ -15,7 +15,7 @@ public class ItemPlane extends ItemAbstractPlane<EntityPlane> {
     }
 
     @Override
-    public EntityPlane createPlane(World world) {
+    public EntityPlane createPlane(Level world) {
         EntityPlane plane = new EntityPlane(world);
         plane.setPlaneType(type);
         return plane;

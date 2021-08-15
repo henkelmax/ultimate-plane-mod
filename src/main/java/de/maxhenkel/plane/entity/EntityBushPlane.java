@@ -1,30 +1,30 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityBushPlane extends EntityPlaneSoundBase {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(EntityBushPlane.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityBushPlane.class, EntityDataSerializers.INT);
 
-    public EntityBushPlane(World world) {
+    public EntityBushPlane(Level world) {
         this(Main.BUSH_PLANE_ENTITY_TYPE, world);
     }
 
-    public EntityBushPlane(EntityType<?> type, World world) {
+    public EntityBushPlane(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("Type", getPlaneType().getTypeName());
     }
@@ -35,17 +35,17 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected boolean isStalling(Vector3d motionVector) {
+    protected boolean isStalling(Vec3 motionVector) {
         return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y;
     }
 
     @Override
-    public void openGUI(PlayerEntity player, boolean outside) {
+    public void openGUI(Player player, boolean outside) {
 
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setPlaneType(Type.fromTypeName(compound.getString("Type")));
     }
@@ -77,8 +77,8 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vector3d[] getPlayerOffsets() {
-        return new Vector3d[]{new Vector3d(0D, 0D, 0.5D)};
+    public Vec3[] getPlayerOffsets() {
+        return new Vec3[]{new Vec3(0D, 0D, 0.5D)};
     }
 
     public Type getPlaneType() {

@@ -1,35 +1,35 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.DamageSourcePlane;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import de.maxhenkel.plane.item.ModItems;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
-    private static final DataParameter<Float> DAMAGE = EntityDataManager.defineId(EntityPlaneDamageBase.class, DataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityPlaneDamageBase.class, EntityDataSerializers.FLOAT);
 
-    public EntityPlaneDamageBase(EntityType type, World worldIn) {
+    public EntityPlaneDamageBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -58,12 +58,12 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         float chance = Math.max(damage - 25F, 0) / 100F;
 
         if (random.nextFloat() < chance) {
-            Vector3d lookVec = getLookAngle().normalize().scale(1.5D);
+            Vec3 lookVec = getLookAngle().normalize().scale(1.5D);
             spawnParticle(ParticleTypes.LARGE_SMOKE, lookVec.x, lookVec.y, lookVec.z);
         }
     }
 
-    private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ, double rand) {
+    private void spawnParticle(ParticleOptions particleTypes, double offX, double offY, double offZ, double rand) {
         level.addParticle(particleTypes,
                 getX() + offX + (random.nextDouble() * rand - rand / 2D),
                 getY() + getBbHeight() / 2D + offY + (random.nextDouble() * rand - rand / 2D),
@@ -71,7 +71,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
                 0D, 0D, 0D);
     }
 
-    private void spawnParticle(IParticleData particleTypes, double offX, double offY, double offZ) {
+    private void spawnParticle(ParticleOptions particleTypes, double offX, double offY, double offZ) {
         spawnParticle(particleTypes, offX, offY, offZ, 1D);
     }
 
@@ -91,10 +91,10 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return false;
         }
 
-        if (!(source.getDirectEntity() instanceof PlayerEntity)) {
+        if (!(source.getDirectEntity() instanceof Player)) {
             return false;
         }
-        PlayerEntity player = (PlayerEntity) source.getDirectEntity();
+        Player player = (Player) source.getDirectEntity();
 
         if (player == null) {
             return false;
@@ -104,7 +104,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return false;
         }
 
-        if (player.abilities.instabuild) {
+        if (player.getAbilities().instabuild) {
             if (player.isShiftKeyDown()) {
                 destroyPlane(source, player);
                 return true;
@@ -121,22 +121,22 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         return false;
     }
 
-    public void destroyPlane(DamageSource source, PlayerEntity player) {
-        IInventory inventory = ((EntityPlaneInventoryBase) this).getInventory();
-        InventoryHelper.dropContents(level, blockPosition(), inventory);
+    public void destroyPlane(DamageSource source, Player player) {
+        Container inventory = ((EntityPlaneInventoryBase) this).getInventory();
+        Containers.dropContents(level, blockPosition(), inventory);
         inventory.clearContent();
 
         LootTable loottable = this.level.getServer().getLootTables().get(getLootTable());
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) level)
-                .withParameter(LootParameters.ORIGIN, position())
-                .withParameter(LootParameters.THIS_ENTITY, this)
-                .withParameter(LootParameters.DAMAGE_SOURCE, source)
-                .withParameter(LootParameters.KILLER_ENTITY, player)
-                .withParameter(LootParameters.DIRECT_KILLER_ENTITY, player);
-        loottable.getRandomItems(context.create(LootParameterSets.ENTITY)).forEach(this::spawnAtLocation);
+        LootContext.Builder context = new LootContext.Builder((ServerLevel) level)
+                .withParameter(LootContextParams.ORIGIN, position())
+                .withParameter(LootContextParams.THIS_ENTITY, this)
+                .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                .withParameter(LootContextParams.KILLER_ENTITY, player)
+                .withParameter(LootContextParams.DIRECT_KILLER_ENTITY, player);
+        loottable.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(this::spawnAtLocation);
 
-        remove();
+        kill();
     }
 
     public abstract ResourceLocation getLootTable();
@@ -171,13 +171,13 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setPlaneDamage(compound.getFloat("Damage"));
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Damage", getPlaneDamage());
     }

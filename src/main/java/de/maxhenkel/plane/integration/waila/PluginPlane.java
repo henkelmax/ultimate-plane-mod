@@ -7,6 +7,7 @@ import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
 import mcp.mobius.waila.api.event.WailaRenderEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @WailaPlugin
@@ -21,14 +22,12 @@ public class PluginPlane implements IWailaPlugin {
 
     @SubscribeEvent
     public void onWailaRender(WailaRenderEvent.Pre event) {
-        if (!(event.getAccessor().getEntity() instanceof EntityPlaneSoundBase)) {
-            return;
-        }
-
-        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getAccessor().getEntity();
-
-        if (plane.getPassengers().contains(Minecraft.getInstance().player)) {
-            event.setCanceled(true);
+        if (event.getAccessor().getHitResult() instanceof EntityHitResult result) {
+            if (result.getEntity() instanceof EntityPlaneSoundBase plane) {
+                if (plane.getPassengers().contains(Minecraft.getInstance().player)) {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 

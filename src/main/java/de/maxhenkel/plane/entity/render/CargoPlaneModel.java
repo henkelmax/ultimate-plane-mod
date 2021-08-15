@@ -1,16 +1,16 @@
 package de.maxhenkel.plane.entity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3d;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.corelib.client.obj.OBJModelInstance;
 import de.maxhenkel.corelib.client.obj.OBJModelOptions;
 import de.maxhenkel.corelib.math.Rotation;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,12 +69,13 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(new ResourceLocation("textures/block/warped_planks.png"));
     private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(new ResourceLocation("textures/block/crimson_planks.png"));
 
-    public CargoPlaneModel(EntityRendererManager renderManager) {
+    public CargoPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
+
     @Override
-    protected void translateName(EntityCargoPlane plane, MatrixStack matrixStack, boolean left) {
+    protected void translateName(EntityCargoPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(16.01D / 16D, -20D / 16D, -1D);
             matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));

@@ -1,40 +1,40 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import de.maxhenkel.plane.Main;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 public class EntityPlane extends EntityPlaneSoundBase {
 
-    private static final DataParameter<Integer> TYPE = EntityDataManager.defineId(EntityPlane.class, DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityPlane.class, EntityDataSerializers.INT);
 
-    public EntityPlane(World world) {
+    public EntityPlane(Level world) {
         this(Main.PLANE_ENTITY_TYPE, world);
     }
 
-    public EntityPlane(EntityType<?> type, World world) {
+    public EntityPlane(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("Type", getPlaneType().getTypeName());
     }
@@ -45,17 +45,17 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void openGUI(PlayerEntity player, boolean outside) {
-        if (player instanceof ServerPlayerEntity) {
-            NetworkHooks.openGui((ServerPlayerEntity) player, new INamedContainerProvider() {
+    public void openGUI(Player player, boolean outside) {
+        if (player instanceof ServerPlayer) {
+            NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
                 @Override
-                public ITextComponent getDisplayName() {
+                public Component getDisplayName() {
                     return getName();
                 }
 
                 @Nullable
                 @Override
-                public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
                     return new ContainerPlane(i, EntityPlane.this, playerInventory);
                 }
             }, packetBuffer -> {
@@ -67,7 +67,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         setPlaneType(Type.fromTypeName(compound.getString("Type")));
     }
@@ -99,8 +99,8 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public Vector3d[] getPlayerOffsets() {
-        return new Vector3d[]{new Vector3d(0D, 0D, 1D), new Vector3d(0D, 0D, 0.5D), new Vector3d(0D, 0D, 0D)};
+    public Vec3[] getPlayerOffsets() {
+        return new Vec3[]{new Vec3(0D, 0D, 1D), new Vec3(0D, 0D, 0.5D), new Vec3(0D, 0D, 0D)};
     }
 
     public Type getPlaneType() {

@@ -1,6 +1,6 @@
 package de.maxhenkel.plane;
 
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 public class DamageSourcePlane extends DamageSource {
 
