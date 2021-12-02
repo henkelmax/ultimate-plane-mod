@@ -44,7 +44,7 @@ public class RenderEvents {
     @SubscribeEvent
     public void onRender(EntityViewRenderEvent.CameraSetup evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            evt.getInfo().move(-evt.getInfo().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get() - 4D), 0D, 0D);
+            evt.getCamera().move(-evt.getCamera().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get() - 4D), 0D, 0D);
         }
     }
 
@@ -122,7 +122,7 @@ public class RenderEvents {
     private double getRelativeHeight(EntityPlaneSoundBase plane) {
         int highestBlock = (int) plane.getY();
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos(plane.getX(), plane.getY(), plane.getZ());
-        for (int y = highestBlock; y >= 0; y--) {
+        for (int y = highestBlock; y >= plane.level.getMinBuildHeight(); y--) {
             p.setY(y);
             if (plane.level.getBlockState(p).canOcclude()) {
                 highestBlock = y;
@@ -138,30 +138,30 @@ public class RenderEvents {
         Player player = event.getPlayer();
         if (player.getVehicle() instanceof EntityPlaneSoundBase) {
             EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getVehicle();
-            event.getMatrixStack().pushPose();
+            event.getPoseStack().pushPose();
 
-            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialRenderTick())));
-            event.getMatrixStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialRenderTick()));
+            event.getPoseStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
+            event.getPoseStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
             if (i >= 0) {
                 Vec3 offset = plane.getPlayerOffsets()[i];
                 offset = offset.xRot((float) -Math.toRadians(plane.getXRot()));
-                event.getMatrixStack().translate(0F, offset.y, 0F);
+                event.getPoseStack().translate(0F, offset.y, 0F);
             }
 
-            event.getMatrixStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
-            event.getMatrixStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+            event.getPoseStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
+            event.getPoseStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            event.getMatrixStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialRenderTick()));
+            event.getPoseStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
         }
     }
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
         if (event.getPlayer().getVehicle() instanceof EntityPlaneSoundBase) {
-            event.getMatrixStack().popPose();
+            event.getPoseStack().popPose();
         }
     }
 

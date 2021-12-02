@@ -1,1 +1,1 @@
-- Added finnish translation
+- Updated to 1.18
