@@ -1,1 +1,1 @@
-- Fixed crash when running over entities
+- Updated to 1.18.2
