@@ -25,6 +25,9 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import de.maxhenkel.plane.item.ModItems;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityPlaneDamageBase.class, EntityDataSerializers.FLOAT);
@@ -36,6 +39,11 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     @Override
     public void tick() {
         super.tick();
+
+        Runnable task;
+        while ((task = tasks.poll()) != null) {
+            task.run();
+        }
 
         if (isInLava()) {
             setPlaneDamage(getPlaneDamage() + 1F);
@@ -155,16 +163,17 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         entityData.set(DAMAGE, damage);
     }
 
+    private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
+
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (entity instanceof LivingEntity && !getPassengers().contains(entity)) {
+        if (!level.isClientSide && entity instanceof LivingEntity && !getPassengers().contains(entity)) {
             if (entity.getBoundingBox().intersects(getBoundingBox())) {
                 double speed = getDeltaMovement().length();
                 if (speed > 0.35F) {
                     float damage = Math.min((float) (speed * 10D), 15F);
-                    entity.hurt(DamageSourcePlane.DAMAGE_PLANE, damage);
+                    tasks.add(() -> entity.hurt(DamageSourcePlane.DAMAGE_PLANE, damage));
                 }
-
             }
         }
         return super.canCollideWith(entity);
