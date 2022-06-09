@@ -16,9 +16,9 @@ public class InteractEvents {
     public void onInteract(PlayerInteractEvent.EntityInteract evt) {
         Player player = evt.getPlayer();
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!stack.getItem().equals(ModItems.WRENCH)) {
+        if (!stack.getItem().equals(ModItems.WRENCH.get())) {
             stack = player.getItemInHand(InteractionHand.OFF_HAND);
-            if (!stack.getItem().equals(ModItems.WRENCH)) {
+            if (!stack.getItem().equals(ModItems.WRENCH.get())) {
                 return;
             }
         }
@@ -53,7 +53,7 @@ public class InteractEvents {
         float newDamage = plane.getPlaneDamage();
 
         if (Math.round(newDamage) % 10 == 0) {
-            ModSounds.playSound(ModSounds.RATCHET, evt.getWorld(), plane.blockPosition(), null, SoundSource.NEUTRAL, 1F);
+            ModSounds.playSound(ModSounds.RATCHET.get(), evt.getWorld(), plane.blockPosition(), null, SoundSource.NEUTRAL, 1F);
         }
     }
 

@@ -4,6 +4,7 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
@@ -12,7 +13,7 @@ public abstract class SoundLoopPlane extends AbstractTickableSoundInstance {
     protected EntityPlaneSoundBase plane;
 
     public SoundLoopPlane(EntityPlaneSoundBase plane, SoundEvent event, SoundSource category) {
-        super(event, category);
+        super(event, category, SoundInstance.createUnseededRandom());
         this.plane = plane;
         this.looping = true;
         this.delay = 0;

@@ -16,7 +16,7 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityBushPlane.class, EntityDataSerializers.INT);
 
     public EntityBushPlane(Level world) {
-        this(Main.BUSH_PLANE_ENTITY_TYPE, world);
+        this(Main.BUSH_PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityBushPlane(EntityType<?> type, Level world) {

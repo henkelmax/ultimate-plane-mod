@@ -2,6 +2,7 @@ package de.maxhenkel.plane.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public abstract class EntityVehicleBase extends Entity {
     private void tickLerp() {
         if (isControlledByLocalInstance()) {
             lerpSteps = 0;
-            setPacketCoordinates(this.getX(), this.getY(), this.getZ());
+            syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
         }
 
         if (lerpSteps > 0) {
@@ -186,7 +186,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        return new ClientboundAddEntityPacket(this);
     }
 
 }

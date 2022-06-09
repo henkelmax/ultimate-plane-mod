@@ -120,7 +120,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         }
 
         ItemStack heldItem = player.getMainHandItem();
-        if (heldItem.getItem().equals(ModItems.WRENCH) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
+        if (heldItem.getItem().equals(ModItems.WRENCH.get()) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
             heldItem.hurtAndBreak(512, player, playerEntity -> {
             });
             destroyPlane(source, player);

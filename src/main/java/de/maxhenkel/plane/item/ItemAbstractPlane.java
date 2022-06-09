@@ -7,8 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -95,13 +93,13 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
 
         if (planeData != null) {
             tooltip.add(
-                    new TranslatableComponent("tooltip.plane.damage",
-                            new TextComponent(String.valueOf(MathUtils.round(planeData.getFloat("Damage"), 2)))
+                    Component.translatable("tooltip.plane.damage",
+                            Component.literal(String.valueOf(MathUtils.round(planeData.getFloat("Damage"), 2)))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
             tooltip.add(
-                    new TranslatableComponent("tooltip.plane.fuel",
-                            new TextComponent(String.valueOf(planeData.getInt("Fuel")))
+                    Component.translatable("tooltip.plane.fuel",
+                            Component.literal(String.valueOf(planeData.getInt("Fuel")))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
         }

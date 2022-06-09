@@ -26,7 +26,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
     private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityPlane.class, EntityDataSerializers.INT);
 
     public EntityPlane(Level world) {
-        this(Main.PLANE_ENTITY_TYPE, world);
+        this(Main.PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityPlane(EntityType<?> type, Level world) {

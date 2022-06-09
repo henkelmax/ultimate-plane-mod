@@ -6,7 +6,6 @@ import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -30,11 +29,11 @@ import javax.annotation.Nullable;
 
 public class EntityCargoPlane extends EntityPlaneSoundBase {
 
-    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityPlaneSoundBase.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityCargoPlane.class, EntityDataSerializers.INT);
     private Container cargoInventory;
 
     public EntityCargoPlane(Level world) {
-        this(Main.CARGO_PLANE_ENTITY_TYPE, world);
+        this(Main.CARGO_PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityCargoPlane(EntityType<?> type, Level world) {
@@ -61,7 +60,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
                 NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
-                        return new TranslatableComponent("gui.plane.cargo_inventory");
+                        return Component.translatable("gui.plane.cargo_inventory");
                     }
 
                     @Nullable

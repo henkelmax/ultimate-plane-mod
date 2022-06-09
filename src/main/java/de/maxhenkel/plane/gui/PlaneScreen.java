@@ -6,7 +6,6 @@ import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,9 +17,9 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
     private static final ResourceLocation CAR_GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/gui_plane.png");
 
-    private static final Component TEXT_FUEL = new TranslatableComponent("gui.plane.fuel");
-    private static final Component TEXT_DAMAGE = new TranslatableComponent("gui.plane.damage");
-    private static final Component TEXT_ENGINE = new TranslatableComponent("gui.plane.throttle");
+    private static final Component TEXT_FUEL = Component.translatable("gui.plane.fuel");
+    private static final Component TEXT_DAMAGE = Component.translatable("gui.plane.damage");
+    private static final Component TEXT_ENGINE = Component.translatable("gui.plane.throttle");
 
     private Inventory playerInv;
     private EntityPlaneSoundBase plane;
@@ -47,19 +46,19 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
         if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<FormattedCharSequence> list = new ArrayList<>();
-            list.add(new TranslatableComponent("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText());
+            list.add(Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText());
             renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
 
         if (mouseX >= leftPos + 96 && mouseX < leftPos + 168 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<FormattedCharSequence> list = new ArrayList<>();
-            list.add(new TranslatableComponent("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText());
+            list.add(Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText());
             renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
 
         if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 46 && mouseY < topPos + 56) {
             List<FormattedCharSequence> list = new ArrayList<>();
-            list.add(new TranslatableComponent("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText());
+            list.add(Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText());
             renderTooltip(matrixStack, list, mouseX - leftPos, mouseY - topPos);
         }
     }

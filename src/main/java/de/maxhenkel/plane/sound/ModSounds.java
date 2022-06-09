@@ -11,40 +11,29 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModSounds {
-    public static SoundEvent ENGINE_STOP = registerSound("engine_stop");
-    public static SoundEvent ENGINE_STARTING = registerSound("engine_starting");
-    public static SoundEvent ENGINE_START = registerSound("engine_start");
-    public static SoundEvent ENGINE_IDLE = registerSound("engine_idle");
-    public static SoundEvent ENGINE_HIGH = registerSound("engine_high");
-    public static SoundEvent CRASH = registerSound("crash");
-    public static SoundEvent RATCHET = registerSound("ratchet");
 
-    public static List<SoundEvent> getAll() {
-        List<SoundEvent> sounds = new ArrayList<>();
-        for (Field field : ModSounds.class.getFields()) {
-            try {
-                Object obj = field.get(null);
-                if (obj instanceof SoundEvent) {
-                    sounds.add((SoundEvent) obj);
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+    private static final DeferredRegister<SoundEvent> SOUND_REGISTER = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Main.MODID);
 
-        return sounds;
+    public static final RegistryObject<SoundEvent> ENGINE_STOP = addSound("engine_stop");
+    public static final RegistryObject<SoundEvent> ENGINE_STARTING = addSound("engine_starting");
+    public static final RegistryObject<SoundEvent> ENGINE_START = addSound("engine_start");
+    public static final RegistryObject<SoundEvent> ENGINE_IDLE = addSound("engine_idle");
+    public static final RegistryObject<SoundEvent> ENGINE_HIGH = addSound("engine_high");
+    public static final RegistryObject<SoundEvent> CRASH = addSound("crash");
+    public static final RegistryObject<SoundEvent> RATCHET = addSound("ratchet");
+
+    public static RegistryObject<SoundEvent> addSound(String soundName) {
+        return SOUND_REGISTER.register(soundName, () -> new SoundEvent(new ResourceLocation(Main.MODID, soundName)));
     }
 
-    public static SoundEvent registerSound(String soundName) {
-        SoundEvent event = new SoundEvent(new ResourceLocation(Main.MODID, soundName));
-        event.setRegistryName(new ResourceLocation(Main.MODID, soundName));
-        return event;
+    public static void init() {
+        SOUND_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     public static void playSound(SoundEvent evt, Level world, BlockPos pos, Player entity, SoundSource category, float volume) {

@@ -15,7 +15,6 @@ import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.PlaneScreen;
-import de.maxhenkel.plane.integration.waila.PluginPlane;
 import de.maxhenkel.plane.loottable.CopyPlaneData;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
@@ -25,18 +24,15 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +42,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.lwjgl.glfw.GLFW;
 import de.maxhenkel.plane.item.ModItems;
 
@@ -59,21 +58,12 @@ public class Main {
 
     public static SimpleChannel SIMPLE_CHANNEL;
 
-    public static EntityType<EntityPlane> PLANE_ENTITY_TYPE;
-    public static EntityType<EntityCargoPlane> CARGO_PLANE_ENTITY_TYPE;
-    public static EntityType<EntityBushPlane> BUSH_PLANE_ENTITY_TYPE;
-
     public static LootItemFunctionType COPY_PLANE_DATA;
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
     public Main() {
-
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(SoundEvent.class, this::registerSounds);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, this::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
@@ -82,6 +72,11 @@ public class Main {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             clientStart();
         });
+
+        ModItems.init();
+        ModSounds.init();
+        ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MENU_TYPE_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -117,7 +112,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
 
         MenuScreens.ScreenConstructor factory = (MenuScreens.ScreenConstructor<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
-        MenuScreens.register(Main.PLANE_CONTAINER_TYPE, factory);
+        MenuScreens.register(Main.PLANE_CONTAINER_TYPE.get(), factory);
 
         PLANE_KEY = ClientRegistry.registerKeyBinding("key.plane", "category.plane", GLFW.GLFW_KEY_P);
         FORWARD_KEY = ClientRegistry.registerKeyBinding("key.plane_add_thrust", "category.plane", GLFW.GLFW_KEY_I);
@@ -131,40 +126,21 @@ public class Main {
 
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
-        try {
+        // TODO
+        /*try {
             Class.forName("mcp.mobius.waila.api.event.WailaRenderEvent");
             MinecraftForge.EVENT_BUS.register(new PluginPlane());
         } catch (ClassNotFoundException e) {
-        }
+        }*/
 
-        EntityRenderers.register(PLANE_ENTITY_TYPE, manager -> new PlaneModel(manager));
-        EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE, manager -> new CargoPlaneModel(manager));
-        EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE, manager -> new BushPlaneModel(manager));
+        EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
+        EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
+        EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
     }
 
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(ModItems.PLANES);
-        event.getRegistry().registerAll(ModItems.CARGO_PLANES);
-        event.getRegistry().registerAll(ModItems.BUSH_PLANES);
-        event.getRegistry().registerAll(
-                ModItems.WRENCH,
-                ModItems.PLANE_WHEEL,
-                ModItems.PLANE_ENGINE,
-                ModItems.DIAMOND_REINFORCED_IRON
-        );
-    }
-
-    @SubscribeEvent
-    public void registerSounds(RegistryEvent.Register<SoundEvent> event) {
-        event.getRegistry().registerAll(
-                ModSounds.getAll().toArray(new SoundEvent[0])
-        );
-    }
-
-    @SubscribeEvent
-    public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "plane", MobCategory.MISC, EntityPlane.class, builder -> {
+    private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, Main.MODID);
+    public static final RegistryObject<EntityType<EntityPlane>> PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("plane", () -> {
+        return CommonRegistry.registerEntity(Main.MODID, "plane", MobCategory.MISC, EntityPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -172,9 +148,9 @@ public class Main {
                     .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world));
         });
-        event.getRegistry().register(PLANE_ENTITY_TYPE);
-
-        CARGO_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "cargo_plane", MobCategory.MISC, EntityCargoPlane.class, builder -> {
+    });
+    public static final RegistryObject<EntityType<EntityCargoPlane>> CARGO_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("cargo_plane", () -> {
+        return CommonRegistry.registerEntity(Main.MODID, "cargo_plane", MobCategory.MISC, EntityCargoPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -182,9 +158,9 @@ public class Main {
                     .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityCargoPlane(world));
         });
-        event.getRegistry().register(CARGO_PLANE_ENTITY_TYPE);
-
-        BUSH_PLANE_ENTITY_TYPE = CommonRegistry.registerEntity(Main.MODID, "bush_plane", MobCategory.MISC, EntityBushPlane.class, builder -> {
+    });
+    public static final RegistryObject<EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
+        return CommonRegistry.registerEntity(Main.MODID, "bush_plane", MobCategory.MISC, EntityBushPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
@@ -192,23 +168,18 @@ public class Main {
                     .sized(3.5F, 2F)
                     .setCustomClientFactory((spawnEntity, world) -> new EntityBushPlane(world));
         });
-        event.getRegistry().register(BUSH_PLANE_ENTITY_TYPE);
-    }
+    });
 
-    public static MenuType<ContainerPlane> PLANE_CONTAINER_TYPE;
-
-    @SubscribeEvent
-    public void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
-        PLANE_CONTAINER_TYPE = new MenuType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
+    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.CONTAINERS, Main.MODID);
+    public static RegistryObject<MenuType<ContainerPlane>> PLANE_CONTAINER_TYPE = MENU_TYPE_REGISTER.register("plane", () -> {
+        return new MenuType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
             EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUUID());
             if (plane == null) {
                 return null;
             }
             return new ContainerPlane(windowId, plane, inv);
         });
-        PLANE_CONTAINER_TYPE.setRegistryName(new ResourceLocation(Main.MODID, "plane"));
-        event.getRegistry().register(PLANE_CONTAINER_TYPE);
-    }
+    });
 
     @Nullable
     public static EntityPlaneSoundBase getPlaneByUUID(Player player, UUID uuid) {

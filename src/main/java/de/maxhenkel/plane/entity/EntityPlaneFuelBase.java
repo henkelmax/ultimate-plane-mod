@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 
 public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
 
-    private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.STRING);
 
     public EntityPlaneFuelBase(EntityType type, Level worldIn) {
         super(type, worldIn);
@@ -74,7 +74,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         super.addAdditionalSaveData(compound);
         compound.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();
-        compound.putString("FuelType", fuel == null ? "" : fuel.getRegistryName().toString());
+        compound.putString("FuelType", fuel == null ? "" : ForgeRegistries.FLUIDS.getKey(fuel).toString());
     }
 
     @Nullable
@@ -87,7 +87,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public void setFuelType(Fluid fluid) {
-        setFuelType(fluid.getRegistryName().toString());
+        setFuelType(ForgeRegistries.FLUIDS.getKey(fluid).toString());
     }
 
     public void setFuelType(String fluid) {

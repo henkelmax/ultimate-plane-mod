@@ -2,7 +2,6 @@ package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.config.ConfigBase;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.function.Function;
@@ -34,7 +33,7 @@ public class ClientConfig extends ConfigBase {
         }
 
         public Component getTextComponent(double bpt) {
-            return new TranslatableComponent(translationKey, Math.round(converterFunction.apply(bpt)));
+            return Component.translatable(translationKey, Math.round(converterFunction.apply(bpt)));
         }
     }
 
