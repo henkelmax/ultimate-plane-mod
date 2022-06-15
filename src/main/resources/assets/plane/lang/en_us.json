@@ -59,5 +59,7 @@
   "key.plane_start": "Start",
   "key.plane_brake": "Brake",
 
-  "death.attack.hit_plane": "%s was run over by a plane"
+  "death.attack.hit_plane": "%s was run over by a plane",
+
+  "config.jade.plugin_plane.plane": "Plane"
 }
