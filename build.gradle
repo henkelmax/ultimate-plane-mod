@@ -28,7 +28,7 @@ idea {
 }
 
 version = mod_version
-group= mod_packagename
+group = mod_packagename
 archivesBaseName = mod_id
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -159,6 +159,9 @@ modrinth {
     gameVersions = [mod_minecraft_version]
     loaders = ['forge']
     syncBodyFrom = file("readme.md").text
+    dependencies {
+        required.project "DCPUF5Rv" // Ultimate Car Mod
+    }
 }
 tasks.modrinth.dependsOn(build)
 
