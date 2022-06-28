@@ -1,13 +1,17 @@
+<!-- modrinth_exclude.start -->
+
 # The Ultimate Plane Mod ![](http://cf.way2muchnoise.eu/full_414049_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/414049.svg)
   
-  ## Links
-  - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod)
-  - [ModRepo](https://modrepo.de/minecraft/plane/overview)
-  - [GitHub](https://github.com/henkelmax/ultimate-plane-mod)
-  - [FAQ](https://modrepo.de/minecraft/plane/faq)
-  - [Credits](https://modrepo.de/minecraft/plane/credits)
-  
-  ---
+## Links
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod)
+- [ModRepo](https://modrepo.de/minecraft/plane/overview)
+- [GitHub](https://github.com/henkelmax/ultimate-plane-mod)
+- [FAQ](https://modrepo.de/minecraft/plane/faq)
+- [Credits](https://modrepo.de/minecraft/plane/credits)
+
+---
+
+<!-- modrinth_exclude.end -->
 
 This mod adds planes into your Minecraft world.
 It requires the [Ultimate Car Mod](https://www.curseforge.com/minecraft/mc-mods/ultimate-car-mod) for the fuel and the gas station.
