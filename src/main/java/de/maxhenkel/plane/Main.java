@@ -1,6 +1,5 @@
 package de.maxhenkel.plane;
 
-import de.maxhenkel.corelib.ClientRegistry;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
@@ -15,6 +14,7 @@ import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.PlaneScreen;
+import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.loottable.CopyPlaneData;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
@@ -32,6 +32,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -46,7 +47,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.lwjgl.glfw.GLFW;
-import de.maxhenkel.plane.item.ModItems;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -82,6 +82,7 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientStart() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::onRegisterKeyBinds);
     }
 
     @SubscribeEvent
@@ -114,16 +115,6 @@ public class Main {
         MenuScreens.ScreenConstructor factory = (MenuScreens.ScreenConstructor<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
         MenuScreens.register(Main.PLANE_CONTAINER_TYPE.get(), factory);
 
-        PLANE_KEY = ClientRegistry.registerKeyBinding("key.plane", "category.plane", GLFW.GLFW_KEY_P);
-        FORWARD_KEY = ClientRegistry.registerKeyBinding("key.plane_add_thrust", "category.plane", GLFW.GLFW_KEY_I);
-        BACK_KEY = ClientRegistry.registerKeyBinding("key.plane_remove_thrust", "category.plane", GLFW.GLFW_KEY_K);
-        LEFT_KEY = ClientRegistry.registerKeyBinding("key.plane_left", "category.plane", GLFW.GLFW_KEY_A);
-        RIGHT_KEY = ClientRegistry.registerKeyBinding("key.plane_right", "category.plane", GLFW.GLFW_KEY_D);
-        UP_KEY = ClientRegistry.registerKeyBinding("key.plane_up", "category.plane", GLFW.GLFW_KEY_S);
-        DOWN_KEY = ClientRegistry.registerKeyBinding("key.plane_down", "category.plane", GLFW.GLFW_KEY_W);
-        START_KEY = ClientRegistry.registerKeyBinding("key.plane_start", "category.plane", GLFW.GLFW_KEY_R);
-        BRAKE_KEY = ClientRegistry.registerKeyBinding("key.plane_brake", "category.plane", GLFW.GLFW_KEY_B);
-
         MinecraftForge.EVENT_BUS.register(new KeyEvents());
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
         // TODO
@@ -136,6 +127,30 @@ public class Main {
         EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
         EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
         EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
+    }
+
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
+        PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, "category.plane");
+        FORWARD_KEY = new KeyMapping("key.plane_add_thrust", GLFW.GLFW_KEY_I, "category.plane");
+        BACK_KEY = new KeyMapping("key.plane_remove_thrust", GLFW.GLFW_KEY_K, "category.plane");
+        LEFT_KEY = new KeyMapping("key.plane_left", GLFW.GLFW_KEY_A, "category.plane");
+        RIGHT_KEY = new KeyMapping("key.plane_right", GLFW.GLFW_KEY_D, "category.plane");
+        UP_KEY = new KeyMapping("key.plane_up", GLFW.GLFW_KEY_S, "category.plane");
+        DOWN_KEY = new KeyMapping("key.plane_down", GLFW.GLFW_KEY_W, "category.plane");
+        START_KEY = new KeyMapping("key.plane_start", GLFW.GLFW_KEY_R, "category.plane");
+        BRAKE_KEY = new KeyMapping("key.plane_brake", GLFW.GLFW_KEY_B, "category.plane");
+
+        event.register(PLANE_KEY);
+        event.register(FORWARD_KEY);
+        event.register(BACK_KEY);
+        event.register(LEFT_KEY);
+        event.register(RIGHT_KEY);
+        event.register(UP_KEY);
+        event.register(DOWN_KEY);
+        event.register(START_KEY);
+        event.register(BRAKE_KEY);
     }
 
     private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, Main.MODID);

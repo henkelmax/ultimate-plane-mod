@@ -18,11 +18,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -42,14 +41,14 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void onRender(EntityViewRenderEvent.CameraSetup evt) {
+    public void onRender(ViewportEvent.ComputeCameraAngles evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
             evt.getCamera().move(-evt.getCamera().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get() - 4D), 0D, 0D);
         }
     }
 
     @SubscribeEvent
-    public void onRender(InputEvent.MouseScrollEvent evt) {
+    public void onRender(InputEvent.MouseScrollingEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
             Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDelta())));
             Main.CLIENT_CONFIG.planeZoom.save();
@@ -58,10 +57,7 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent evt) {
-        if (!evt.getType().equals(ElementType.ALL)) {
-            return;
-        }
+    public void onRender(RenderGuiOverlayEvent.Post evt) {
 
         Player player = mc.player;
 
