@@ -131,9 +131,9 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         if (player.getVehicle() instanceof EntityPlaneSoundBase) {
-            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getPlayer().getVehicle();
+            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getEntity().getVehicle();
             event.getPoseStack().pushPose();
 
             event.getPoseStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
@@ -156,7 +156,7 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getPlayer().getVehicle() instanceof EntityPlaneSoundBase) {
+        if (event.getEntity().getVehicle() instanceof EntityPlaneSoundBase) {
             event.getPoseStack().popPose();
         }
     }

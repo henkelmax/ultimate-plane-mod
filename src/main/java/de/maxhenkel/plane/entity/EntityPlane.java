@@ -47,7 +47,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
     @Override
     public void openGUI(Player player, boolean outside) {
         if (player instanceof ServerPlayer) {
-            NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
+            NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return getName();

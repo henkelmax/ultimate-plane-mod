@@ -57,7 +57,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     public void openGUI(Player player, boolean outside) {
         if (player instanceof ServerPlayer) {
             if (outside) {
-                NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
+                NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
                         return Component.translatable("gui.plane.cargo_inventory");
@@ -70,7 +70,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
                     }
                 });
             } else {
-                NetworkHooks.openGui((ServerPlayer) player, new MenuProvider() {
+                NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
                         return getName();
