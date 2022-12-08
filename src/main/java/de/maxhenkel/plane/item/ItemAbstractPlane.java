@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,7 +23,7 @@ import java.util.List;
 public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends Item {
 
     public ItemAbstractPlane() {
-        super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION));
+        super(new Properties().stacksTo(1)/*.tab(CreativeModeTab.TAB_TRANSPORTATION)*/); // TODO Fix creative tab
     }
 
     public abstract T createPlane(Level world);

@@ -2,7 +2,7 @@ package de.maxhenkel.plane.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
@@ -136,8 +136,8 @@ public class RenderEvents {
             EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getEntity().getVehicle();
             event.getPoseStack().pushPose();
 
-            event.getPoseStack().mulPose(Vector3f.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
-            event.getPoseStack().mulPose(Vector3f.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
+            event.getPoseStack().mulPose(Axis.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
+            event.getPoseStack().mulPose(Axis.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
@@ -150,7 +150,7 @@ public class RenderEvents {
             event.getPoseStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
             event.getPoseStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            event.getPoseStack().mulPose(Vector3f.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
+            event.getPoseStack().mulPose(Axis.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
         }
     }
 

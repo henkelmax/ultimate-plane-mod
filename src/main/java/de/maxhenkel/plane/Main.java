@@ -23,6 +23,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -91,7 +92,7 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new InteractEvents());
         MinecraftForge.EVENT_BUS.register(new CapabilityEvents());
 
-        COPY_PLANE_DATA = Registry.register(Registry.LOOT_FUNCTION_TYPE, new ResourceLocation(Main.MODID, "copy_plane_data"), new LootItemFunctionType(new CopyPlaneData.Serializer()));
+        COPY_PLANE_DATA = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(Main.MODID, "copy_plane_data"), new LootItemFunctionType(new CopyPlaneData.Serializer()));
 
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageControlPlane.class);

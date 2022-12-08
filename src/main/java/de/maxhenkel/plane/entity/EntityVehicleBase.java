@@ -2,6 +2,7 @@ package de.maxhenkel.plane.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -185,7 +186,7 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
     }
 

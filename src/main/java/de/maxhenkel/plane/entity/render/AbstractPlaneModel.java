@@ -2,7 +2,7 @@ package de.maxhenkel.plane.entity.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJEntityRenderer;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,9 +33,9 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
 
     protected void drawName(T plane, String txt, PoseStack matrixStack, MultiBufferSource buffer, float partialTicks, float yRot, int light, boolean left) {
         matrixStack.pushPose();
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yRot));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-yRot));
         float xRot = plane.xRotO + (plane.getXRot() - plane.xRotO) * partialTicks;
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(xRot));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(xRot));
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
 

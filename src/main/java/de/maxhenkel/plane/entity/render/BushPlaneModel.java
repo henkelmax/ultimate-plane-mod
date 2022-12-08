@@ -1,8 +1,7 @@
 package de.maxhenkel.plane.entity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.corelib.client.obj.OBJModelInstance;
 import de.maxhenkel.corelib.client.obj.OBJModelOptions;
@@ -11,6 +10,8 @@ import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(-10D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
+                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
                             }
                     )
             ),
@@ -41,7 +42,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(10D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Vector3f.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
+                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
                             }
                     )
             ),
@@ -54,7 +55,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                             new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
+                                matrixStack.mulPose(Axis.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
                             }
                     )
             )
@@ -78,10 +79,10 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     protected void translateName(EntityBushPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90F));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
         } else {
             matrixStack.translate(-8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90F));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
         }
     }
 
@@ -121,7 +122,7 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                 new OBJModelOptions<>(
                         texture,
                         new Vector3d(0D, 8D / 16D, 0D),
-                        new Rotation(180F, Vector3f.YP),
+                        new Rotation(180F, Axis.YP),
                         (plane, matrixStack, partialTicks) -> {
                         }
                 )
