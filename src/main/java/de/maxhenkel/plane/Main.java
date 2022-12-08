@@ -8,10 +8,7 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
-import de.maxhenkel.plane.events.CapabilityEvents;
-import de.maxhenkel.plane.events.InteractEvents;
-import de.maxhenkel.plane.events.KeyEvents;
-import de.maxhenkel.plane.events.RenderEvents;
+import de.maxhenkel.plane.events.*;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.PlaneScreen;
 import de.maxhenkel.plane.item.ModItems;
@@ -66,6 +63,7 @@ public class Main {
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);

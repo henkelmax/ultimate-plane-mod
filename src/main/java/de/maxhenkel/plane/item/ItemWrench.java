@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 public class ItemWrench extends Item {
 
     public ItemWrench() {
-        super(new Properties().stacksTo(1)/*.tab(CreativeModeTab.TAB_MISC)*/.durability(1024)); // TODO Fix creative tab
+        super(new Properties().stacksTo(1).durability(1024));
     }
 
     @Override

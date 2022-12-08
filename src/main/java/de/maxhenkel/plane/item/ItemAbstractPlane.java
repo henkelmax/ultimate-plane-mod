@@ -23,7 +23,7 @@ import java.util.List;
 public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends Item {
 
     public ItemAbstractPlane() {
-        super(new Properties().stacksTo(1)/*.tab(CreativeModeTab.TAB_TRANSPORTATION)*/); // TODO Fix creative tab
+        super(new Properties().stacksTo(1));
     }
 
     public abstract T createPlane(Level world);
