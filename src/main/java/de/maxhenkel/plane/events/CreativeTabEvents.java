@@ -15,25 +15,21 @@ public class CreativeTabEvents {
     @SubscribeEvent
     public static void onCreativeModeTabBuildContents(CreativeModeTabEvent.BuildContents event) {
         if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.register((flags, builder, hasPermissions) -> {
-                for (RegistryObject<ItemPlane> plane : ModItems.PLANES) {
-                    builder.accept(new ItemStack(plane.get()));
-                }
-                for (RegistryObject<ItemBushPlane> plane : ModItems.BUSH_PLANES) {
-                    builder.accept(new ItemStack(plane.get()));
-                }
-                for (RegistryObject<ItemCargoPlane> plane : ModItems.CARGO_PLANES) {
-                    builder.accept(new ItemStack(plane.get()));
-                }
-            });
+            for (RegistryObject<ItemPlane> plane : ModItems.PLANES) {
+                event.accept(new ItemStack(plane.get()));
+            }
+            for (RegistryObject<ItemBushPlane> plane : ModItems.BUSH_PLANES) {
+                event.accept(new ItemStack(plane.get()));
+            }
+            for (RegistryObject<ItemCargoPlane> plane : ModItems.CARGO_PLANES) {
+                event.accept(new ItemStack(plane.get()));
+            }
         }
         if (event.getTab() == CreativeModeTabs.INGREDIENTS) {
-            event.register((flags, builder, hasPermissions) -> {
-                builder.accept(new ItemStack(ModItems.PLANE_ENGINE.get()));
-                builder.accept(new ItemStack(ModItems.PLANE_WHEEL.get()));
-                builder.accept(new ItemStack(ModItems.WRENCH.get()));
-                builder.accept(new ItemStack(ModItems.DIAMOND_REINFORCED_IRON.get()));
-            });
+            event.accept(new ItemStack(ModItems.PLANE_ENGINE.get()));
+            event.accept(new ItemStack(ModItems.PLANE_WHEEL.get()));
+            event.accept(new ItemStack(ModItems.WRENCH.get()));
+            event.accept(new ItemStack(ModItems.DIAMOND_REINFORCED_IRON.get()));
         }
     }
 
