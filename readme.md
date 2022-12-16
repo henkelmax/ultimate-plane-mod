@@ -4,9 +4,6 @@
   
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod)
-- [ModRepo](https://modrepo.de/minecraft/plane/overview)
-- [GitHub](https://github.com/henkelmax/ultimate-plane-mod)
-- [FAQ](https://modrepo.de/minecraft/plane/faq)
 - [Credits](https://modrepo.de/minecraft/plane/credits)
 
 ---
