@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJEntityRenderer;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
@@ -48,7 +49,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
 
         matrixStack.scale(textScale, textScale, textScale);
 
-        getFont().drawInBatch(txt, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, false, 0, light);
+        getFont().drawInBatch(txt, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, light);
 
         matrixStack.popPose();
     }

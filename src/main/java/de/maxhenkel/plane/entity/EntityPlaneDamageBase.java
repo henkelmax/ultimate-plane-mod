@@ -1,8 +1,10 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.DamageSourcePlane;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -12,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import de.maxhenkel.plane.item.ModItems;
 
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -172,7 +176,12 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
                 double speed = getDeltaMovement().length();
                 if (speed > 0.35F) {
                     float damage = Math.min((float) (speed * 10D), 15F);
-                    tasks.add(() -> entity.hurt(DamageSourcePlane.DAMAGE_PLANE, damage));
+
+                    tasks.add(() -> {
+                        ServerLevel serverLevel = (ServerLevel) level;
+                        Optional<Holder.Reference<DamageType>> holder = serverLevel.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageSourcePlane.DAMAGE_PLANE_TYPE);
+                        holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
+                    });
                 }
             }
         }

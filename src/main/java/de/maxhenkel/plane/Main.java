@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.AABB;
@@ -192,7 +193,7 @@ public class Main {
                 return null;
             }
             return new ContainerPlane(windowId, plane, inv);
-        });
+        }, FeatureFlags.VANILLA_SET);
     });
 
     @Nullable
