@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.DamageSourcePlane;
+import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,12 +22,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import de.maxhenkel.plane.item.ModItems;
 
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -57,7 +57,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     protected void handleParticles() {
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             return;
         }
 
@@ -76,7 +76,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
     }
 
     private void spawnParticle(ParticleOptions particleTypes, double offX, double offY, double offZ, double rand) {
-        level.addParticle(particleTypes,
+        level().addParticle(particleTypes,
                 getX() + offX + (random.nextDouble() * rand - rand / 2D),
                 getY() + getBbHeight() / 2D + offY + (random.nextDouble() * rand - rand / 2D),
                 getZ() + offZ + (random.nextDouble() * rand - rand / 2D),
@@ -99,7 +99,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
             return false;
         }
 
-        if (level.isClientSide || !isAlive()) {
+        if (level().isClientSide || !isAlive()) {
             return false;
         }
 
@@ -135,12 +135,12 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     public void destroyPlane(DamageSource source, Player player) {
         Container inventory = ((EntityPlaneInventoryBase) this).getInventory();
-        Containers.dropContents(level, blockPosition(), inventory);
+        Containers.dropContents(level(), blockPosition(), inventory);
         inventory.clearContent();
 
-        LootTable loottable = this.level.getServer().getLootTables().get(getLootTable());
+        LootTable loottable = level().getServer().getLootData().getLootTable(getLootTable());
 
-        LootContext.Builder context = new LootContext.Builder((ServerLevel) level)
+        LootParams.Builder context = new LootParams.Builder((ServerLevel) level())
                 .withParameter(LootContextParams.ORIGIN, position())
                 .withParameter(LootContextParams.THIS_ENTITY, this)
                 .withParameter(LootContextParams.DAMAGE_SOURCE, source)
@@ -171,14 +171,14 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (!level.isClientSide && entity instanceof LivingEntity && !getPassengers().contains(entity)) {
+        if (!level().isClientSide && entity instanceof LivingEntity && !getPassengers().contains(entity)) {
             if (entity.getBoundingBox().intersects(getBoundingBox())) {
                 double speed = getDeltaMovement().length();
                 if (speed > 0.35F) {
                     float damage = Math.min((float) (speed * 10D), 15F);
 
                     tasks.add(() -> {
-                        ServerLevel serverLevel = (ServerLevel) level;
+                        ServerLevel serverLevel = (ServerLevel) level();
                         Optional<Holder.Reference<DamageType>> holder = serverLevel.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageSourcePlane.DAMAGE_PLANE_TYPE);
                         holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
                     });

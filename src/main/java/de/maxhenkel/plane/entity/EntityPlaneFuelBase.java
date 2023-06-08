@@ -41,7 +41,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
             return;
         }
 
-        if (level.getGameTime() % 20L == 0L) {
+        if (level().getGameTime() % 20L == 0L) {
             int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * getMaxFuelUsage()), 1);
             setFuel(Math.max(getFuel() - consumeAmount, 0));
         }

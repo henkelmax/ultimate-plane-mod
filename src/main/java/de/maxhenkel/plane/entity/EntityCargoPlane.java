@@ -48,7 +48,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public void destroyPlane(DamageSource source, Player player) {
-        Containers.dropContents(level, blockPosition(), cargoInventory);
+        Containers.dropContents(level(), blockPosition(), cargoInventory);
         cargoInventory.clearContent();
         super.destroyPlane(source, player);
     }

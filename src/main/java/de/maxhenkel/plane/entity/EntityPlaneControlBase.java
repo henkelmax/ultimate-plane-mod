@@ -47,7 +47,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStarted(false);
         }
 
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             if (isStarted()) {
                 if (isThrustPositive()) {
                     setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
@@ -238,7 +238,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             move(MoverType.SELF, getDeltaMovement());
         }
 
-        if (level.isClientSide) {
+        if (level().isClientSide) {
             return;
         }
         if (isCollidedHorizontal()) {
@@ -281,8 +281,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         boolean last = onGroundLast;
         boolean last2 = onGroundLast2;
         onGroundLast2 = onGroundLast;
-        onGroundLast = onGround;
-        return last || last2 || onGround;
+        onGroundLast = onGround();
+        return last || last2 || onGround();
     }
 
     public boolean isCollidedHorizontal() {
@@ -388,7 +388,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
         }
 
-        if (level.isClientSide && needsUpdate) {
+        if (level().isClientSide && needsUpdate) {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }

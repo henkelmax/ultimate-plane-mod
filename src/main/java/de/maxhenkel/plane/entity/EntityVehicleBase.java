@@ -122,7 +122,7 @@ public abstract class EntityVehicleBase extends Entity {
     public abstract Vec3[] getPlayerOffsets();
 
     @Override
-    public void positionRider(Entity passenger) {
+    public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (!hasPassenger(passenger)) {
             return;
         }
@@ -177,7 +177,7 @@ public abstract class EntityVehicleBase extends Entity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (!player.isShiftKeyDown()) {
             if (player.getVehicle() != this) {
-                if (!level.isClientSide) {
+                if (!level().isClientSide) {
                     player.startRiding(this);
                 }
             }

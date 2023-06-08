@@ -23,7 +23,7 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) {
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
                 openGUI(player, true);
             }
             return InteractionResult.SUCCESS;

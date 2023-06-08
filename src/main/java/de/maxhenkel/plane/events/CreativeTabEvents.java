@@ -6,15 +6,15 @@ import de.maxhenkel.plane.item.ItemPlane;
 import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 public class CreativeTabEvents {
 
     @SubscribeEvent
-    public static void onCreativeModeTabBuildContents(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+    public static void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             for (RegistryObject<ItemPlane> plane : ModItems.PLANES) {
                 event.accept(new ItemStack(plane.get()));
             }
@@ -25,7 +25,7 @@ public class CreativeTabEvents {
                 event.accept(new ItemStack(plane.get()));
             }
         }
-        if (event.getTab() == CreativeModeTabs.INGREDIENTS) {
+        if (event.getTabKey().equals(CreativeModeTabs.INGREDIENTS)) {
             event.accept(new ItemStack(ModItems.PLANE_ENGINE.get()));
             event.accept(new ItemStack(ModItems.PLANE_WHEEL.get()));
             event.accept(new ItemStack(ModItems.WRENCH.get()));

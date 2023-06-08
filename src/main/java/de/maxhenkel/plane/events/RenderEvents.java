@@ -1,7 +1,6 @@
 package de.maxhenkel.plane.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
@@ -9,6 +8,7 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -70,16 +70,15 @@ public class RenderEvents {
         EntityPlaneSoundBase plane = (EntityPlaneSoundBase) e;
 
         if (Main.CLIENT_CONFIG.showPlaneInfo.get()) {
-            renderPlaneInfo(evt.getPoseStack(), plane);
+            renderPlaneInfo(evt.getGuiGraphics(), plane);
         }
     }
 
-    public void renderPlaneInfo(PoseStack matrixStack, EntityPlaneSoundBase plane) {
-        matrixStack.pushPose();
+    public void renderPlaneInfo(GuiGraphics guiGraphics, EntityPlaneSoundBase plane) {
+        guiGraphics.pose().pushPose();
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, PLANE_INFO_TEXTURE);
 
         int texWidth = 110;
         int texHeight = 90;
@@ -88,29 +87,29 @@ public class RenderEvents {
         int width = mc.getWindow().getGuiScaledWidth();
 
         float scale = Main.CLIENT_CONFIG.planeInfoScale.get().floatValue();
-        matrixStack.scale(scale, scale, 1F);
-        matrixStack.translate(-width, -height, 0D);
-        matrixStack.translate(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0D);
+        guiGraphics.pose().scale(scale, scale, 1F);
+        guiGraphics.pose().translate(-width, -height, 0D);
+        guiGraphics.pose().translate(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0D);
 
         int padding = 3;
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        mc.gui.blit(matrixStack, xStart, yStart, 0, 0, texWidth, texHeight);
+        guiGraphics.blit(PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight);
 
         Font font = mc.gui.getFont();
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.lineHeight + 2) * integer;
 
-        font.draw(matrixStack, Component.translatable("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText(), xStart + 7, heightFunc.apply(5), 0);
-        font.draw(matrixStack, Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText(), xStart + 7, heightFunc.apply(6), 0);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText(), xStart + 7, heightFunc.apply(5), 0, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText(), xStart + 7, heightFunc.apply(6), 0, false);
 
-        matrixStack.popPose();
+        guiGraphics.pose().popPose();
     }
 
     private double cachedRelativeHeight = 0D;
@@ -118,9 +117,9 @@ public class RenderEvents {
     private double getRelativeHeight(EntityPlaneSoundBase plane) {
         int highestBlock = (int) plane.getY();
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos(plane.getX(), plane.getY(), plane.getZ());
-        for (int y = highestBlock; y >= plane.level.getMinBuildHeight(); y--) {
+        for (int y = highestBlock; y >= plane.level().getMinBuildHeight(); y--) {
             p.setY(y);
-            if (plane.level.getBlockState(p).canOcclude()) {
+            if (plane.level().getBlockState(p).canOcclude()) {
                 highestBlock = y;
                 break;
             }
