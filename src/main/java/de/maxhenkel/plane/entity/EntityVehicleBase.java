@@ -33,7 +33,7 @@ public abstract class EntityVehicleBase extends Entity {
     public EntityVehicleBase(EntityType type, Level worldIn) {
         super(type, worldIn);
         this.blocksBuilding = true;
-        this.maxUpStep = 0.6F;
+        setMaxUpStep(0.6F);
     }
 
     @Override
