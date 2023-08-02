@@ -28,3 +28,9 @@ description='''Planes in Minecraft'''
     versionRange="${car_version_range}"
     ordering="AFTER"
     side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="jade"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"

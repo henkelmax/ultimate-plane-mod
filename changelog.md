@@ -1,1 +1,2 @@
-- Fix support for newer Forge versions
+- Added Jade to mods.toml
+- Switch to NeoGradle

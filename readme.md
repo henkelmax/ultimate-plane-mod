@@ -1,8 +1,9 @@
 <!-- modrinth_exclude.start -->
 
-# The Ultimate Plane Mod ![](http://cf.way2muchnoise.eu/full_414049_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/414049.svg)
-  
+# The Ultimate Plane Mod
+
 ## Links
+- [Modrinth](https://modrinth.com/mod/ultimate-plane-mod)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod)
 - [Credits](https://modrepo.de/minecraft/plane/credits)
 
