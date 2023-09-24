@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.loottable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.nbt.CompoundTag;
@@ -13,9 +13,13 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
+import java.util.List;
+
 public class CopyPlaneData extends LootItemConditionalFunction {
 
-    protected CopyPlaneData(LootItemCondition[] conditions) {
+    public static final Codec<CopyPlaneData> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).apply(instance, CopyPlaneData::new));
+
+    protected CopyPlaneData(List<LootItemCondition> conditions) {
         super(conditions);
     }
 
@@ -43,14 +47,6 @@ public class CopyPlaneData extends LootItemConditionalFunction {
     @Override
     public LootItemFunctionType getType() {
         return Main.COPY_PLANE_DATA;
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<CopyPlaneData> {
-
-        @Override
-        public CopyPlaneData deserialize(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, LootItemCondition[] iLootConditions) {
-            return new CopyPlaneData(iLootConditions);
-        }
     }
 
 }

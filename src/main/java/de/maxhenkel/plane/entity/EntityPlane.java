@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +18,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import de.maxhenkel.plane.Main;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -46,8 +46,8 @@ public class EntityPlane extends EntityPlaneSoundBase {
 
     @Override
     public void openGUI(Player player, boolean outside) {
-        if (player instanceof ServerPlayer) {
-            NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider() {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return getName();
@@ -62,7 +62,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
                 packetBuffer.writeUUID(getUUID());
             });
         } else {
-            Main.SIMPLE_CHANNEL.sendToServer(new MessagePlaneGui(player, outside));
+            NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessagePlaneGui(player, outside));
         }
     }
 

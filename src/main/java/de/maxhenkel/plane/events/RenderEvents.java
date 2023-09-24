@@ -50,7 +50,7 @@ public class RenderEvents {
     @SubscribeEvent
     public void onRender(InputEvent.MouseScrollingEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDelta())));
+            Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getDeltaY())));
             Main.CLIENT_CONFIG.planeZoom.save();
             evt.setCanceled(true);
         }
