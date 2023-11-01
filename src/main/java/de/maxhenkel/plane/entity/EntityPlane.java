@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import de.maxhenkel.plane.Main;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -47,7 +48,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
     @Override
     public void openGUI(Player player, boolean outside) {
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(new MenuProvider() {
+            NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return getName();

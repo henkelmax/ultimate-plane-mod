@@ -5,8 +5,8 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     }
 
     @Override
-    public void executeServerSide(CustomPayloadEvent.Context context) {
+    public void executeServerSide(NetworkEvent.Context context) {
         if (!context.getSender().getUUID().equals(uuid)) {
             return;
         }

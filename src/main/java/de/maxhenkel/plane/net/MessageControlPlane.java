@@ -4,8 +4,8 @@ import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
@@ -39,7 +39,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public void executeServerSide(CustomPayloadEvent.Context context) {
+    public void executeServerSide(NetworkEvent.Context context) {
         Entity e = context.getSender().getVehicle();
         if (!(e instanceof EntityPlaneControlBase)) {
             return;

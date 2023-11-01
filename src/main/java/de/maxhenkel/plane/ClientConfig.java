@@ -2,18 +2,17 @@ package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.config.ConfigBase;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.common.ForgeConfigSpec;
-
+import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.function.Function;
 
 public class ClientConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.BooleanValue showPlaneInfo;
-    public final ForgeConfigSpec.DoubleValue planeInfoScale;
-    public final ForgeConfigSpec.EnumValue<SpeedType> planeInfoSpeedType;
-    public final ForgeConfigSpec.DoubleValue planeZoom;
+    public final ModConfigSpec.BooleanValue showPlaneInfo;
+    public final ModConfigSpec.DoubleValue planeInfoScale;
+    public final ModConfigSpec.EnumValue<SpeedType> planeInfoSpeedType;
+    public final ModConfigSpec.DoubleValue planeZoom;
 
-    public ClientConfig(ForgeConfigSpec.Builder builder) {
+    public ClientConfig(ModConfigSpec.Builder builder) {
         super(builder);
         showPlaneInfo = builder.define("plane_info.enabled", true);
         planeInfoScale = builder.defineInRange("plane_info.scale", 0.75D, 0.1D, 2D);
