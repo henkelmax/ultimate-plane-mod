@@ -5,23 +5,24 @@ import de.maxhenkel.plane.item.ItemCargoPlane;
 import de.maxhenkel.plane.item.ItemPlane;
 import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CreativeTabEvents {
 
     @SubscribeEvent
     public static void onCreativeModeTabBuildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
-            for (RegistryObject<ItemPlane> plane : ModItems.PLANES) {
+            for (DeferredHolder<Item, ItemPlane> plane : ModItems.PLANES) {
                 event.accept(new ItemStack(plane.get()));
             }
-            for (RegistryObject<ItemBushPlane> plane : ModItems.BUSH_PLANES) {
+            for (DeferredHolder<Item, ItemBushPlane> plane : ModItems.BUSH_PLANES) {
                 event.accept(new ItemStack(plane.get()));
             }
-            for (RegistryObject<ItemCargoPlane> plane : ModItems.CARGO_PLANES) {
+            for (DeferredHolder<Item, ItemCargoPlane> plane : ModItems.CARGO_PLANES) {
                 event.accept(new ItemStack(plane.get()));
             }
         }

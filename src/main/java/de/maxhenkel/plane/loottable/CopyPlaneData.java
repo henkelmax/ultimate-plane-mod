@@ -46,7 +46,7 @@ public class CopyPlaneData extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return Main.COPY_PLANE_DATA;
+        return Main.COPY_PLANE_DATA.get();
     }
 
 }

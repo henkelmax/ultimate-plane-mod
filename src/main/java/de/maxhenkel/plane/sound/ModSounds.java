@@ -4,6 +4,7 @@ import de.maxhenkel.plane.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -12,23 +13,22 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.RegistryObject;
 
 public class ModSounds {
 
-    private static final DeferredRegister<SoundEvent> SOUND_REGISTER = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Main.MODID);
+    private static final DeferredRegister<SoundEvent> SOUND_REGISTER = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, Main.MODID);
 
-    public static final RegistryObject<SoundEvent> ENGINE_STOP = addSound("engine_stop");
-    public static final RegistryObject<SoundEvent> ENGINE_STARTING = addSound("engine_starting");
-    public static final RegistryObject<SoundEvent> ENGINE_START = addSound("engine_start");
-    public static final RegistryObject<SoundEvent> ENGINE_IDLE = addSound("engine_idle");
-    public static final RegistryObject<SoundEvent> ENGINE_HIGH = addSound("engine_high");
-    public static final RegistryObject<SoundEvent> CRASH = addSound("crash");
-    public static final RegistryObject<SoundEvent> RATCHET = addSound("ratchet");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_STOP = addSound("engine_stop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_STARTING = addSound("engine_starting");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_START = addSound("engine_start");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_IDLE = addSound("engine_idle");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_HIGH = addSound("engine_high");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CRASH = addSound("crash");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RATCHET = addSound("ratchet");
 
-    public static RegistryObject<SoundEvent> addSound(String soundName) {
+    public static DeferredHolder<SoundEvent, SoundEvent> addSound(String soundName) {
         return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Main.MODID, soundName)));
     }
 

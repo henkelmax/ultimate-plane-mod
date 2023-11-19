@@ -1,11 +1,11 @@
 package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.config.ConfigBase;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ public class ServerConfig extends ConfigBase {
     @Override
     public void onReload(ModConfigEvent event) {
         super.onReload(event);
-        validFuels = validFuelsSpec.get().stream().map(ResourceLocation::new).map(ForgeRegistries.FLUIDS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+        validFuels = validFuelsSpec.get().stream().map(ResourceLocation::new).map(BuiltInRegistries.FLUID::get).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }

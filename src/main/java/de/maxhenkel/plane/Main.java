@@ -19,9 +19,7 @@ import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
@@ -42,9 +40,8 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.RegistryObject;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
@@ -57,7 +54,8 @@ public class Main {
 
     public static SimpleChannel SIMPLE_CHANNEL;
 
-    public static LootItemFunctionType COPY_PLANE_DATA;
+    private static final DeferredRegister<LootItemFunctionType> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, Main.MODID);
+    public static final DeferredHolder<LootItemFunctionType, LootItemFunctionType> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> new LootItemFunctionType(CopyPlaneData.CODEC));
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
@@ -84,8 +82,6 @@ public class Main {
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new InteractEvents());
         NeoForge.EVENT_BUS.register(new CapabilityEvents());
-
-        COPY_PLANE_DATA = Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, new ResourceLocation(Main.MODID, "copy_plane_data"), new LootItemFunctionType(CopyPlaneData.CODEC));
 
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageControlPlane.class);
@@ -146,8 +142,8 @@ public class Main {
         event.register(BRAKE_KEY);
     }
 
-    private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Main.MODID);
-    public static final RegistryObject<EntityType<EntityPlane>> PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("plane", () -> {
+    private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, Main.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<EntityPlane>> PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("plane", () -> {
         return CommonRegistry.registerEntity(Main.MODID, "plane", MobCategory.MISC, EntityPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
@@ -157,7 +153,7 @@ public class Main {
                     .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world));
         });
     });
-    public static final RegistryObject<EntityType<EntityCargoPlane>> CARGO_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("cargo_plane", () -> {
+    public static final DeferredHolder<EntityType<?>, EntityType<EntityCargoPlane>> CARGO_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("cargo_plane", () -> {
         return CommonRegistry.registerEntity(Main.MODID, "cargo_plane", MobCategory.MISC, EntityCargoPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
@@ -167,7 +163,7 @@ public class Main {
                     .setCustomClientFactory((spawnEntity, world) -> new EntityCargoPlane(world));
         });
     });
-    public static final RegistryObject<EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
+    public static final DeferredHolder<EntityType<?>, EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
         return CommonRegistry.registerEntity(Main.MODID, "bush_plane", MobCategory.MISC, EntityBushPlane.class, builder -> {
             builder
                     .setTrackingRange(256)
@@ -178,8 +174,8 @@ public class Main {
         });
     });
 
-    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Main.MODID);
-    public static RegistryObject<MenuType<ContainerPlane>> PLANE_CONTAINER_TYPE = MENU_TYPE_REGISTER.register("plane", () -> {
+    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.MENU, Main.MODID);
+    public static DeferredHolder<MenuType<?>, MenuType<ContainerPlane>> PLANE_CONTAINER_TYPE = MENU_TYPE_REGISTER.register("plane", () -> {
         return new MenuType<>((IContainerFactory<ContainerPlane>) (windowId, inv, data) -> {
             EntityPlaneSoundBase plane = getPlaneByUUID(inv.player, data.readUUID());
             if (plane == null) {

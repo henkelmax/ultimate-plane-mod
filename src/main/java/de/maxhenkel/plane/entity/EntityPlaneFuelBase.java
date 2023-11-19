@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -73,7 +74,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         super.addAdditionalSaveData(compound);
         compound.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();
-        compound.putString("FuelType", fuel == null ? "" : ForgeRegistries.FLUIDS.getKey(fuel).toString());
+        compound.putString("FuelType", fuel == null ? "" : BuiltInRegistries.FLUID.getKey(fuel).toString());
     }
 
     @Nullable
@@ -82,11 +83,11 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         if (type.isEmpty()) {
             return null;
         }
-        return ForgeRegistries.FLUIDS.getValue(new ResourceLocation(type));
+        return BuiltInRegistries.FLUID.get(new ResourceLocation(type));
     }
 
     public void setFuelType(Fluid fluid) {
-        setFuelType(ForgeRegistries.FLUIDS.getKey(fluid).toString());
+        setFuelType(BuiltInRegistries.FLUID.getKey(fluid).toString());
     }
 
     public void setFuelType(String fluid) {
