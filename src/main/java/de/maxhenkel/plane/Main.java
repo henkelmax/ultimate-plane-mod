@@ -1,10 +1,7 @@
 package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.CommonRegistry;
-import de.maxhenkel.plane.entity.EntityBushPlane;
-import de.maxhenkel.plane.entity.EntityCargoPlane;
-import de.maxhenkel.plane.entity.EntityPlane;
-import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import de.maxhenkel.plane.entity.*;
 import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
@@ -36,8 +33,13 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.network.simple.SimpleChannel;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -63,6 +65,7 @@ public class Main {
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterCapabilities);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
@@ -81,7 +84,6 @@ public class Main {
     public void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new InteractEvents());
-        NeoForge.EVENT_BUS.register(new CapabilityEvents());
 
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageControlPlane.class);
@@ -189,6 +191,33 @@ public class Main {
     public static EntityPlaneSoundBase getPlaneByUUID(Player player, UUID uuid) {
         double distance = 10D;
         return player.level().getEntitiesOfClass(EntityPlaneSoundBase.class, new AABB(player.getX() - distance, player.getY() - distance, player.getZ() - distance, player.getX() + distance, player.getY() + distance, player.getZ() + distance), entity -> entity.getUUID().equals(uuid)).stream().findAny().orElse(null);
+    }
+
+    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        registerEntityCapabilities(event, PLANE_ENTITY_TYPE);
+        registerEntityCapabilities(event, BUSH_PLANE_ENTITY_TYPE);
+        registerEntityCapabilities(event, CARGO_PLANE_ENTITY_TYPE);
+    }
+
+    private <T extends EntityVehicleBase> void registerEntityCapabilities(RegisterCapabilitiesEvent event, DeferredHolder<EntityType<?>, EntityType<T>> holder) {
+        event.registerEntity(Capabilities.FluidHandler.ENTITY, holder.get(), (object, context) -> {
+            if (object instanceof IFluidHandler fluidHandler) {
+                return fluidHandler;
+            }
+            return null;
+        });
+        event.registerEntity(Capabilities.EnergyStorage.ENTITY, holder.get(), (object, context) -> {
+            if (object instanceof IEnergyStorage energyStorage) {
+                return energyStorage;
+            }
+            return null;
+        });
+        event.registerEntity(Capabilities.ItemHandler.ENTITY, holder.get(), (object, context) -> {
+            if (object instanceof IItemHandler itemHandler) {
+                return itemHandler;
+            }
+            return null;
+        });
     }
 
 }
