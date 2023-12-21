@@ -1,36 +1,36 @@
-modLoader="javafml"
-loaderVersion="${loader_version}"
-license="All rights reserved"
-issueTrackerURL="https://github.com/henkelmax/ultimate-plane-mod/issues"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod"
-authors="${mod_vendor}"
+modLoader = "javafml"
+loaderVersion = "*"
+license = "All rights reserved"
+issueTrackerURL = "https://github.com/henkelmax/ultimate-plane-mod/issues"
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-updateJSONURL="https://update.maxhenkel.de/neoforge/plane"
-description='''Planes in Minecraft'''
-[[dependencies.${mod_id}]]
-    modId="neoforge"
-    mandatory=true
-    versionRange="${neoforge_version_range}"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[${minecraft_version}]"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="car"
-    mandatory=true
-    versionRange="${car_version_range}"
-    ordering="AFTER"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="jade"
-    mandatory=false
-    versionRange="*"
-    ordering="NONE"
-    side="BOTH"
+modId = "plane"
+version = "${mod_version}"
+displayName = "Ultimate Plane Mod"
+updateJSONURL = "https://update.maxhenkel.de/neoforge/plane"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod"
+authors = "Max Henkel"
+description = '''Planes in Minecraft'''
+[[dependencies.plane]]
+modId = "neoforge"
+mandatory = true
+versionRange = "${neoforge_dependency}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.plane]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.plane]]
+modId = "car"
+mandatory = true
+versionRange = "${car_dependency}"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.plane]]
+modId = "jade"
+mandatory = false
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
