@@ -8,6 +8,7 @@ version = "${mod_version}"
 displayName = "Ultimate Plane Mod"
 updateJSONURL = "https://update.maxhenkel.de/neoforge/plane"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod"
+logoFile = "icon.png"
 authors = "Max Henkel"
 description = '''Planes in Minecraft'''
 [[dependencies.plane]]
