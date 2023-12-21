@@ -1,12 +1,10 @@
 <!-- modrinth_exclude.start -->
 
-# The Ultimate Plane Mod ![](http://cf.way2muchnoise.eu/full_414049_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/414049.svg)
-  
+# The Ultimate Plane Mod
+
 ## Links
+- [Modrinth](https://modrinth.com/mod/ultimate-plane-mod)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/ultimate-plane-mod)
-- [ModRepo](https://modrepo.de/minecraft/plane/overview)
-- [GitHub](https://github.com/henkelmax/ultimate-plane-mod)
-- [FAQ](https://modrepo.de/minecraft/plane/faq)
 - [Credits](https://modrepo.de/minecraft/plane/credits)
 
 ---
@@ -109,7 +107,7 @@ The external inventory of the cargo plane can be accessed by sneaking and right-
 
 Every plane has an overlay displaying useful information about the flight.
 You can disable it by pressing `CTRL` + `P`. You can also change the scale in the client config.
-The speed units can also be changed in the client config. 
+The speed units can also be changed in the client config.
 Possible units are kilometers per hour (`km/h`) and blocks per second (`b/s`).
 
 ![](https://i.imgur.com/EKBpOtq.png)
