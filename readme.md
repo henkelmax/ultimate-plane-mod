@@ -107,7 +107,7 @@ The external inventory of the cargo plane can be accessed by sneaking and right-
 
 Every plane has an overlay displaying useful information about the flight.
 You can disable it by pressing `CTRL` + `P`. You can also change the scale in the client config.
-The speed units can also be changed in the client config. 
+The speed units can also be changed in the client config.
 Possible units are kilometers per hour (`km/h`) and blocks per second (`b/s`).
 
 ![](https://i.imgur.com/EKBpOtq.png)
