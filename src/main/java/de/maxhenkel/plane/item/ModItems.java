@@ -6,7 +6,7 @@ import de.maxhenkel.plane.entity.EntityCargoPlane;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -25,8 +25,8 @@ public class ModItems {
     public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_ENGINE = ITEM_REGISTER.register("plane_engine", () -> new ItemCraftingComponent());
     public static final DeferredHolder<Item, ItemCraftingComponent> DIAMOND_REINFORCED_IRON = ITEM_REGISTER.register("diamond_reinforced_iron", () -> new ItemCraftingComponent());
 
-    public static void init() {
-        ITEM_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+    public static void init(IEventBus eventBus) {
+        ITEM_REGISTER.register(eventBus);
     }
 
 }

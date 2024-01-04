@@ -1,7 +1,5 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.corelib.net.NetUtils;
-import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.net.MessageControlPlane;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,6 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
@@ -390,7 +389,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         if (level().isClientSide && needsUpdate) {
-            NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
+            PacketDistributor.SERVER.noArg().send(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }
 

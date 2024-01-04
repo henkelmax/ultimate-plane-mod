@@ -1,13 +1,17 @@
 package de.maxhenkel.plane.net;
 
 import de.maxhenkel.corelib.net.Message;
+import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
+
+    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "control_plane");
 
     private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 
@@ -34,18 +38,19 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public Dist getExecutingSide() {
-        return Dist.DEDICATED_SERVER;
+    public PacketFlow getExecutingSide() {
+        return PacketFlow.SERVERBOUND;
     }
 
     @Override
-    public void executeServerSide(NetworkEvent.Context context) {
-        Entity e = context.getSender().getVehicle();
-        if (!(e instanceof EntityPlaneControlBase)) {
+    public void executeServerSide(PlayPayloadContext context) {
+        if (!(context.player().orElse(null) instanceof ServerPlayer sender)) {
             return;
         }
 
-        EntityPlaneControlBase plane = (EntityPlaneControlBase) e;
+        if (!(sender.getVehicle() instanceof EntityPlaneControlBase plane)) {
+            return;
+        }
 
         plane.updateControls(up, down, thrustPos, thrustNeg, left, right, braking, starting);
     }
@@ -73,6 +78,11 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
         buf.writeBoolean(right);
         buf.writeBoolean(braking);
         buf.writeBoolean(starting);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
 }

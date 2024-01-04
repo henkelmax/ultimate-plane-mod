@@ -1,16 +1,20 @@
 package de.maxhenkel.plane.net;
 
 import de.maxhenkel.corelib.net.Message;
+import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.UUID;
 
 public class MessagePlaneGui implements Message<MessagePlaneGui> {
+
+    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "plane_gui");
 
     private UUID uuid;
     private boolean outside;
@@ -25,19 +29,22 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     }
 
     @Override
-    public Dist getExecutingSide() {
-        return Dist.DEDICATED_SERVER;
+    public PacketFlow getExecutingSide() {
+        return PacketFlow.SERVERBOUND;
     }
 
     @Override
-    public void executeServerSide(NetworkEvent.Context context) {
-        if (!context.getSender().getUUID().equals(uuid)) {
+    public void executeServerSide(PlayPayloadContext context) {
+        if (!(context.player().orElse(null) instanceof ServerPlayer sender)) {
             return;
         }
 
-        Entity e = context.getSender().getVehicle();
-        if (e instanceof EntityPlaneSoundBase) {
-            ((EntityPlaneSoundBase) e).openGUI(context.getSender(), outside);
+        if (!sender.getUUID().equals(uuid)) {
+            return;
+        }
+
+        if (sender.getVehicle() instanceof EntityPlaneSoundBase plane) {
+            plane.openGUI(sender, outside);
         }
     }
 
@@ -52,6 +59,11 @@ public class MessagePlaneGui implements Message<MessagePlaneGui> {
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUUID(uuid);
         buf.writeBoolean(outside);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
 }

@@ -13,25 +13,25 @@ authors = "Max Henkel"
 description = '''Planes in Minecraft'''
 [[dependencies.plane]]
 modId = "neoforge"
-mandatory = true
+type = "required"
 versionRange = "${neoforge_dependency}"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.plane]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[${minecraft_version}]"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.plane]]
 modId = "car"
-mandatory = true
+type = "required"
 versionRange = "${car_dependency}"
 ordering = "AFTER"
 side = "BOTH"
 [[dependencies.plane]]
 modId = "jade"
-mandatory = false
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

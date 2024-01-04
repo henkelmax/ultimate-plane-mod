@@ -5,7 +5,10 @@ import de.maxhenkel.plane.entity.*;
 import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
-import de.maxhenkel.plane.events.*;
+import de.maxhenkel.plane.events.CreativeTabEvents;
+import de.maxhenkel.plane.events.InteractEvents;
+import de.maxhenkel.plane.events.KeyEvents;
+import de.maxhenkel.plane.events.RenderEvents;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.gui.PlaneScreen;
 import de.maxhenkel.plane.item.ModItems;
@@ -26,12 +29,11 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -41,7 +43,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lwjgl.glfw.GLFW;
@@ -54,40 +57,40 @@ public class Main {
 
     public static final String MODID = "plane";
 
-    public static SimpleChannel SIMPLE_CHANNEL;
-
     private static final DeferredRegister<LootItemFunctionType> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, Main.MODID);
     public static final DeferredHolder<LootItemFunctionType, LootItemFunctionType> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> new LootItemFunctionType(CopyPlaneData.CODEC));
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
-    public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterCapabilities);
+    public Main(IEventBus eventBus) {
+        eventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::onRegisterPayloadHandler);
+        eventBus.addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
+        eventBus.addListener(this::onRegisterCapabilities);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
 
         if (FMLEnvironment.dist.isClient()) {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::onRegisterKeyBinds);
+            eventBus.addListener(Main.this::clientSetup);
+            eventBus.addListener(Main.this::onRegisterKeyBinds);
         }
 
-        ModItems.init();
-        ModSounds.init();
-        ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-        MENU_TYPE_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModItems.init(eventBus);
+        ModSounds.init(eventBus);
+        ENTITY_REGISTER.register(eventBus);
+        MENU_TYPE_REGISTER.register(eventBus);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
-        NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new InteractEvents());
+    }
 
-        SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageControlPlane.class);
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 1, MessagePlaneGui.class);
+    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
+        IPayloadRegistrar registrar = event.registrar(MODID).versioned("0");
+        CommonRegistry.registerMessage(registrar, MessageControlPlane.class);
+        CommonRegistry.registerMessage(registrar, MessagePlaneGui.class);
     }
 
     public static KeyMapping PLANE_KEY;
@@ -120,7 +123,6 @@ public class Main {
         EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
     }
 
-    @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
         PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, "category.plane");
@@ -151,8 +153,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F)
-                    .setCustomClientFactory((spawnEntity, world) -> new EntityPlane(world));
+                    .sized(3.5F, 2F);
         });
     });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityCargoPlane>> CARGO_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("cargo_plane", () -> {
@@ -161,8 +162,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F)
-                    .setCustomClientFactory((spawnEntity, world) -> new EntityCargoPlane(world));
+                    .sized(3.5F, 2F);
         });
     });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
@@ -171,8 +171,7 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F)
-                    .setCustomClientFactory((spawnEntity, world) -> new EntityBushPlane(world));
+                    .sized(3.5F, 2F);
         });
     });
 
