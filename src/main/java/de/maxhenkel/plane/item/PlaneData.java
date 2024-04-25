@@ -27,13 +27,13 @@ public class PlaneData {
     private final int fuel;
     private final CompoundTag planeData;
 
-    protected PlaneData(float damage, int fuel, CompoundTag planeData) {
+    private PlaneData(float damage, int fuel, CompoundTag planeData) {
         this.damage = damage;
         this.fuel = fuel;
         this.planeData = planeData;
     }
 
-    protected PlaneData(CompoundTag planeData) {
+    private PlaneData(CompoundTag planeData) {
         this.damage = planeData.getFloat("Damage");
         this.fuel = planeData.getInt("Fuel");
         this.planeData = planeData;
@@ -43,6 +43,10 @@ public class PlaneData {
         CompoundTag saveData = new CompoundTag();
         entity.addAdditionalSaveData(saveData);
         return new PlaneData(saveData);
+    }
+
+    public static PlaneData of(CompoundTag tag) {
+        return new PlaneData(tag.copy());
     }
 
     public float getDamage() {

@@ -29,7 +29,6 @@ public class ModItems {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, Main.MODID);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PlaneData>> PLANE_DATA_COMPONENT = DATA_COMPONENT_TYPE_REGISTER.register("plane_data", () -> DataComponentType.<PlaneData>builder().persistent(PlaneData.CODEC).networkSynchronized(PlaneData.STREAM_CODEC).build());
 
-
     public static void init(IEventBus eventBus) {
         ITEM_REGISTER.register(eventBus);
         DATA_COMPONENT_TYPE_REGISTER.register(eventBus);
