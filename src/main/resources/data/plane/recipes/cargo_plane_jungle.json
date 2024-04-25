@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:cargo_plane_jungle",
+    "id": "plane:cargo_plane_jungle",
     "count": 1
   }
 }

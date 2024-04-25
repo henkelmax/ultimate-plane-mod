@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:cargo_plane_birch",
+    "id": "plane:cargo_plane_birch",
     "count": 1
   }
 }

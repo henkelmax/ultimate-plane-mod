@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -125,7 +125,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
         ItemStack heldItem = player.getMainHandItem();
         if (heldItem.getItem().equals(ModItems.WRENCH.get()) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
-            heldItem.hurtAndBreak(512, player, playerEntity -> {
+            heldItem.hurtAndBreak(512, player.getRandom(), player, () -> {
             });
             destroyPlane(source, player);
         }
@@ -138,7 +138,7 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         Containers.dropContents(level(), blockPosition(), inventory);
         inventory.clearContent();
 
-        LootTable loottable = level().getServer().getLootData().getLootTable(getLootTable());
+        LootTable loottable = level().getServer().reloadableRegistries().getLootTable(getLootTable());
 
         LootParams.Builder context = new LootParams.Builder((ServerLevel) level())
                 .withParameter(LootContextParams.ORIGIN, position())
@@ -151,12 +151,12 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
         kill();
     }
 
-    public abstract ResourceLocation getLootTable();
+    public abstract ResourceKey<LootTable> getLootTable();
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(DAMAGE, 0F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DAMAGE, 0F);
     }
 
     public float getPlaneDamage() {

@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,11 @@ public abstract class EntityVehicleBase extends Entity {
     public EntityVehicleBase(EntityType type, Level worldIn) {
         super(type, worldIn);
         this.blocksBuilding = true;
-        setMaxUpStep(0.6F);
+    }
+
+    @Override
+    public float maxUpStep() {
+        return 0.6F;
     }
 
     @Override

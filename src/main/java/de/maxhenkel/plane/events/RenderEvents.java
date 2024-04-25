@@ -20,10 +20,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.TickEvent;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -56,7 +58,10 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void onRender(RenderGuiOverlayEvent.Post evt) {
+    public void onRender(RenderGuiLayerEvent.Post evt) {
+        if (!VanillaGuiLayers.HOTBAR.equals(evt.getName())) {
+            return;
+        }
 
         Player player = mc.player;
 

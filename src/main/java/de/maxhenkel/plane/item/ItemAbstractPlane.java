@@ -5,7 +5,7 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends Item {
@@ -62,48 +61,34 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
     }
 
     private void addData(ItemStack stack, EntityPlaneSoundBase plane) {
-        CompoundTag planeData = getPlaneData(stack);
+        PlaneData planeData = stack.get(ModItems.PLANE_DATA_COMPONENT);
         if (planeData != null) {
-            plane.readAdditionalSaveData(planeData);
+            plane.readAdditionalSaveData(planeData.getPlaneData());
             plane.setStarted(false, false);
         }
-
-        if (!stack.getItem().getName(stack).equals(stack.getHoverName())) {
-            plane.setCustomName(stack.getHoverName());
+        Component customName = stack.get(DataComponents.CUSTOM_NAME);
+        if (customName != null) {
+            plane.setCustomName(customName);
         }
-    }
-
-    private CompoundTag getPlaneData(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag == null) {
-            return null;
-        }
-
-        if (!tag.contains("PlaneData")) {
-            return null;
-        }
-
-        return tag.getCompound("PlaneData");
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        CompoundTag planeData = getPlaneData(stack);
-
+    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag flagIn) {
+        PlaneData planeData = stack.get(ModItems.PLANE_DATA_COMPONENT);
         if (planeData != null) {
             tooltip.add(
                     Component.translatable("tooltip.plane.damage",
-                            Component.literal(String.valueOf(MathUtils.round(planeData.getFloat("Damage"), 2)))
+                            Component.literal(String.valueOf(MathUtils.round(planeData.getDamage(), 2)))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
             tooltip.add(
                     Component.translatable("tooltip.plane.fuel",
-                            Component.literal(String.valueOf(planeData.getInt("Fuel")))
+                            Component.literal(String.valueOf(planeData.getFuel()))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
         }
 
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, tooltipContext, tooltip, flagIn);
     }
 
 }

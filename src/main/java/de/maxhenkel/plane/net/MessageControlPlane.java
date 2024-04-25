@@ -3,15 +3,16 @@ package de.maxhenkel.plane.net;
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
-    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "control_plane");
+    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "control_plane"));
 
     private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 
@@ -43,8 +44,8 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public void executeServerSide(PlayPayloadContext context) {
-        if (!(context.player().orElse(null) instanceof ServerPlayer sender)) {
+    public void executeServerSide(IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer sender)) {
             return;
         }
 
@@ -56,7 +57,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public MessageControlPlane fromBytes(FriendlyByteBuf buf) {
+    public MessageControlPlane fromBytes(RegistryFriendlyByteBuf buf) {
         up = buf.readBoolean();
         down = buf.readBoolean();
         thrustPos = buf.readBoolean();
@@ -69,7 +70,7 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
+    public void toBytes(RegistryFriendlyByteBuf buf) {
         buf.writeBoolean(up);
         buf.writeBoolean(down);
         buf.writeBoolean(thrustPos);
@@ -81,8 +82,8 @@ public class MessageControlPlane implements Message<MessageControlPlane> {
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<MessageControlPlane> type() {
+        return TYPE;
     }
 
 }

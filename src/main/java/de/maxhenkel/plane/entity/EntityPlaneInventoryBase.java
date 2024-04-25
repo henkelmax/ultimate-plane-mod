@@ -41,13 +41,13 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        ItemUtils.readInventory(compound, "Inventory", inventory);
+        ItemUtils.readInventory(registryAccess(), compound, "Inventory", inventory);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        ItemUtils.saveInventory(compound, "Inventory", inventory);
+        ItemUtils.saveInventory(registryAccess(), compound, "Inventory", inventory);
     }
 
 }

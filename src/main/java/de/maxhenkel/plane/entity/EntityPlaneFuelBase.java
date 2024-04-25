@@ -56,10 +56,10 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(FUEL, 0);
-        entityData.define(FUEL_TYPE, "");
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(FUEL, 0);
+        builder.define(FUEL_TYPE, "");
     }
 
     @Override

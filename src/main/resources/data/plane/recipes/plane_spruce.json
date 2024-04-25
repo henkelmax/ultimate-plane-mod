@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:plane_spruce",
+    "id": "plane:plane_spruce",
     "count": 1
   }
 }

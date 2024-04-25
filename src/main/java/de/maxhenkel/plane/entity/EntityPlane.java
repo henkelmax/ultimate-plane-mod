@@ -3,11 +3,13 @@ package de.maxhenkel.plane.entity;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -62,7 +65,7 @@ public class EntityPlane extends EntityPlaneSoundBase {
                 packetBuffer.writeUUID(getUUID());
             });
         } else {
-            PacketDistributor.SERVER.noArg().send(new MessagePlaneGui(player, outside));
+            PacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
         }
     }
 
@@ -73,8 +76,8 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    public ResourceLocation getLootTable() {
-        return new ResourceLocation(Main.MODID, "entities/plane_" + getPlaneType().getTypeName());
+    public ResourceKey<LootTable> getLootTable() {
+        return ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation(Main.MODID, "entities/plane_" + getPlaneType().getTypeName()));
     }
 
     @Override
@@ -93,9 +96,9 @@ public class EntityPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(TYPE, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TYPE, 0);
     }
 
     @Override

@@ -43,8 +43,8 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.lwjgl.glfw.GLFW;
@@ -57,8 +57,8 @@ public class Main {
 
     public static final String MODID = "plane";
 
-    private static final DeferredRegister<LootItemFunctionType> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, Main.MODID);
-    public static final DeferredHolder<LootItemFunctionType, LootItemFunctionType> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> new LootItemFunctionType(CopyPlaneData.CODEC));
+    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, Main.MODID);
+    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPlaneData>> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> new LootItemFunctionType<>(CopyPlaneData.CODEC));
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
@@ -69,8 +69,8 @@ public class Main {
         eventBus.addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
         eventBus.addListener(this::onRegisterCapabilities);
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
-        CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
+        CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
 
         if (FMLEnvironment.dist.isClient()) {
             eventBus.addListener(Main.this::clientSetup);
@@ -81,14 +81,15 @@ public class Main {
         ModSounds.init(eventBus);
         ENTITY_REGISTER.register(eventBus);
         MENU_TYPE_REGISTER.register(eventBus);
+        LOOT_FUNCTION_TYPE_REGISTER.register(eventBus);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(new InteractEvents());
     }
 
-    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
-        IPayloadRegistrar registrar = event.registrar(MODID).versioned("0");
+    public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(MODID).versioned("0");
         CommonRegistry.registerMessage(registrar, MessageControlPlane.class);
         CommonRegistry.registerMessage(registrar, MessagePlaneGui.class);
     }

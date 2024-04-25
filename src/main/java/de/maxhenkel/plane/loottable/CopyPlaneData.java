@@ -1,10 +1,12 @@
 package de.maxhenkel.plane.loottable;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
-import net.minecraft.nbt.CompoundTag;
+import de.maxhenkel.plane.item.ModItems;
+import de.maxhenkel.plane.item.PlaneData;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class CopyPlaneData extends LootItemConditionalFunction {
 
-    public static final Codec<CopyPlaneData> CODEC = RecordCodecBuilder.create(instance -> commonFields(instance).apply(instance, CopyPlaneData::new));
+    public static final MapCodec<CopyPlaneData> CODEC = RecordCodecBuilder.mapCodec(instance -> commonFields(instance).apply(instance, CopyPlaneData::new));
 
     protected CopyPlaneData(List<LootItemCondition> conditions) {
         super(conditions);
@@ -26,19 +28,14 @@ public class CopyPlaneData extends LootItemConditionalFunction {
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
-        if (!(entity instanceof EntityPlaneSoundBase)) {
+        if (!(entity instanceof EntityPlaneSoundBase plane)) {
             return stack;
         }
 
-        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) entity;
-
-        CompoundTag planeData = new CompoundTag();
-        plane.addAdditionalSaveData(planeData);
-
-        stack.getOrCreateTag().put("PlaneData", planeData);
+        stack.set(ModItems.PLANE_DATA_COMPONENT, PlaneData.of(plane));
 
         if (plane.hasCustomName()) {
-            stack.setHoverName(plane.getCustomName());
+            stack.set(DataComponents.CUSTOM_NAME, plane.getCustomName());
         }
 
         return stack;

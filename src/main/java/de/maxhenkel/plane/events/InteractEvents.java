@@ -45,7 +45,7 @@ public class InteractEvents {
             return;
         }
 
-        stack.hurtAndBreak(1, player, playerEntity -> {
+        stack.hurtAndBreak(1, player.getRandom(), player, () -> {
         });
 
         plane.setPlaneDamage(Math.max(damage - 1F, 0F));

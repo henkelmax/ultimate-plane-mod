@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:cargo_plane_dark_oak",
+    "id": "plane:cargo_plane_dark_oak",
     "count": 1
   }
 }

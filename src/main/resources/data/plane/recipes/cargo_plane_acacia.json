@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "plane:cargo_plane_acacia",
+    "id": "plane:cargo_plane_acacia",
     "count": 1
   }
 }

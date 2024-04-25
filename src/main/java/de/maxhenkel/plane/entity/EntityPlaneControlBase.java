@@ -319,18 +319,18 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(STARTED, false);
-        entityData.define(START_TIME, 0);
-        entityData.define(ENGINE_SPEED, 0F);
-        entityData.define(THRUST_POSITIVE, false);
-        entityData.define(THRUST_NEGATIVE, false);
-        entityData.define(LEFT, false);
-        entityData.define(RIGHT, false);
-        entityData.define(UP, false);
-        entityData.define(DOWN, false);
-        entityData.define(BRAKE, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(STARTED, false);
+        builder.define(START_TIME, 0);
+        builder.define(ENGINE_SPEED, 0F);
+        builder.define(THRUST_POSITIVE, false);
+        builder.define(THRUST_NEGATIVE, false);
+        builder.define(LEFT, false);
+        builder.define(RIGHT, false);
+        builder.define(UP, false);
+        builder.define(DOWN, false);
+        builder.define(BRAKE, false);
     }
 
     public void updateControls(boolean up, boolean down, boolean thrustPos, boolean thrustNeg, boolean left, boolean right, boolean braking, boolean starting) {
@@ -389,7 +389,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         if (level().isClientSide && needsUpdate) {
-            PacketDistributor.SERVER.noArg().send(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
+            PacketDistributor.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }
 

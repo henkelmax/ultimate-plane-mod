@@ -4,6 +4,7 @@ import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
 import de.maxhenkel.plane.entity.EntityPlane;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -25,8 +26,13 @@ public class ModItems {
     public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_ENGINE = ITEM_REGISTER.register("plane_engine", () -> new ItemCraftingComponent());
     public static final DeferredHolder<Item, ItemCraftingComponent> DIAMOND_REINFORCED_IRON = ITEM_REGISTER.register("diamond_reinforced_iron", () -> new ItemCraftingComponent());
 
+    private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, Main.MODID);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<PlaneData>> PLANE_DATA_COMPONENT = DATA_COMPONENT_TYPE_REGISTER.register("plane_data", () -> DataComponentType.<PlaneData>builder().persistent(PlaneData.CODEC).networkSynchronized(PlaneData.STREAM_CODEC).build());
+
+
     public static void init(IEventBus eventBus) {
         ITEM_REGISTER.register(eventBus);
+        DATA_COMPONENT_TYPE_REGISTER.register(eventBus);
     }
 
 }
