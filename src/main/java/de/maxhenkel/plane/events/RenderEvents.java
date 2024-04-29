@@ -24,7 +24,7 @@ import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
 import java.util.function.Function;
@@ -165,14 +165,14 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent evt) {
-        if (!evt.player.equals(mc.player)) {
+    public void onPlayerTick(PlayerTickEvent.Pre evt) {
+        if (!evt.getEntity().equals(mc.player)) {
             return;
         }
 
         EntityPlaneSoundBase vehicle = getPlane();
 
-        if (vehicle != null && evt.player.equals(vehicle.getDriver())) {
+        if (vehicle != null && evt.getEntity().equals(vehicle.getDriver())) {
             cachedRelativeHeight = getRelativeHeight(vehicle);
         }
 
