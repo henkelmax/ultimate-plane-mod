@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
@@ -125,8 +126,10 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
 
         ItemStack heldItem = player.getMainHandItem();
         if (heldItem.getItem().equals(ModItems.WRENCH.get()) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
-            heldItem.hurtAndBreak(512, player.getRandom(), player, () -> {
-            });
+            if (player instanceof ServerPlayer serverPlayer) {
+                heldItem.hurtAndBreak(512, serverPlayer.serverLevel(), serverPlayer, (item) -> {
+                });
+            }
             destroyPlane(source, player);
         }
 
@@ -144,8 +147,8 @@ public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
                 .withParameter(LootContextParams.ORIGIN, position())
                 .withParameter(LootContextParams.THIS_ENTITY, this)
                 .withParameter(LootContextParams.DAMAGE_SOURCE, source)
-                .withParameter(LootContextParams.KILLER_ENTITY, player)
-                .withParameter(LootContextParams.DIRECT_KILLER_ENTITY, player);
+                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
+                .withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player);
         loottable.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(this::spawnAtLocation);
 
         kill();

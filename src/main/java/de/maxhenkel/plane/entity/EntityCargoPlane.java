@@ -119,7 +119,7 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
 
     @Override
     public ResourceKey<LootTable> getLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

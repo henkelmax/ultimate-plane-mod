@@ -38,6 +38,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -75,6 +76,7 @@ public class Main {
         if (FMLEnvironment.dist.isClient()) {
             eventBus.addListener(Main.this::clientSetup);
             eventBus.addListener(Main.this::onRegisterKeyBinds);
+            eventBus.addListener(Main.this::onRegisterScreens);
         }
 
         ModItems.init(eventBus);
@@ -106,10 +108,6 @@ public class Main {
 
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-
-        MenuScreens.ScreenConstructor factory = (MenuScreens.ScreenConstructor<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
-        MenuScreens.register(Main.PLANE_CONTAINER_TYPE.get(), factory);
-
         NeoForge.EVENT_BUS.register(new KeyEvents());
         NeoForge.EVENT_BUS.register(new RenderEvents());
         // TODO
@@ -122,6 +120,13 @@ public class Main {
         EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
         EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
         EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void onRegisterScreens(RegisterMenuScreensEvent containers) {
+        MenuScreens.ScreenConstructor factory = (MenuScreens.ScreenConstructor<ContainerPlane, PlaneScreen>) (container, playerInventory, name) -> new PlaneScreen(container, playerInventory, name);
+        containers.register(Main.PLANE_CONTAINER_TYPE.get(), factory);
+
     }
 
     @OnlyIn(Dist.CLIENT)

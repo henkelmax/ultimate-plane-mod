@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class MessagePlaneGui implements Message<MessagePlaneGui> {
 
-    public static final CustomPacketPayload.Type<MessagePlaneGui> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "plane_gui"));
+    public static final CustomPacketPayload.Type<MessagePlaneGui> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "plane_gui"));
 
     private UUID uuid;
     private boolean outside;

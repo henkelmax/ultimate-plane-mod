@@ -55,7 +55,7 @@ public class EntityBushPlane extends EntityPlaneSoundBase {
 
     @Override
     public ResourceKey<LootTable> getLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation(Main.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

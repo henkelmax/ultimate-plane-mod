@@ -22,10 +22,10 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     private static final List<OBJModelInstance<EntityCargoPlane>> MODELS = Arrays.asList(
             new OBJModelInstance<>(
                     new OBJModel(
-                            new ResourceLocation(Main.MODID, "models/entity/wheel.obj")
+                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
                     ),
                     new OBJModelOptions<>(
-                            new ResourceLocation(Main.MODID, "textures/entity/wheel.png"),
+                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
                             new Vector3d(-18D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
@@ -35,10 +35,10 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
             ),
             new OBJModelInstance<>(
                     new OBJModel(
-                            new ResourceLocation(Main.MODID, "models/entity/wheel.obj")
+                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
                     ),
                     new OBJModelOptions<>(
-                            new ResourceLocation(Main.MODID, "textures/entity/wheel.png"),
+                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
                             new Vector3d(18D / 16D, 2D / 16D, -17.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
@@ -48,10 +48,10 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
             ),
             new OBJModelInstance<>(
                     new OBJModel(
-                            new ResourceLocation(Main.MODID, "models/entity/propeller.obj")
+                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj")
                     ),
                     new OBJModelOptions<>(
-                            new ResourceLocation("textures/block/spruce_planks.png"),
+                            ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"),
                             new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
                             (plane, matrixStack, partialTicks) -> {
                                 matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
@@ -61,14 +61,14 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
             )
     );
 
-    private static final List<OBJModelInstance<EntityCargoPlane>> OAK_MODEL = getPlaneModel(new ResourceLocation("textures/block/oak_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> DARK_OAK_MODEL = getPlaneModel(new ResourceLocation("textures/block/dark_oak_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> BIRCH_MODEL = getPlaneModel(new ResourceLocation("textures/block/birch_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> JUNGLE_MODEL = getPlaneModel(new ResourceLocation("textures/block/jungle_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> ACACIA_MODEL = getPlaneModel(new ResourceLocation("textures/block/acacia_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> SPRUCE_MODEL = getPlaneModel(new ResourceLocation("textures/block/spruce_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(new ResourceLocation("textures/block/warped_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(new ResourceLocation("textures/block/crimson_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/oak_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> DARK_OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/dark_oak_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> BIRCH_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/birch_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> JUNGLE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/jungle_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> ACACIA_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/acacia_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> SPRUCE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png"));
 
     public CargoPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -117,7 +117,7 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
         List<OBJModelInstance<EntityCargoPlane>> models = new ArrayList<>(MODELS);
         models.add(new OBJModelInstance<>(
                 new OBJModel(
-                        new ResourceLocation(Main.MODID, "models/entity/cargo_plane.obj")
+                        ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/cargo_plane.obj")
                 ),
                 new OBJModelOptions<>(
                         texture,

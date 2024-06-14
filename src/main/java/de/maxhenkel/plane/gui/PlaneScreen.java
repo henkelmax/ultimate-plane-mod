@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
-    private static final ResourceLocation CAR_GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/gui_plane.png");
+    private static final ResourceLocation CAR_GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/gui_plane.png");
 
     private static final Component TEXT_FUEL = Component.translatable("gui.plane.fuel");
     private static final Component TEXT_DAMAGE = Component.translatable("gui.plane.damage");

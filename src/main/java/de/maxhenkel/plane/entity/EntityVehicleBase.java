@@ -190,9 +190,4 @@ public abstract class EntityVehicleBase extends Entity {
         return InteractionResult.FAIL;
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
-    }
-
 }

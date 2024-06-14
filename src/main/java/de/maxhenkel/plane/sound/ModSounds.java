@@ -29,7 +29,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RATCHET = addSound("ratchet");
 
     public static DeferredHolder<SoundEvent, SoundEvent> addSound(String soundName) {
-        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Main.MODID, soundName)));
+        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Main.MODID, soundName)));
     }
 
     public static void init(IEventBus eventBus) {

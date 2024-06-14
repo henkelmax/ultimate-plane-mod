@@ -32,7 +32,7 @@ import java.util.function.Function;
 @OnlyIn(Dist.CLIENT)
 public class RenderEvents {
 
-    private static final ResourceLocation PLANE_INFO_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/plane_info.png");
+    private static final ResourceLocation PLANE_INFO_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/plane_info.png");
 
     private Minecraft mc;
     private EntityPlaneSoundBase lastVehicle;
@@ -44,7 +44,7 @@ public class RenderEvents {
     @SubscribeEvent
     public void onRender(ViewportEvent.ComputeCameraAngles evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            evt.getCamera().move(-evt.getCamera().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get() - 4D), 0D, 0D);
+            evt.getCamera().move(-evt.getCamera().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get().floatValue() - 4F), 0F, 0F);
         }
     }
 

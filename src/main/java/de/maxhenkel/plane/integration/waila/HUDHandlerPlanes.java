@@ -13,11 +13,11 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class HUDHandlerPlanes implements IEntityComponentProvider {
 
-    public static final ResourceLocation OBJECT_NAME_TAG = new ResourceLocation("jade", "object_name");
+    public static final ResourceLocation OBJECT_NAME_TAG = ResourceLocation.fromNamespaceAndPath("jade", "object_name");
 
     public static final HUDHandlerPlanes INSTANCE = new HUDHandlerPlanes();
 
-    public static final ResourceLocation UID = new ResourceLocation(Main.MODID, "plane");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "plane");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {

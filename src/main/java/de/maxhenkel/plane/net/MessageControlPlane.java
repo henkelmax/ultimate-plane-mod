@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
-    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "control_plane"));
+    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "control_plane"));
 
     private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 

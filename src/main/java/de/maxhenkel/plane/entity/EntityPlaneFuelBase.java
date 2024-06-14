@@ -83,7 +83,11 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         if (type.isEmpty()) {
             return null;
         }
-        return BuiltInRegistries.FLUID.get(new ResourceLocation(type));
+        ResourceLocation resourceLocation = ResourceLocation.tryParse(type);
+        if (resourceLocation == null) {
+            return null;
+        }
+        return BuiltInRegistries.FLUID.get(resourceLocation);
     }
 
     public void setFuelType(Fluid fluid) {
