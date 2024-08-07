@@ -24,9 +24,19 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfigEvent event) {
+    public void onReload(ModConfigEvent.Reloading event) {
         super.onReload(event);
-        validFuels = validFuelsSpec.get().stream().map(ResourceLocation::tryParse).filter(Objects::nonNull).map(BuiltInRegistries.FLUID::get).filter(Objects::nonNull).collect(Collectors.toList());
+        onConfigChanged();
     }
 
+    @Override
+    public void onLoad(ModConfigEvent.Loading evt) {
+        super.onLoad(evt);
+        onConfigChanged();
+    }
+
+    private void onConfigChanged() {
+        validFuels = validFuelsSpec.get().stream().map(ResourceLocation::tryParse).filter(Objects::nonNull).map(BuiltInRegistries.FLUID::get).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+    
 }
