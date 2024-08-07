@@ -10,7 +10,7 @@
       "item": "minecraft:warped_slab"
     },
     "C": {
-      "tag": "forge:chests/wooden"
+      "tag": "c:chests/wooden"
     },
     "E": {
       "item": "plane:plane_engine"

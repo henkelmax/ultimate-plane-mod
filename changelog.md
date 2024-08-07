@@ -1,1 +1,2 @@
 - Fixed config error
+- Fixed recipes

@@ -10,7 +10,7 @@
       "item": "plane:diamond_reinforced_iron"
     },
     "S": {
-      "tag": "forge:rods/iron"
+      "tag": "c:rods/iron"
     }
   },
   "result": {
