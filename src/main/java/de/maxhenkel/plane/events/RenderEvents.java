@@ -19,10 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
-import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -42,14 +39,14 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void onRender(ViewportEvent.ComputeCameraAngles evt) {
+    public void onCameraDistance(CalculateDetachedCameraDistanceEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            evt.getCamera().move(-evt.getCamera().getMaxZoom(Main.CLIENT_CONFIG.planeZoom.get().floatValue() - 4F), 0F, 0F);
+            evt.setDistance(Main.CLIENT_CONFIG.planeZoom.get().floatValue());
         }
     }
 
     @SubscribeEvent
-    public void onRender(InputEvent.MouseScrollingEvent evt) {
+    public void onScroll(InputEvent.MouseScrollingEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
             Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDeltaY())));
             Main.CLIENT_CONFIG.planeZoom.save();
