@@ -26,16 +26,38 @@
   "item.plane.bush_plane_birch": "Brzozowy Samolot Bush",
   "item.plane.bush_plane_warped": "Spaczony Samolot Bush",
   "item.plane.bush_plane_crimson": "Szkarłatny Samolot Bush",
+  "entity.plane.plane.oak": "Dębowy Samolot",
+  "entity.plane.plane.dark_oak": "Ciemnodębowy Samolot",
+  "entity.plane.plane.spruce": "Świerkowy Samolot",
+  "entity.plane.plane.acacia": "Akacjowy Samolot",
+  "entity.plane.plane.jungle": "Tropikalny Samolot",
+  "entity.plane.plane.birch": "Brzozowy Samolot",
+  "entity.plane.plane.warped": "Spaczony Samolot",
+  "entity.plane.plane.crimson": "Szkarłatny Samolot",
+  "entity.plane.cargo_plane.oak": "Dębowy Samolot Transportowy",
+  "entity.plane.cargo_plane.dark_oak": "Ciemnodębowy Samolot Transportowy",
+  "entity.plane.cargo_plane.spruce": "Świerkowy Samolot Transportowy",
+  "entity.plane.cargo_plane.acacia": "Akacjowy Samolot Transportowy",
+  "entity.plane.cargo_plane.jungle": "Tropikalny Samolot Transportowy",
+  "entity.plane.cargo_plane.birch": "Brzozowy Samolot Transportowy",
+  "entity.plane.cargo_plane.warped": "Spaczony Samolot Transportowy",
+  "entity.plane.cargo_plane.crimson": "Szkarłatny Samolot Transportowy",
+  "entity.plane.bush_plane.oak": "Dębowy Samolot Bush",
+  "entity.plane.bush_plane.dark_oak": "Ciemnodębowy Samolot Bush",
+  "entity.plane.bush_plane.spruce": "Świerkowy Samolot Bush",
+  "entity.plane.bush_plane.acacia": "Akacjowy Samolot Bush",
+  "entity.plane.bush_plane.jungle": "Tropikalny Samolot Bush",
+  "entity.plane.bush_plane.birch": "Brzozowy Samolot Bush",
+  "entity.plane.bush_plane.warped": "Spaczony Samolot Bush",
+  "entity.plane.bush_plane.crimson": "Szkarłatny Samolot Bush",
   "item.plane.wrench": "Klucz Francuski do Samolotu",
   "item.plane.plane_engine": "Silnik Samolotu",
   "item.plane.plane_wheel": "Koło Samolotu",
   "item.plane.diamond_reinforced_iron": "Żelazo Wzmocnione Diamentem",
-
   "gui.plane.fuel": "Paliwo",
   "gui.plane.damage": "Zniszczenia",
   "gui.plane.throttle": "Ciąg",
   "gui.plane.cargo_inventory": "Inwentarz Ładunków",
-
   "tooltip.plane.fuel": "Paliwo: %s mb",
   "tooltip.plane.damage": "Zniszczenia: %s %%",
   "tooltip.plane.throttle": "Ciąg: %s %%",
@@ -43,12 +65,9 @@
   "tooltip.plane.speed": "Prędkość: %s",
   "tooltip.plane.height": "Wysokość: %s blocks",
   "tooltip.plane.relative_height": "Wysokość-R: %s blocks",
-
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-
   "category.plane": "Samolot",
-
   "key.plane": "Interfejs Samolotu",
   "key.plane_add_thrust": "Zwiększ Ciąg",
   "key.plane_remove_thrust": "Zmniejsz Ciąg",
@@ -58,8 +77,6 @@
   "key.plane_down": "Dół",
   "key.plane_start": "Start",
   "key.plane_brake": "Hamulec",
-
   "death.attack.hit_plane": "%s został przejechany przez samolot",
-
   "config.jade.plugin_plane.plane": "Samolot"
 }

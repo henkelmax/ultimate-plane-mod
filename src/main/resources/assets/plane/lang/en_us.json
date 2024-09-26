@@ -54,12 +54,10 @@
   "item.plane.plane_engine": "Plane Engine",
   "item.plane.plane_wheel": "Plane Wheel",
   "item.plane.diamond_reinforced_iron": "Diamond Reinforced Iron",
-
   "gui.plane.fuel": "Fuel",
   "gui.plane.damage": "Damage",
   "gui.plane.throttle": "Throttle",
   "gui.plane.cargo_inventory": "Cargo Inventory",
-
   "tooltip.plane.fuel": "Fuel: %s mb",
   "tooltip.plane.damage": "Damage: %s %%",
   "tooltip.plane.throttle": "Throttle: %s %%",
@@ -67,12 +65,9 @@
   "tooltip.plane.speed": "Speed: %s",
   "tooltip.plane.height": "Height: %s blocks",
   "tooltip.plane.relative_height": "RHeight: %s blocks",
-
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-
   "category.plane": "Plane",
-
   "key.plane": "Plane GUI",
   "key.plane_add_thrust": "Add Thrust",
   "key.plane_remove_thrust": "Remove Thrust",
@@ -82,8 +77,6 @@
   "key.plane_down": "Down",
   "key.plane_start": "Start",
   "key.plane_brake": "Brake",
-
   "death.attack.hit_plane": "%s was run over by a plane",
-
   "config.jade.plugin_plane.plane": "Plane"
 }
