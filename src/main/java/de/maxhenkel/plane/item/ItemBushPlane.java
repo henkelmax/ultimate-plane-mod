@@ -1,14 +1,13 @@
 package de.maxhenkel.plane.item;
 
+import de.maxhenkel.plane.PlaneType;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import net.minecraft.world.level.Level;
 
 public class ItemBushPlane extends ItemAbstractPlane<EntityBushPlane> {
 
-    private EntityBushPlane.Type type;
-
-    public ItemBushPlane(EntityBushPlane.Type type) {
-        this.type = type;
+    public ItemBushPlane(PlaneType type) {
+        super(type);
     }
 
     @Override

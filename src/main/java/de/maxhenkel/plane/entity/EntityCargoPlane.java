@@ -7,9 +7,6 @@ import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,10 +27,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class EntityCargoPlane extends EntityPlaneSoundBase {
+public class EntityCargoPlane extends EntityPlaneBase {
 
-    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(EntityCargoPlane.class, EntityDataSerializers.INT);
-    private Container cargoInventory;
+    private final Container cargoInventory;
 
     public EntityCargoPlane(Level world) {
         this(Main.CARGO_PLANE_ENTITY_TYPE.get(), world);
@@ -96,14 +92,12 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        setPlaneType(EntityCargoPlane.Type.fromTypeName(compound.getString("Type")));
         ItemUtils.readInventory(registryAccess(), compound, "CargoInventory", cargoInventory);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Type", getPlaneType().getTypeName());
         ItemUtils.saveInventory(registryAccess(), compound, "CargoInventory", cargoInventory);
     }
 
@@ -128,52 +122,8 @@ public class EntityCargoPlane extends EntityPlaneSoundBase {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(TYPE, 0);
-    }
-
-    @Override
     public Vec3[] getPlayerOffsets() {
         return new Vec3[]{new Vec3(0.5D, 0D, 0.8D), new Vec3(-0.5D, 0D, 0.8D)};
-    }
-
-    public EntityCargoPlane.Type getPlaneType() {
-        return EntityCargoPlane.Type.values()[entityData.get(TYPE)];
-    }
-
-    public void setPlaneType(EntityCargoPlane.Type type) {
-        entityData.set(TYPE, type.ordinal());
-    }
-
-    public static enum Type {
-        OAK("oak"),
-        SPRUCE("spruce"),
-        BIRCH("birch"),
-        JUNGLE("jungle"),
-        ACACIA("acacia"),
-        DARK_OAK("dark_oak"),
-        WARPED("warped"),
-        CRIMSON("crimson");
-
-        private String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        public String getTypeName() {
-            return name;
-        }
-
-        public static EntityCargoPlane.Type fromTypeName(String name) {
-            for (EntityCargoPlane.Type type : values()) {
-                if (type.getTypeName().equals(name)) {
-                    return type;
-                }
-            }
-            return OAK;
-        }
     }
 
 }

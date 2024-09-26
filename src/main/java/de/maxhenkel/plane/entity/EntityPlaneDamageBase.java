@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public abstract class EntityPlaneDamageBase extends EntityPlaneBase {
+public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
     private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityPlaneDamageBase.class, EntityDataSerializers.FLOAT);
 

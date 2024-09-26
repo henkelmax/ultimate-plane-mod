@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.item;
 
 import de.maxhenkel.corelib.math.MathUtils;
+import de.maxhenkel.plane.PlaneType;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -24,8 +25,15 @@ import java.util.List;
 
 public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends Item {
 
-    public ItemAbstractPlane() {
+    protected final PlaneType type;
+
+    public ItemAbstractPlane(PlaneType type) {
         super(new Properties().stacksTo(1));
+        this.type = type;
+    }
+
+    public PlaneType getType() {
+        return type;
     }
 
     public abstract T createPlane(Level world);
