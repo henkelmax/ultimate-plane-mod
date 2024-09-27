@@ -7,6 +7,7 @@ import de.maxhenkel.corelib.client.obj.OBJModelInstance;
 import de.maxhenkel.corelib.client.obj.OBJModelOptions;
 import de.maxhenkel.corelib.math.Rotation;
 import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.entity.EntityBushPlane;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -69,6 +70,9 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     private static final List<OBJModelInstance<EntityCargoPlane>> SPRUCE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"));
     private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png"));
     private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> BAMBOO_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/bamboo_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> CHERRY_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/cherry_planks.png"));
+    private static final List<OBJModelInstance<EntityCargoPlane>> MANGROVE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/mangrove_planks.png"));
 
     public CargoPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -110,6 +114,12 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
                 return WARPED_MODEL;
             case CRIMSON:
                 return CRIMSON_MODEL;
+            case BAMBOO:
+                return BAMBOO_MODEL;
+            case CHERRY:
+                return CHERRY_MODEL;
+            case MANGROVE:
+                return MANGROVE_MODEL;
         }
     }
 

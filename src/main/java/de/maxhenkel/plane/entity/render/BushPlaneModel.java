@@ -69,6 +69,9 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     private static final List<OBJModelInstance<EntityBushPlane>> SPRUCE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"));
     private static final List<OBJModelInstance<EntityBushPlane>> WARPED_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png"));
     private static final List<OBJModelInstance<EntityBushPlane>> CRIMSON_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png"));
+    private static final List<OBJModelInstance<EntityBushPlane>> BAMBOO_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/bamboo_planks.png"));
+    private static final List<OBJModelInstance<EntityBushPlane>> CHERRY_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/cherry_planks.png"));
+    private static final List<OBJModelInstance<EntityBushPlane>> MANGROVE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/mangrove_planks.png"));
 
     public BushPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -110,6 +113,12 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
                 return WARPED_MODEL;
             case CRIMSON:
                 return CRIMSON_MODEL;
+            case BAMBOO:
+                return BAMBOO_MODEL;
+            case CHERRY:
+                return CHERRY_MODEL;
+            case MANGROVE:
+                return MANGROVE_MODEL;
         }
     }
 

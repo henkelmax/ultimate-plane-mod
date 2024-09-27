@@ -8,7 +8,10 @@ public enum PlaneType {
     ACACIA("acacia"),
     DARK_OAK("dark_oak"),
     WARPED("warped"),
-    CRIMSON("crimson");
+    CRIMSON("crimson"),
+    BAMBOO("bamboo"),
+    CHERRY("cherry"),
+    MANGROVE("mangrove");
 
     private final String name;
 
