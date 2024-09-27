@@ -67,7 +67,7 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
 
-        drawFuel(guiGraphics, (float) plane.getFuel() / (float) plane.getMaxFuel());
+        drawFuel(guiGraphics, (float) plane.getFuel() / (float) plane.getFuelCapacity());
         drawDamage(guiGraphics, (100F - Math.min(plane.getPlaneDamage(), 100F)) / 100F);
         drawThrottle(guiGraphics, plane.getEngineSpeed());
     }

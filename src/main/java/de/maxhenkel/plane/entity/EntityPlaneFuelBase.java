@@ -22,13 +22,13 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.STRING);
 
+    private float fuelAccumulator;
+
     public EntityPlaneFuelBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public abstract float getMaxFuelUsage();
-
-    public abstract int getMaxFuel();
+    public abstract int getFuelCapacity();
 
     @Override
     public void tick() {
@@ -36,15 +36,36 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         fuelTick();
     }
 
-    public void fuelTick() {
+    protected void fuelTick() {
         if (!isStarted()) {
             return;
         }
 
-        if (level().getGameTime() % 20L == 0L) {
-            int consumeAmount = Math.max((int) Math.ceil(getEngineSpeed() * getMaxFuelUsage()), 1);
-            setFuel(Math.max(getFuel() - consumeAmount, 0));
-        }
+        setFuel(Math.max(getFuel() - calculateFuelUsage(), 0));
+    }
+
+    protected int calculateFuelUsage() {
+        float maxUsage = getBaseFuelUsage() * getFuelMultiplier();
+
+        float idleUsage = Math.max(Math.min(getIdleUsageMultiplier(), 1F), 0F);
+
+        maxUsage = (maxUsage * idleUsage) + (maxUsage * getEngineSpeed()) * (1F - idleUsage);
+
+        fuelAccumulator += maxUsage;
+
+        int fuelInt = (int) fuelAccumulator;
+        fuelAccumulator -= fuelInt;
+        return fuelInt;
+    }
+
+    protected abstract float getBaseFuelUsage();
+
+    protected float getFuelMultiplier() {
+        return 1F;
+    }
+
+    protected float getIdleUsageMultiplier() {
+        return 0.1F;
     }
 
     @Override
@@ -124,7 +145,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
 
     @Override
     public int getTankCapacity(int tank) {
-        return getMaxFuel();
+        return getFuelCapacity();
     }
 
     @Override
@@ -144,12 +165,12 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
             return 0;
         }
 
-        int amount = Math.min(resource.getAmount(), getMaxFuel() - getFuel());
+        int amount = Math.min(resource.getAmount(), getFuelCapacity() - getFuel());
 
         if (action.execute()) {
             int i = getFuel() + amount;
-            if (i > getMaxFuel()) {
-                i = getMaxFuel();
+            if (i > getFuelCapacity()) {
+                i = getFuelCapacity();
             }
             setFuel(i);
             setFuelType(resource.getFluid());

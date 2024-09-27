@@ -41,13 +41,13 @@ public class EntityBushPlane extends EntityPlaneBase {
     }
 
     @Override
-    public float getMaxFuelUsage() {
-        return 15F;
+    public int getFuelCapacity() {
+        return 6000;
     }
 
     @Override
-    public int getMaxFuel() {
-        return 6000;
+    protected float getBaseFuelUsage() {
+        return 0.75F;
     }
 
     @Override
