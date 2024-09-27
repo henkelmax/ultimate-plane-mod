@@ -1,2 +1,1 @@
-- Added bamboo, cherry and mangrove planes
-- Added planes creative tab
+- Fixed plane loot tables

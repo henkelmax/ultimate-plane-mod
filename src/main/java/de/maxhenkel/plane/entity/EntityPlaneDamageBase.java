@@ -38,9 +38,6 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
     private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityPlaneDamageBase.class, EntityDataSerializers.FLOAT);
 
-    @Nullable
-    protected ResourceKey<LootTable> lootTable;
-
     public EntityPlaneDamageBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
@@ -161,9 +158,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     @Nullable
-    public ResourceKey<LootTable> getLootTable() {
-        return lootTable;
-    }
+    public abstract ResourceKey<LootTable> getLootTable();
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
