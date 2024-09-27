@@ -232,10 +232,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 motionVector = motionVector.add(new Vec3(addVec.x, 0D, addVec.z));
             }
 
-            if (isStalling(motionVector)) {
-                motionVector = motionVector.multiply(new Vec3(0.975D, 1.025D, 0.975D));
-            }
-
             setDeltaMovement(motionVector);
 
             move(MoverType.SELF, getDeltaMovement());
@@ -261,14 +257,6 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 damagePlane(damage, false);
             }
         }
-    }
-
-    protected boolean isStalling(Vec3 motionVector) {
-        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y * getStallFactor();
-    }
-
-    protected double getStallFactor() {
-        return 4D;
     }
 
     public abstract double getFallSpeed();

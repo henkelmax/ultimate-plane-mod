@@ -46,11 +46,6 @@ public class EntityCargoPlane extends EntityPlaneBase {
     }
 
     @Override
-    protected double getStallFactor() {
-        return 5D;
-    }
-
-    @Override
     public void destroyPlane(DamageSource source, Player player) {
         Containers.dropContents(level(), blockPosition(), cargoInventory);
         cargoInventory.clearContent();

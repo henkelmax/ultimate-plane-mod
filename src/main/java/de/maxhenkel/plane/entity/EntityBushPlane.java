@@ -26,11 +26,6 @@ public class EntityBushPlane extends EntityPlaneBase {
     }
 
     @Override
-    protected double getStallFactor() {
-        return 1D;
-    }
-
-    @Override
     public void openGUI(Player player, boolean outside) {
 
     }
