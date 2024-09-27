@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -38,6 +37,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
     public EntityCargoPlane(EntityType<?> type, Level world) {
         super(type, world);
         cargoInventory = new SimpleContainer(54);
+        lootTable = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override
@@ -109,11 +109,6 @@ public class EntityCargoPlane extends EntityPlaneBase {
     @Override
     protected float getBaseFuelUsage() {
         return 1.05F;
-    }
-
-    @Override
-    public ResourceKey<LootTable> getLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

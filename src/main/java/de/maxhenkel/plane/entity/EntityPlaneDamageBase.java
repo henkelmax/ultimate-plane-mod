@@ -29,6 +29,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,6 +37,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
     private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(EntityPlaneDamageBase.class, EntityDataSerializers.FLOAT);
+
+    @Nullable
+    protected ResourceKey<LootTable> lootTable;
 
     public EntityPlaneDamageBase(EntityType type, Level worldIn) {
         super(type, worldIn);
@@ -141,20 +145,25 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
         Containers.dropContents(level(), blockPosition(), inventory);
         inventory.clearContent();
 
-        LootTable loottable = level().getServer().reloadableRegistries().getLootTable(getLootTable());
-
-        LootParams.Builder context = new LootParams.Builder((ServerLevel) level())
-                .withParameter(LootContextParams.ORIGIN, position())
-                .withParameter(LootContextParams.THIS_ENTITY, this)
-                .withParameter(LootContextParams.DAMAGE_SOURCE, source)
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
-                .withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player);
-        loottable.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(this::spawnAtLocation);
+        ResourceKey<LootTable> lootTable = getLootTable();
+        if (lootTable != null) {
+            LootTable table = level().getServer().reloadableRegistries().getLootTable(lootTable);
+            LootParams.Builder context = new LootParams.Builder((ServerLevel) level())
+                    .withParameter(LootContextParams.ORIGIN, position())
+                    .withParameter(LootContextParams.THIS_ENTITY, this)
+                    .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                    .withParameter(LootContextParams.ATTACKING_ENTITY, player)
+                    .withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player);
+            table.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(this::spawnAtLocation);
+        }
 
         kill();
     }
 
-    public abstract ResourceKey<LootTable> getLootTable();
+    @Nullable
+    public ResourceKey<LootTable> getLootTable() {
+        return lootTable;
+    }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {

@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -28,6 +27,7 @@ public class EntityPlane extends EntityPlaneBase {
 
     public EntityPlane(EntityType<?> type, Level world) {
         super(type, world);
+        lootTable = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/plane_" + getPlaneType().getTypeName()));
     }
 
     @Override
@@ -55,11 +55,6 @@ public class EntityPlane extends EntityPlaneBase {
         } else {
             PacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
         }
-    }
-
-    @Override
-    public ResourceKey<LootTable> getLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/plane_" + getPlaneType().getTypeName()));
     }
 
     @Override
