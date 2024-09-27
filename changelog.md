@@ -1,1 +1,3 @@
-- Fixed plane names
+- Enhanced plane takeoff process
+- Enhanced plane stalling
+- Enhanced plane fuel usage calculation
