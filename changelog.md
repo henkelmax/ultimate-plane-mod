@@ -1,1 +1,1 @@
-- Improved plane rotation acceleration
+- Added bamboo, cherry and mangrove planes
