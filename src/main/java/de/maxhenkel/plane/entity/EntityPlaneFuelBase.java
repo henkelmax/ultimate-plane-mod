@@ -33,7 +33,9 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     @Override
     public void tick() {
         super.tick();
-        fuelTick();
+        if (!level().isClientSide()) {
+            fuelTick();
+        }
     }
 
     protected void fuelTick() {
