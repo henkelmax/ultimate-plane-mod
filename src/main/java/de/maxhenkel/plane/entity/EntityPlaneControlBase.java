@@ -28,6 +28,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     public static final double MAX_ENGINE_SPEED = 1.5D;
     public static final double ENGINE_ACCELERATION = 0.005D;
     public static final double BRAKE_POWER = 0.012D;
+    public static final float MAX_GROUND_LEAN_BACK = -7F;
+    public static final float MAX_PITCH_CORRECTION_SPEED = 10F;
 
     public EntityPlaneControlBase(EntityType type, Level worldIn) {
         super(type, worldIn);
@@ -77,6 +79,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         return time;
     }
 
+    //TODO Fix rotation speed
     private void handleRotation() {
 
         double speed = getDeltaMovement().length();
@@ -121,21 +124,20 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         setXRot(Math.max(getXRot(), -90F));
         setXRot(Math.min(getXRot(), 90F));
 
-        float groundPitchTolerance = 7F;
-
         if (isCollidedVertical()) {
             // Prevent leaning forwards when on ground
-            if (getXRot() > 0) {
-                setXRot(getXRot() - 10F);
-                if (getXRot() < 0) {
-                    setXRot(0);
+            if (getXRot() > 0F) {
+                setXRot(getXRot() - MAX_PITCH_CORRECTION_SPEED);
+                if (getXRot() < 0F) {
+                    setXRot(0F);
                 }
             }
 
-            if (getXRot() < -groundPitchTolerance) {
-                setXRot(getXRot() + 10F);
-                if (getXRot() > -groundPitchTolerance) {
-                    setXRot(getXRot() - groundPitchTolerance);
+            // Limit leaning when on ground
+            if (getXRot() < MAX_GROUND_LEAN_BACK) {
+                setXRot(getXRot() + MAX_PITCH_CORRECTION_SPEED);
+                if (getXRot() > MAX_GROUND_LEAN_BACK) {
+                    setXRot(MAX_GROUND_LEAN_BACK);
                 }
             }
         }
@@ -169,14 +171,15 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
 
             if (isBrake()) {
-                speed = decreaseToZero(speed, (1D / (speed + 1D)) * BRAKE_POWER); // brake resistance
+                speed = decreaseToZero(speed, (1D / (speed + 1D)) * BRAKE_POWER); // Brake resistance
             }
 
             if (engineSpeed <= 0F) {
-                speed = decreaseToZero(speed, 0.002D); // ground resistance
+                speed = decreaseToZero(speed, 0.002D); // Ground resistance
             }
 
-            Vec3 motion = getLookAngle().normalize().scale(speed).multiply(1D, 0D, 1D);
+            // Ignore the plane pitch when on ground to prevent the plane slowing down when tilting up on the ground
+            Vec3 motion = getLookAngle().multiply(1D, 0D, 1D).normalize().scale(speed);
             setDeltaMovement(motion);
             if (speed > 0D) {
                 move(MoverType.SELF, getDeltaMovement());
@@ -261,7 +264,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     protected boolean isStalling(Vec3 motionVector) {
-        return motionVector.multiply(1D, 0D, 1D).length() / 4D < -motionVector.y;
+        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y * 4D;
     }
 
     public abstract double getFallSpeed();
