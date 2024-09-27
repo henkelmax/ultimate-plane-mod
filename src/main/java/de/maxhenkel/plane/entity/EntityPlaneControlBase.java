@@ -79,26 +79,37 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         return time;
     }
 
+    private int pressLeftTicks = 0;
+    private int pressRightTicks = 0;
+
+    private static final float TURN_ACCELERATION_SPEED = 0.05F;
+
     //TODO Fix rotation speed
     private void handleRotation() {
-
         double speed = getDeltaMovement().length();
 
-        float rotationSpeed = 0;
+        float rotationSpeed = 0F;
         if (Math.abs(speed) > 0F) {
-            rotationSpeed = Mth.abs(0.5F / (float) Math.pow(speed, 2)); //rotation modifier+0.5
-            rotationSpeed = Mth.clamp(rotationSpeed, 1.0F, 5.0F);
+            // Let the player turn quicker the slower the plane goes
+            rotationSpeed = 0.5F / (float) Math.pow(speed, 2F); //rotation modifier+0.5
+            rotationSpeed = Mth.clamp(rotationSpeed, 1F, 5F);
         }
 
-        deltaRotation = 0;
+        deltaRotation = 0F;
 
-        rotationSpeed = Math.abs(rotationSpeed);
-
-        if (isLeft()) {
-            deltaRotation -= rotationSpeed;
+        if (isLeft() && rotationSpeed > 0F) {
+            pressLeftTicks++;
+            float factor = Math.min(pressLeftTicks * TURN_ACCELERATION_SPEED, 1F);
+            deltaRotation -= rotationSpeed * factor;
+        } else {
+            pressLeftTicks = 0;
         }
-        if (isRight()) {
-            deltaRotation += rotationSpeed;
+        if (isRight() && rotationSpeed > 0F) {
+            pressRightTicks++;
+            float factor = Math.min(pressRightTicks * TURN_ACCELERATION_SPEED, 1F);
+            deltaRotation += rotationSpeed * factor;
+        } else {
+            pressRightTicks = 0;
         }
 
         // ----- YAW ------

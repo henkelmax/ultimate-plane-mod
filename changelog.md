@@ -1,1 +1,1 @@
-- Fixed fuel gauge jittering on the plane GUI
+- Improved plane rotation acceleration
