@@ -22,7 +22,7 @@ It requires the [Ultimate Car Mod](https://www.curseforge.com/minecraft/mc-mods/
 
 ## Features
 
-- 24 different planes
+- 33 different planes
 - Planes in every wood type
 - Planes can be named
 - Planes can store items
