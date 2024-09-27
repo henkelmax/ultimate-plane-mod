@@ -57,8 +57,12 @@ public class PlaneData {
         return fuel;
     }
 
-    public CompoundTag getPlaneData() {
+    private CompoundTag getPlaneData() {
         return planeData;
+    }
+
+    public CompoundTag getPlaneDataCopy() {
+        return planeData.copy();
     }
 
     @Override

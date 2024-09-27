@@ -75,7 +75,7 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         convert(stack);
         PlaneData planeData = stack.get(ModItems.PLANE_DATA_COMPONENT);
         if (planeData != null) {
-            plane.readAdditionalSaveData(planeData.getPlaneData());
+            plane.readAdditionalSaveData(planeData.getPlaneDataCopy());
             plane.setStarted(false, false);
         }
         Component customName = stack.get(DataComponents.CUSTOM_NAME);
