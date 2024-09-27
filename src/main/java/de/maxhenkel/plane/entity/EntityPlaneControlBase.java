@@ -264,7 +264,11 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     protected boolean isStalling(Vec3 motionVector) {
-        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y * 4D;
+        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y * getStallFactor();
+    }
+
+    protected double getStallFactor() {
+        return 4D;
     }
 
     public abstract double getFallSpeed();

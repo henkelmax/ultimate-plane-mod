@@ -26,8 +26,8 @@ public class EntityBushPlane extends EntityPlaneBase {
     }
 
     @Override
-    protected boolean isStalling(Vec3 motionVector) {
-        return motionVector.multiply(1D, 0D, 1D).length() < -motionVector.y;
+    protected double getStallFactor() {
+        return 1D;
     }
 
     @Override
