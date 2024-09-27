@@ -81,6 +81,7 @@ public class Main {
 
         ModItems.init(eventBus);
         ModSounds.init(eventBus);
+        ModCreativeTabs.init(eventBus);
         ENTITY_REGISTER.register(eventBus);
         MENU_TYPE_REGISTER.register(eventBus);
         LOOT_FUNCTION_TYPE_REGISTER.register(eventBus);

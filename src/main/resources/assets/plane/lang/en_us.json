@@ -1,4 +1,5 @@
 {
+  "itemGroup.planes": "Planes",
   "entity.plane.plane": "Plane",
   "entity.plane.cargo_plane": "Cargo Plane",
   "entity.plane.bush_plane": "Bush Plane",
