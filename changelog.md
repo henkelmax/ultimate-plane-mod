@@ -1,3 +1,1 @@
-- Enhanced plane takeoff process
-- Enhanced plane stalling
-- Enhanced plane fuel usage calculation
+- Fixed fuel gauge jittering on the plane GUI
