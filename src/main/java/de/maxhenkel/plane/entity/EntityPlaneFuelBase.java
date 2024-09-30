@@ -130,7 +130,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public boolean isValidFuel(FluidStack fluid) {
-        return Main.SERVER_CONFIG.validFuels.contains(fluid.getFluid());
+        return Main.SERVER_CONFIG.validFuels.stream().anyMatch(fluidTag -> fluidTag.contains(fluid.getFluid()));
     }
 
     @Override

@@ -1,14 +1,13 @@
 package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import de.maxhenkel.corelib.tag.Tag;
+import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,11 +15,11 @@ import java.util.stream.Collectors;
 public class ServerConfig extends ConfigBase {
 
     private final ModConfigSpec.ConfigValue<List<? extends String>> validFuelsSpec;
-    public static List<Fluid> validFuels = new ArrayList<>();
+    public List<Tag<Fluid>> validFuels = new ArrayList<>();
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
-        validFuelsSpec = builder.defineList("valid_fuels", Arrays.asList("car:bio_diesel"), Objects::nonNull);
+        validFuelsSpec = builder.defineList("valid_fuels", List.of("#car:gas_station"), Objects::nonNull);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class ServerConfig extends ConfigBase {
     }
 
     private void onConfigChanged() {
-        validFuels = validFuelsSpec.get().stream().map(ResourceLocation::tryParse).filter(Objects::nonNull).map(BuiltInRegistries.FLUID::get).filter(Objects::nonNull).collect(Collectors.toList());
+        validFuels = validFuelsSpec.get().stream().map(TagUtils::getFluid).filter(Objects::nonNull).collect(Collectors.toList());
     }
-    
+
 }
