@@ -1,1 +1,1 @@
-- Fixed plane loot tables
+- Improve plane fuel configuration
