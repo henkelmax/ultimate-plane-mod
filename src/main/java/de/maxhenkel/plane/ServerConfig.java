@@ -19,7 +19,7 @@ public class ServerConfig extends ConfigBase {
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
-        validFuelsSpec = builder.defineList("valid_fuels", List.of("#car:gas_station"), Objects::nonNull);
+        validFuelsSpec = builder.defineList("valid_fuels", () -> List.of("#car:gas_station"), () -> "", Objects::nonNull);
     }
 
     @Override
