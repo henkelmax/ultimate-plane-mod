@@ -1,1 +1,1 @@
-- Fixed planes rendering weirdly in some cases
+- Don't render fire animation on planes
