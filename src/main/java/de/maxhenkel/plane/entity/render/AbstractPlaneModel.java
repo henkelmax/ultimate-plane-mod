@@ -24,6 +24,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
             drawName(plane, name, matrixStack, buffer, partialTicks, yRot, light, true);
             drawName(plane, name, matrixStack, buffer, partialTicks, yRot, light, false);
         }
+        RenderSystem.enableCull();
     }
 
     protected String trimName(String name, float textScale, float maxLength) {
