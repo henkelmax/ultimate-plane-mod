@@ -1,1 +1,1 @@
-- Improve plane fuel configuration
+- Fixed planes rendering weirdly in some cases
