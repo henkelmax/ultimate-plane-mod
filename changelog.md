@@ -1,1 +1,2 @@
 - Don't render fire animation on planes
+- Make maximum plane damage configurable

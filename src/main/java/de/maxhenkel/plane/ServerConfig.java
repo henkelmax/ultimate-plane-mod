@@ -14,12 +14,16 @@ import java.util.stream.Collectors;
 
 public class ServerConfig extends ConfigBase {
 
+    public final ModConfigSpec.DoubleValue maxPlaneDamage;
+
     private final ModConfigSpec.ConfigValue<List<? extends String>> validFuelsSpec;
     public List<Tag<Fluid>> validFuels = new ArrayList<>();
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
-        validFuelsSpec = builder.defineList("valid_fuels", () -> List.of("#car:gas_station"), () -> "", Objects::nonNull);
+        maxPlaneDamage = builder.defineInRange("plane.max_damage", 200D, 100D, Double.MAX_VALUE);
+
+        validFuelsSpec = builder.defineList("plane.valid_fuels", () -> List.of("#car:gas_station"), () -> "", Objects::nonNull);
     }
 
     @Override
