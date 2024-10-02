@@ -17,14 +17,12 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneSoundBase> extends
 
     @Override
     public void render(T plane, float yRot, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int light) {
-        RenderSystem.disableCull();
         super.render(plane, yRot, partialTicks, matrixStack, buffer, light);
         if (plane.hasCustomName()) {
             String name = trimName(plane.getCustomName().getString(), 0.02F, 1F);
             drawName(plane, name, matrixStack, buffer, partialTicks, yRot, light, true);
             drawName(plane, name, matrixStack, buffer, partialTicks, yRot, light, false);
         }
-        RenderSystem.enableCull();
     }
 
     protected String trimName(String name, float textScale, float maxLength) {
