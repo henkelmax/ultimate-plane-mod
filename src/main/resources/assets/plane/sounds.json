@@ -4,7 +4,8 @@
     "sounds": [
       {
         "name": "plane:engine_idle",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 128
       }
     ]
   },
@@ -13,7 +14,8 @@
     "sounds": [
       {
         "name": "plane:engine_start",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 128
       }
     ]
   },
@@ -22,7 +24,8 @@
     "sounds": [
       {
         "name": "plane:engine_starting",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 128
       }
     ]
   },
@@ -31,7 +34,8 @@
     "sounds": [
       {
         "name": "plane:engine_stop",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 128
       }
     ]
   },
@@ -40,7 +44,8 @@
     "sounds": [
       {
         "name": "plane:engine_high",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 128
       }
     ]
   },
@@ -49,7 +54,8 @@
     "sounds": [
       {
         "name": "plane:crash",
-        "stream": false
+        "stream": false,
+        "attenuation_distance": 32
       }
     ]
   },

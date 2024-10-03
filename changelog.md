@@ -1,1 +1,1 @@
-- Enhance plane stalling
+- Increased plane sound distance to 128 blocks
