@@ -1,3 +1,4 @@
 - Improved damage when colliding horizontally
 - Optimized plane rendering
 - Improved plane rotation visuals
+- Reworked plane models
