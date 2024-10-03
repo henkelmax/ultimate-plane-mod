@@ -37,7 +37,7 @@ public class ModSounds {
     }
 
     public static void playSound(SoundEvent evt, Level world, BlockPos pos, Player entity, SoundSource category, float volume) {
-        playSound(evt, world, pos, entity, category, volume, 1.0F);
+        playSound(evt, world, pos, entity, category, volume, 1F);
     }
 
     public static void playSound(SoundEvent evt, Level world, BlockPos pos, Player entity, SoundSource category, float volume, float pitch) {
