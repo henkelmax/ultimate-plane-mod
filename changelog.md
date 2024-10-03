@@ -1,1 +1,1 @@
-- Increased plane sound distance to 128 blocks
+- Improved damage when colliding horizontally

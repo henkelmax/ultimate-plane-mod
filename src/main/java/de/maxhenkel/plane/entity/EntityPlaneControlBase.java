@@ -259,11 +259,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             return;
         }
         if (isCollidedHorizontal()) {
-            double newHorizontalMotion = getHorizontalMotion(getDeltaMovement());
-            double motionDifference = horizontalMotion - newHorizontalMotion;
-            double damage = motionDifference * 1000D - 150D;
+            double damage = horizontalMotion * 1000D - 400D;
             if (damage > 0D) {
                 damagePlane(damage, true);
+                setDeltaMovement(getDeltaMovement().multiply(0D, 1D, 0D));
             }
         }
 
