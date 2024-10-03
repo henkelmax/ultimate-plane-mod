@@ -20,6 +20,10 @@ public class ModCreativeTabs {
         return CreativeModeTab.builder()
                 .icon(() -> new ItemStack(ModItems.PLANES[0].get()))
                 .displayItems((param, output) -> {
+                    output.accept(new ItemStack(ModItems.PLANE_ENGINE.get()));
+                    output.accept(new ItemStack(ModItems.PLANE_WHEEL.get()));
+                    output.accept(new ItemStack(ModItems.WRENCH.get()));
+                    output.accept(new ItemStack(ModItems.DIAMOND_REINFORCED_IRON.get()));
                     for (DeferredHolder<Item, ItemBushPlane> plane : ModItems.BUSH_PLANES) {
                         output.accept(new ItemStack(plane.get()));
                     }

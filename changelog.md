@@ -3,3 +3,4 @@
 - Improved plane rotation visuals
 - Reworked plane models
 - Added collision between planes
+- Added all items to plane creative tab

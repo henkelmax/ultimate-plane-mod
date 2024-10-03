@@ -5,7 +5,6 @@ import de.maxhenkel.plane.entity.*;
 import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
-import de.maxhenkel.plane.events.CreativeTabEvents;
 import de.maxhenkel.plane.events.InteractEvents;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
@@ -67,7 +66,6 @@ public class Main {
     public Main(IEventBus eventBus) {
         eventBus.addListener(this::commonSetup);
         eventBus.addListener(this::onRegisterPayloadHandler);
-        eventBus.addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
         eventBus.addListener(this::onRegisterCapabilities);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
