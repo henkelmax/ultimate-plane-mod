@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.events;
 
-import de.maxhenkel.plane.entity.EntityPlaneDamageBase;
+import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.sound.ModSounds;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -17,24 +17,14 @@ public class InteractEvents {
     public void onInteract(PlayerInteractEvent.EntityInteract evt) {
         Player player = evt.getEntity();
         ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (!stack.getItem().equals(ModItems.WRENCH.get())) {
+        if (!stack.is(ModItems.WRENCH)) {
             stack = player.getItemInHand(InteractionHand.OFF_HAND);
-            if (!stack.getItem().equals(ModItems.WRENCH.get())) {
+            if (!stack.is(ModItems.WRENCH)) {
                 return;
             }
         }
 
-        EntityPlaneDamageBase plane = null;
-
-        if (!(evt.getTarget() instanceof EntityPlaneDamageBase)) {
-            return;
-        }
-
-        if (evt.getTarget() instanceof EntityPlaneDamageBase) {
-            plane = (EntityPlaneDamageBase) evt.getTarget();
-        }
-
-        if (plane == null) {
+        if (!(evt.getTarget() instanceof EntityPlaneBase plane)) {
             return;
         }
 
