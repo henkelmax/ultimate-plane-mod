@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import com.google.common.collect.ImmutableList;
+import de.maxhenkel.plane.Main;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -151,6 +152,9 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public boolean canCollideWith(Entity entity) {
+        if (Main.SERVER_CONFIG.planeToPlaneCollision.get()) {
+            return entity instanceof EntityVehicleBase;
+        }
         return false;
     }
 
