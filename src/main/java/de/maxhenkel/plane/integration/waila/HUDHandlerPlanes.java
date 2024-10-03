@@ -2,7 +2,7 @@ package de.maxhenkel.plane.integration.waila;
 
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
 
     @Override
     public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
-        if (entityAccessor.getEntity() instanceof EntityPlane plane) {
+        if (entityAccessor.getEntity() instanceof EntityPlaneBase plane) {
             iTooltip.remove(OBJECT_NAME_TAG);
             iTooltip.add(entityAccessor.getEntity().getDisplayName().copy().withStyle(ChatFormatting.WHITE));
             iTooltip.add(Component.translatable("tooltip.plane.fuel", Component.literal(String.valueOf(plane.getFuel())).withStyle(ChatFormatting.DARK_GRAY)).withStyle(ChatFormatting.GRAY));

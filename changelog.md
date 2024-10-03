@@ -5,3 +5,4 @@
 - Added collision between planes
 - Added all items to plane creative tab
 - Added transporter plane
+- Fixed jade tooltip information not appearing for all planes
