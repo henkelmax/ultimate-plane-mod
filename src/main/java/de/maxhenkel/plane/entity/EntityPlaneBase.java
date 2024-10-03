@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +19,8 @@ public abstract class EntityPlaneBase extends EntityPlaneSoundBase {
     public EntityPlaneBase(EntityType type, Level worldIn) {
         super(type, worldIn);
     }
+
+    public abstract Vec3 getBodyRotationCenter();
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {

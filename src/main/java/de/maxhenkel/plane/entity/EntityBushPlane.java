@@ -12,6 +12,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class EntityBushPlane extends EntityPlaneBase {
 
+    private static final Vec3 BODY_CENTER = new Vec3(0D, 0D, -17.5D / 16D);
+
     public EntityBushPlane(Level world) {
         this(Main.BUSH_PLANE_ENTITY_TYPE.get(), world);
     }
@@ -55,4 +57,8 @@ public class EntityBushPlane extends EntityPlaneBase {
         return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
     }
 
+    @Override
+    public Vec3 getBodyRotationCenter() {
+        return BODY_CENTER;
+    }
 }

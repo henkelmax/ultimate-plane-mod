@@ -1,9 +1,11 @@
 package de.maxhenkel.plane.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -132,31 +134,33 @@ public class RenderEvents {
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
         Player player = event.getEntity();
-        if (player.getVehicle() instanceof EntityPlaneSoundBase) {
-            EntityPlaneSoundBase plane = (EntityPlaneSoundBase) event.getEntity().getVehicle();
-            event.getPoseStack().pushPose();
+        if (player.getVehicle() instanceof EntityPlaneBase plane) {
+            PoseStack pose = event.getPoseStack();
+            pose.pushPose();
 
-            event.getPoseStack().mulPose(Axis.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
-            event.getPoseStack().mulPose(Axis.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
+            pose.mulPose(Axis.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
+            Vec3 bodyRotationCenter = plane.getBodyRotationCenter();
+            pose.mulPose(Axis.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
             if (i >= 0) {
                 Vec3 offset = plane.getPlayerOffsets()[i];
+                offset = offset.add(bodyRotationCenter);
                 offset = offset.xRot((float) -Math.toRadians(plane.getXRot()));
-                event.getPoseStack().translate(0F, offset.y, 0F);
+                pose.translate(0F, offset.y, 0F);
             }
 
-            event.getPoseStack().scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
-            event.getPoseStack().translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
+            pose.scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
+            pose.translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            event.getPoseStack().mulPose(Axis.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
+            pose.mulPose(Axis.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
         }
     }
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getEntity().getVehicle() instanceof EntityPlaneSoundBase) {
+        if (event.getEntity().getVehicle() instanceof EntityPlaneBase) {
             event.getPoseStack().popPose();
         }
     }

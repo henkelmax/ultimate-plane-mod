@@ -3,75 +3,19 @@ package de.maxhenkel.plane.entity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
-import de.maxhenkel.corelib.client.obj.OBJModelInstance;
-import de.maxhenkel.corelib.client.obj.OBJModelOptions;
-import de.maxhenkel.corelib.math.Rotation;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityBushPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
 
-    private static final List<OBJModelInstance<EntityBushPlane>> MODELS = Arrays.asList(
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
-                            new Vector3d(-10D / 16D, 2D / 16D, -17.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-                            }
-                    )
-            ),
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
-                            new Vector3d(10D / 16D, 2D / 16D, -17.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-                            }
-                    )
-            ),
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"),
-                            new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
-                            }
-                    )
-            )
-    );
-
-    private static final List<OBJModelInstance<EntityBushPlane>> OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/oak_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> DARK_OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/dark_oak_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> BIRCH_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/birch_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> JUNGLE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/jungle_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> ACACIA_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/acacia_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> SPRUCE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> WARPED_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> CRIMSON_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> BAMBOO_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/bamboo_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> CHERRY_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/cherry_planks.png"));
-    private static final List<OBJModelInstance<EntityBushPlane>> MANGROVE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/mangrove_planks.png"));
+    private static final OBJModel BUSH_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/bush_plane.obj"));
+    private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
+    private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
+    private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-10F / 16F, 2F / 16F, -17.5F / 16F);
+    private static final Vector3f RIGHT_WHEEL_OFFSET = new Vector3f(10F / 16F, 2F / 16F, -17.5F / 16F);
 
     public BushPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -90,11 +34,32 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     }
 
     @Override
-    public List<OBJModelInstance<EntityBushPlane>> getModels(EntityBushPlane entity) {
-        return getModelFromType(entity);
+    protected Vector3f getLeftWheelOffset(EntityBushPlane plane) {
+        return LEFT_WHEEL_OFFSET;
     }
 
-    private static List<OBJModelInstance<EntityBushPlane>> getModelFromType(EntityBushPlane plane) {
+    @Override
+    protected Vector3f getRightWheelOffset(EntityBushPlane plane) {
+        return RIGHT_WHEEL_OFFSET;
+    }
+
+    @Override
+    protected Vector3f getPropellerOffset(EntityBushPlane plane) {
+        return PROPELLER_OFFSET;
+    }
+
+    @Override
+    protected Vector3f getBodyOffset(EntityBushPlane plane) {
+        return BODY_OFFSET;
+    }
+
+    @Override
+    protected OBJModel getBodyModel(EntityBushPlane plane) {
+        return BUSH_PLANE_MODEL;
+    }
+
+    @Override
+    protected ResourceLocation getBodyTexture(EntityBushPlane plane) {
         switch (plane.getPlaneType()) {
             default:
             case OAK:
@@ -120,23 +85,6 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
             case MANGROVE:
                 return MANGROVE_MODEL;
         }
-    }
-
-    private static List<OBJModelInstance<EntityBushPlane>> getPlaneModel(ResourceLocation texture) {
-        List<OBJModelInstance<EntityBushPlane>> models = new ArrayList<>(MODELS);
-        models.add(new OBJModelInstance<>(
-                new OBJModel(
-                        ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/bush_plane.obj")
-                ),
-                new OBJModelOptions<>(
-                        texture,
-                        new Vector3d(0D, 8D / 16D, 0D),
-                        new Rotation(180F, Axis.YP),
-                        (plane, matrixStack, partialTicks) -> {
-                        }
-                )
-        ));
-        return models;
     }
 
 }

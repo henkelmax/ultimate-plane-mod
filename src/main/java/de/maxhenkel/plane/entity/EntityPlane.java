@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 
 public class EntityPlane extends EntityPlaneBase {
 
+    private static final Vec3 BODY_CENTER = new Vec3(0D, 0D, -17.5D / 16D);
+
     public EntityPlane(Level world) {
         this(Main.PLANE_ENTITY_TYPE.get(), world);
     }
@@ -82,4 +84,8 @@ public class EntityPlane extends EntityPlaneBase {
         return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/plane_" + getPlaneType().getTypeName()));
     }
 
+    @Override
+    public Vec3 getBodyRotationCenter() {
+        return BODY_CENTER;
+    }
 }

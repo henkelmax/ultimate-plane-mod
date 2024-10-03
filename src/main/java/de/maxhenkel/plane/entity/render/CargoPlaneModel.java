@@ -3,81 +3,23 @@ package de.maxhenkel.plane.entity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
-import de.maxhenkel.corelib.client.obj.OBJModelInstance;
-import de.maxhenkel.corelib.client.obj.OBJModelOptions;
-import de.maxhenkel.corelib.math.Rotation;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityBushPlane;
 import de.maxhenkel.plane.entity.EntityCargoPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
 
-    private static final List<OBJModelInstance<EntityCargoPlane>> MODELS = Arrays.asList(
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
-                            new Vector3d(-18D / 16D, 2D / 16D, -17.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-                            }
-                    )
-            ),
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png"),
-                            new Vector3d(18D / 16D, 2D / 16D, -17.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-                            }
-                    )
-            ),
-            new OBJModelInstance<>(
-                    new OBJModel(
-                            ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj")
-                    ),
-                    new OBJModelOptions<>(
-                            ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"),
-                            new Vector3d(0D / 16D, 16D / 16D, -29.5D / 16D),
-                            (plane, matrixStack, partialTicks) -> {
-                                matrixStack.scale(1F / 16F, 1F / 16F, 1F / 16F);
-                                matrixStack.mulPose(Axis.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
-                            }
-                    )
-            )
-    );
-
-    private static final List<OBJModelInstance<EntityCargoPlane>> OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/oak_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> DARK_OAK_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/dark_oak_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> BIRCH_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/birch_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> JUNGLE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/jungle_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> ACACIA_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/acacia_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> SPRUCE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> WARPED_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> CRIMSON_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> BAMBOO_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/bamboo_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> CHERRY_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/cherry_planks.png"));
-    private static final List<OBJModelInstance<EntityCargoPlane>> MANGROVE_MODEL = getPlaneModel(ResourceLocation.withDefaultNamespace("textures/block/mangrove_planks.png"));
+    private static final OBJModel CARGO_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/cargo_plane.obj"));
+    private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
+    private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
+    private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-18F / 16F, 2F / 16F, -17.5F / 16F);
+    private static final Vector3f RIGHT_WHEEL_OFFSET = new Vector3f(18F / 16F, 2F / 16F, -17.5F / 16F);
 
     public CargoPlaneModel(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
-
 
     @Override
     protected void translateName(EntityCargoPlane plane, PoseStack matrixStack, boolean left) {
@@ -91,11 +33,32 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     }
 
     @Override
-    public List<OBJModelInstance<EntityCargoPlane>> getModels(EntityCargoPlane entity) {
-        return getModelFromType(entity);
+    protected Vector3f getLeftWheelOffset(EntityCargoPlane plane) {
+        return LEFT_WHEEL_OFFSET;
     }
 
-    private static List<OBJModelInstance<EntityCargoPlane>> getModelFromType(EntityCargoPlane plane) {
+    @Override
+    protected Vector3f getRightWheelOffset(EntityCargoPlane plane) {
+        return RIGHT_WHEEL_OFFSET;
+    }
+
+    @Override
+    protected Vector3f getPropellerOffset(EntityCargoPlane plane) {
+        return PROPELLER_OFFSET;
+    }
+
+    @Override
+    protected Vector3f getBodyOffset(EntityCargoPlane plane) {
+        return BODY_OFFSET;
+    }
+
+    @Override
+    protected OBJModel getBodyModel(EntityCargoPlane plane) {
+        return CARGO_PLANE_MODEL;
+    }
+
+    @Override
+    protected ResourceLocation getBodyTexture(EntityCargoPlane plane) {
         switch (plane.getPlaneType()) {
             default:
             case OAK:
@@ -121,23 +84,6 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
             case MANGROVE:
                 return MANGROVE_MODEL;
         }
-    }
-
-    private static List<OBJModelInstance<EntityCargoPlane>> getPlaneModel(ResourceLocation texture) {
-        List<OBJModelInstance<EntityCargoPlane>> models = new ArrayList<>(MODELS);
-        models.add(new OBJModelInstance<>(
-                new OBJModel(
-                        ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/cargo_plane.obj")
-                ),
-                new OBJModelOptions<>(
-                        texture,
-                        new Vector3d(0D, 8D / 16D, 0D),
-                        new Rotation(180F, Axis.YP),
-                        (plane, matrixStack, partialTicks) -> {
-                        }
-                )
-        ));
-        return models;
     }
 
 }

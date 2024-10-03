@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 
 public class EntityCargoPlane extends EntityPlaneBase {
 
+    private static final Vec3 BODY_CENTER = new Vec3(0D, 0D, -17.5D / 16D);
+
     private final Container cargoInventory;
 
     public EntityCargoPlane(Level world) {
@@ -93,6 +95,11 @@ public class EntityCargoPlane extends EntityPlaneBase {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         ItemUtils.readInventory(registryAccess(), compound, "CargoInventory", cargoInventory);
+    }
+
+    @Override
+    public Vec3 getBodyRotationCenter() {
+        return BODY_CENTER;
     }
 
     @Override
