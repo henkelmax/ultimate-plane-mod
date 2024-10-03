@@ -109,12 +109,6 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.register(new KeyEvents());
         NeoForge.EVENT_BUS.register(new RenderEvents());
-        // TODO
-        /*try {
-            Class.forName("mcp.mobius.waila.api.event.WailaRenderEvent");
-            MinecraftForge.EVENT_BUS.register(new PluginPlane());
-        } catch (ClassNotFoundException e) {
-        }*/
 
         EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
         EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
