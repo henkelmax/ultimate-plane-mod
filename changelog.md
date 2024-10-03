@@ -1,1 +1,1 @@
-- Fixed world rendering issues
+- Enhance plane stalling
