@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "EPP",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:jungle_slab"
+    },
+    "P": {
+      "item": "minecraft:jungle_planks"
+    },
+    "E": {
+      "item": "plane:plane_engine"
+    },
+    "W": {
+      "item": "plane:plane_wheel"
+    }
+  },
+  "result": {
+    "id": "plane:transporter_plane_jungle",
+    "count": 1
+  }
+}

@@ -4,3 +4,4 @@
 - Reworked plane models
 - Added collision between planes
 - Added all items to plane creative tab
+- Added transporter plane

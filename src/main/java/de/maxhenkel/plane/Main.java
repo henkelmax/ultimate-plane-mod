@@ -5,6 +5,7 @@ import de.maxhenkel.plane.entity.*;
 import de.maxhenkel.plane.entity.render.BushPlaneModel;
 import de.maxhenkel.plane.entity.render.CargoPlaneModel;
 import de.maxhenkel.plane.entity.render.PlaneModel;
+import de.maxhenkel.plane.entity.render.TransporterPlaneModel;
 import de.maxhenkel.plane.events.InteractEvents;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
@@ -112,6 +113,7 @@ public class Main {
 
         EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
         EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
+        EntityRenderers.register(TRANSPORTER_PLANE_ENTITY_TYPE.get(), manager -> new TransporterPlaneModel(manager));
         EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
     }
 
@@ -164,6 +166,15 @@ public class Main {
                     .sized(3.5F, 2F);
         });
     });
+    public static final DeferredHolder<EntityType<?>, EntityType<EntityTransporterPlane>> TRANSPORTER_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("transporter_plane", () -> {
+        return CommonRegistry.registerEntity(Main.MODID, "transporter_plane", MobCategory.MISC, EntityTransporterPlane.class, builder -> {
+            builder
+                    .setTrackingRange(256)
+                    .setUpdateInterval(1)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .sized(3.5F, 2F);
+        });
+    });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
         return CommonRegistry.registerEntity(Main.MODID, "bush_plane", MobCategory.MISC, EntityBushPlane.class, builder -> {
             builder
@@ -195,6 +206,7 @@ public class Main {
         registerEntityCapabilities(event, PLANE_ENTITY_TYPE);
         registerEntityCapabilities(event, BUSH_PLANE_ENTITY_TYPE);
         registerEntityCapabilities(event, CARGO_PLANE_ENTITY_TYPE);
+        registerEntityCapabilities(event, TRANSPORTER_PLANE_ENTITY_TYPE);
     }
 
     private <T extends EntityVehicleBase> void registerEntityCapabilities(RegisterCapabilitiesEvent event, DeferredHolder<EntityType<?>, EntityType<T>> holder) {

@@ -1,9 +1,6 @@
 package de.maxhenkel.plane;
 
-import de.maxhenkel.plane.item.ItemBushPlane;
-import de.maxhenkel.plane.item.ItemCargoPlane;
-import de.maxhenkel.plane.item.ItemPlane;
-import de.maxhenkel.plane.item.ModItems;
+import de.maxhenkel.plane.item.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -31,6 +28,9 @@ public class ModCreativeTabs {
                         output.accept(new ItemStack(plane.get()));
                     }
                     for (DeferredHolder<Item, ItemCargoPlane> plane : ModItems.CARGO_PLANES) {
+                        output.accept(new ItemStack(plane.get()));
+                    }
+                    for (DeferredHolder<Item, ItemTransporterPlane> plane : ModItems.TRANSPORTER_PLANES) {
                         output.accept(new ItemStack(plane.get()));
                     }
                 })

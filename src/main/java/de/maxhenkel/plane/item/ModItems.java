@@ -17,6 +17,7 @@ public class ModItems {
 
     public static final DeferredHolder<Item, ItemPlane>[] PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("plane_" + type.getTypeName(), () -> new ItemPlane(type))).toList().toArray(new DeferredHolder[0]);
     public static final DeferredHolder<Item, ItemCargoPlane>[] CARGO_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("cargo_plane_" + type.getTypeName(), () -> new ItemCargoPlane(type))).toList().toArray(new DeferredHolder[0]);
+    public static final DeferredHolder<Item, ItemTransporterPlane>[] TRANSPORTER_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("transporter_plane_" + type.getTypeName(), () -> new ItemTransporterPlane(type))).toList().toArray(new DeferredHolder[0]);
     public static final DeferredHolder<Item, ItemBushPlane>[] BUSH_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("bush_plane_" + type.getTypeName(), () -> new ItemBushPlane(type))).toList().toArray(new DeferredHolder[0]);
     public static final DeferredHolder<Item, ItemWrench> WRENCH = ITEM_REGISTER.register("wrench", () -> new ItemWrench());
     public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_WHEEL = ITEM_REGISTER.register("plane_wheel", () -> new ItemCraftingComponent());
