@@ -243,6 +243,13 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 motionVector = motionVector.add(new Vec3(addVec.x, 0D, addVec.z));
             }
 
+            if (isStalling(motionVector)) {
+                motionVector = motionVector.multiply(new Vec3(0.9D, 1D, 0.9D));
+                if (motionVector.multiply(1D, 0D, 1D).length() < 0.75D) {
+                    motionVector = motionVector.multiply(new Vec3(1D, 1.1D, 1D));
+                }
+            }
+
             setDeltaMovement(motionVector);
 
             move(MoverType.SELF, getDeltaMovement());
@@ -268,6 +275,18 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
                 damagePlane(damage, false);
             }
         }
+    }
+
+    protected boolean isStalling(Vec3 motionVector) {
+        return getAngleBetweenVectors(motionVector, getLookAngle()) > getStallAngle() && getXRot() < 0F && motionVector.y < 0D;
+    }
+
+    protected double getStallAngle() {
+        return 20D;
+    }
+
+    private static double getAngleBetweenVectors(Vec3 vec1, Vec3 vec2) {
+        return Math.toDegrees(Math.acos(vec1.normalize().dot(vec2.normalize())));
     }
 
     public abstract double getFallSpeed();
