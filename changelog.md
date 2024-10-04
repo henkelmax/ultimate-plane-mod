@@ -1,9 +1,1 @@
-- Fixed plane GUI showing when having the GUI hidden
-- Made plane fuel capacity configurable
-- Made plane fuel usage configurable
-- Updated simplified Chinese translation
-- Added Turkish translation
-- Fixed custom name rendering
-- Fixed name showing on top of the plane
-- Don't trim plane names
-- Allow name-tagging planes
+- Fixed planes rolling when placed down
