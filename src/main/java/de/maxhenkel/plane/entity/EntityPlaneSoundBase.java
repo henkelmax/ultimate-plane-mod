@@ -74,7 +74,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     }
 
     @Override
-    public void damagePlane(double damage, boolean horizontal) {
+    public void damagePlane(float damage, boolean horizontal) {
         super.damagePlane(damage, horizontal);
 
         ModSounds.playSound(ModSounds.CRASH.get(), level(), blockPosition(), null, SoundSource.NEUTRAL, 1.0F);

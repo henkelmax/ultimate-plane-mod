@@ -101,9 +101,26 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     @Override
-    public void damagePlane(double damage, boolean horizontal) {
+    public void damagePlane(float damage, boolean horizontal) {
         super.damagePlane(damage, horizontal);
-        setPlaneDamage((float) (getPlaneDamage() + damage));
+        setPlaneDamage(getPlaneDamage() + damage);
+        damagePassengers(damage);
+    }
+
+    protected void damagePassengers(float planeDamage) {
+        if (planeDamage < 20F) {
+            return;
+        }
+        planeDamage = Math.min(planeDamage, 200F);
+
+        float entityDamage = planeDamage / 10F;
+
+        for (Entity entity : getPassengers()) {
+            if (!(entity instanceof LivingEntity livingEntity)) {
+                continue;
+            }
+            damageEntity(livingEntity, entityDamage, DamageSourcePlane.DAMAGE_PLANE_CRASH);
+        }
     }
 
     @Override
@@ -215,8 +232,12 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
             return;
         }
         float damage = Math.min((float) (speed * 10D), 15F);
+        damageEntity(entity, damage, DamageSourcePlane.DAMAGE_HIT_PLANE);
+    }
+
+    protected void damageEntity(Entity entity, float damage, ResourceKey<DamageType> damageType) {
         tasks.add(() -> {
-            Optional<Holder.Reference<DamageType>> holder = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageSourcePlane.DAMAGE_PLANE_TYPE);
+            Optional<Holder.Reference<DamageType>> holder = level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(damageType);
             holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
         });
     }

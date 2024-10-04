@@ -269,7 +269,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         if (isCollidedHorizontal()) {
             double damage = horizontalMotion * 1000D - 400D;
             if (damage > 0D) {
-                damagePlane(damage, true);
+                damagePlane((float) damage, true);
                 setDeltaMovement(getDeltaMovement().multiply(0D, 1D, 0D));
             }
         }
@@ -279,7 +279,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             double motionDifference = verticalMotion - newVerticalMotion;
             double damage = motionDifference * 1000D - 100D;
             if (damage > 0D) {
-                damagePlane(damage, false);
+                damagePlane((float) damage, false);
             }
         }
     }
@@ -303,7 +303,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     public abstract double getFallSpeed();
 
     @Override
-    public void damagePlane(double damage, boolean horizontal) {
+    public void damagePlane(float damage, boolean horizontal) {
         super.damagePlane(damage, horizontal);
         if ((horizontal && damage > 5D) || damage > 20D) {
             setStarted(false);

@@ -46,7 +46,7 @@ public abstract class EntityFlyableBase extends EntityVehicleBase {
 
     }
 
-    public void damagePlane(double damage, boolean horizontal) {
+    public void damagePlane(float damage, boolean horizontal) {
 
     }
 
