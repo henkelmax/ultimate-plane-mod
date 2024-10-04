@@ -61,7 +61,7 @@ public class EntityPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return 15000;
+        return 16000;
     }
 
     @Override

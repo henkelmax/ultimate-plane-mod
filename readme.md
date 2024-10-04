@@ -12,7 +12,7 @@
 <!-- modrinth_exclude.end -->
 
 This mod adds planes into your Minecraft world.
-It requires the [Ultimate Car Mod](https://www.curseforge.com/minecraft/mc-mods/ultimate-car-mod) for the fuel and the gas station.
+It requires the [Ultimate Car Mod](https://modrinth.com/mod/ultimate-car-mod) for the fuel and the gas station.
 
 ![](https://i.imgur.com/lhzLIP5.png)
 
@@ -22,11 +22,11 @@ It requires the [Ultimate Car Mod](https://www.curseforge.com/minecraft/mc-mods/
 
 ## Features
 
-- 33 different planes
+- 44 different planes
 - Planes in every wood type
 - Planes can be named
 - Planes can store items
-- WAILA/HWYLA support
+- [Jade](https://modrinth.com/mod/jade) support
 
 ## Types of planes
 
@@ -36,7 +36,7 @@ The Bush plane is the smallest plane.
 It can only hold one player.
 It has no inventory.
 Despite these restrictions it has the best flight characteristics and the least fuel usage.
-Its tank can hold 2000 mb of fuel.
+Its tank can hold 6000 mb of fuel.
 
 ![](https://i.imgur.com/i2ILjuz.png)
 
@@ -44,7 +44,7 @@ Its tank can hold 2000 mb of fuel.
 
 The normal plane is the best compromise between maneuverability and storage size.
 It can hold three players and has 27 slots storage space.
-Its tank can hold 5000 mb of fuel.
+Its tank can hold 16000 mb of fuel.
 
 ![](https://i.imgur.com/HDny3ek.png)
 
@@ -53,9 +53,15 @@ Its tank can hold 5000 mb of fuel.
 The cargo plane has the most storage space of them all at the cost of maneuverability.
 It can hold two players.
 It has an external storage of 54 slots and an internal storage of 27 slots.
-Its tank can hold 6000 mb of fuel.
+Its tank can hold 16000 mb of fuel.
 
 ![](https://i.imgur.com/lk7wU78.png)
+
+### The Transporter Plane
+
+The transporter plane is designed to transport players.
+It can hold four players and has 27 slots storage space.
+Its tank can hold 16000 mb of fuel.
 
 ## Controlling planes
 

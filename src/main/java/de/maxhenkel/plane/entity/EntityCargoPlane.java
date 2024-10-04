@@ -110,7 +110,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return 18000;
+        return 16000;
     }
 
     @Override
