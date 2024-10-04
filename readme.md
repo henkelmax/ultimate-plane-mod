@@ -27,6 +27,8 @@ It requires the [Ultimate Car Mod](https://modrinth.com/mod/ultimate-car-mod) fo
 - Planes can be named
 - Planes can store items
 - [Jade](https://modrinth.com/mod/jade) support
+- Configurable plane fuel capacity
+- Configurable plane fuel usage
 
 ## Types of planes
 

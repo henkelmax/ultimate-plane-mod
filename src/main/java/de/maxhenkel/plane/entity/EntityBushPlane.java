@@ -39,7 +39,7 @@ public class EntityBushPlane extends EntityPlaneBase {
 
     @Override
     protected float getBaseFuelUsage() {
-        return 0.75F;
+        return Main.SERVER_CONFIG.bushPlaneBaseFuelUsage.get().floatValue();
     }
 
     @Override

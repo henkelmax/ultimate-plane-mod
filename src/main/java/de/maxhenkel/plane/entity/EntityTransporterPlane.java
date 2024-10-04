@@ -71,7 +71,7 @@ public class EntityTransporterPlane extends EntityPlaneBase {
 
     @Override
     protected float getBaseFuelUsage() {
-        return 0.95F;
+        return Main.SERVER_CONFIG.transporterPlaneBaseFuelUsage.get().floatValue();
     }
 
     @Override

@@ -1,2 +1,3 @@
 - Fixed plane GUI showing when having the GUI hidden
 - Made plane fuel capacity configurable
+- Made plane fuel usage configurable
