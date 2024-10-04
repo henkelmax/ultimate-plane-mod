@@ -61,16 +61,17 @@ public class RenderEvents {
         if (!VanillaGuiLayers.HOTBAR.equals(evt.getName())) {
             return;
         }
+        if (mc.options.hideGui) {
+            return;
+        }
 
         Player player = mc.player;
 
         Entity e = player.getVehicle();
 
-        if (!(e instanceof EntityPlaneSoundBase)) {
+        if (!(e instanceof EntityPlaneBase plane)) {
             return;
         }
-
-        EntityPlaneSoundBase plane = (EntityPlaneSoundBase) e;
 
         if (Main.CLIENT_CONFIG.showPlaneInfo.get()) {
             renderPlaneInfo(evt.getGuiGraphics(), plane);

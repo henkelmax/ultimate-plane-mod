@@ -1,8 +1,1 @@
-- Improved damage when colliding horizontally
-- Optimized plane rendering
-- Improved plane rotation visuals
-- Reworked plane models
-- Added collision between planes
-- Added all items to plane creative tab
-- Added transporter plane
-- Fixed jade tooltip information not appearing for all planes
+- Fixed plane GUI showing when having the GUI hidden
