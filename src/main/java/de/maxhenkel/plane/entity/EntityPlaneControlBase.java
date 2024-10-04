@@ -26,7 +26,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     private static final EntityDataAccessor<Boolean> BRAKE = SynchedEntityData.defineId(EntityPlaneControlBase.class, EntityDataSerializers.BOOLEAN);
 
     public static final double MAX_ENGINE_SPEED = 1.5D;
-    public static final double ENGINE_ACCELERATION = 0.005D;
+    public static final double ENGINE_ACCELERATION = 0.006F;
     public static final double BRAKE_POWER = 0.012D;
     public static final float MAX_GROUND_LEAN_BACK = -7F;
     public static final float MAX_PITCH_CORRECTION_SPEED = 10F;
@@ -179,7 +179,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             double maxEngineSpeed = MAX_ENGINE_SPEED * engineSpeed;
 
             if (speed < maxEngineSpeed) {
-                speed = Math.min(speed + engineSpeed * ENGINE_ACCELERATION, maxEngineSpeed);
+                speed = Math.min(speed + engineSpeed * getEngineAcceleration(), maxEngineSpeed);
             }
 
             if (isBrake()) {
@@ -227,7 +227,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
             if (speed < MAX_ENGINE_SPEED * engineSpeed) {
                 double addSpeed = 0D;
-                addSpeed = addSpeed + engineSpeed * ENGINE_ACCELERATION * 4F;
+                addSpeed = addSpeed + engineSpeed * getEngineAcceleration() * 4F;
                 if (speed + addSpeed > MAX_ENGINE_SPEED * engineSpeed) {
                     addSpeed = (MAX_ENGINE_SPEED * engineSpeed) - speed;
                 }
@@ -287,6 +287,10 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     private static double getAngleBetweenVectors(Vec3 vec1, Vec3 vec2) {
         return Math.toDegrees(Math.acos(vec1.normalize().dot(vec2.normalize())));
+    }
+
+    public double getEngineAcceleration() {
+        return ENGINE_ACCELERATION;
     }
 
     public abstract double getFallSpeed();
