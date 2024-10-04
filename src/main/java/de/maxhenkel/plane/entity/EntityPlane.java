@@ -61,7 +61,7 @@ public class EntityPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return 16000;
+        return Main.SERVER_CONFIG.planeFuelCapacity.get();
     }
 
     @Override

@@ -36,7 +36,7 @@ The Bush plane is the smallest plane.
 It can only hold one player.
 It has no inventory.
 Despite these restrictions it has the best flight characteristics and the least fuel usage.
-Its tank can hold 6000 mb of fuel.
+Its tank can hold 8,000 mb of fuel.
 
 ![](https://i.imgur.com/i2ILjuz.png)
 
@@ -44,7 +44,7 @@ Its tank can hold 6000 mb of fuel.
 
 The normal plane is the best compromise between maneuverability and storage size.
 It can hold three players and has 27 slots storage space.
-Its tank can hold 16000 mb of fuel.
+Its tank can hold 10,000 mb of fuel.
 
 ![](https://i.imgur.com/HDny3ek.png)
 
@@ -53,7 +53,7 @@ Its tank can hold 16000 mb of fuel.
 The cargo plane has the most storage space of them all at the cost of maneuverability.
 It can hold two players.
 It has an external storage of 54 slots and an internal storage of 27 slots.
-Its tank can hold 16000 mb of fuel.
+Its tank can hold 16,000 mb of fuel.
 
 ![](https://i.imgur.com/lk7wU78.png)
 
@@ -61,7 +61,7 @@ Its tank can hold 16000 mb of fuel.
 
 The transporter plane is designed to transport players.
 It can hold four players and has 27 slots storage space.
-Its tank can hold 16000 mb of fuel.
+Its tank can hold 16,000 mb of fuel.
 
 ## Controlling planes
 

@@ -34,7 +34,7 @@ public class EntityBushPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return 6000;
+        return Main.SERVER_CONFIG.bushPlaneFuelCapacity.get();
     }
 
     @Override

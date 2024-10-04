@@ -16,16 +16,26 @@ public class ServerConfig extends ConfigBase {
 
     public final ModConfigSpec.DoubleValue maxPlaneDamage;
     public final ModConfigSpec.BooleanValue planeToPlaneCollision;
+    public final ModConfigSpec.IntValue bushPlaneFuelCapacity;
+    public final ModConfigSpec.IntValue planeFuelCapacity;
+    public final ModConfigSpec.IntValue cargoPlaneFuelCapacity;
+    public final ModConfigSpec.IntValue transporterPlaneFuelCapacity;
+
 
     private final ModConfigSpec.ConfigValue<List<? extends String>> validFuelsSpec;
     public List<Tag<Fluid>> validFuels = new ArrayList<>();
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
-        maxPlaneDamage = builder.defineInRange("plane.max_damage", 200D, 100D, Double.MAX_VALUE);
-        planeToPlaneCollision = builder.define("plane_to_plane_collision", true);
+        maxPlaneDamage = builder.worldRestart().defineInRange("plane.max_damage", 200D, 100D, Double.MAX_VALUE);
+        planeToPlaneCollision = builder.worldRestart().define("plane.plane_to_plane_collision", true);
 
-        validFuelsSpec = builder.defineList("plane.valid_fuels", () -> List.of("#car:gas_station"), () -> "", Objects::nonNull);
+        bushPlaneFuelCapacity = builder.worldRestart().defineInRange("plane.bush_plane.fuel_capacity", 8_000, 1000, Integer.MAX_VALUE);
+        planeFuelCapacity = builder.worldRestart().defineInRange("plane.plane.fuel_capacity", 10_000, 1000, Integer.MAX_VALUE);
+        cargoPlaneFuelCapacity = builder.worldRestart().defineInRange("plane.cargo.fuel_capacity", 16_000, 1000, Integer.MAX_VALUE);
+        transporterPlaneFuelCapacity = builder.worldRestart().defineInRange("plane.transporter.fuel", 16_000, 1000, Integer.MAX_VALUE);
+
+        validFuelsSpec = builder.worldRestart().defineList("plane.valid_fuels", () -> List.of("#car:gas_station"), () -> "", Objects::nonNull);
     }
 
     @Override
