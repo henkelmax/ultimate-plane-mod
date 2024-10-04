@@ -33,6 +33,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
     public EntityPlaneControlBase(EntityType type, Level worldIn) {
         super(type, worldIn);
+        setOnGround(true);
     }
 
     @Override
