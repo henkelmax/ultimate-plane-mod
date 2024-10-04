@@ -134,4 +134,9 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
     public ResourceLocation getTextureLocation(T entity) {
         return null;
     }
+
+    @Override
+    protected boolean shouldShowName(T entity) {
+        return false;
+    }
 }

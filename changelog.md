@@ -4,3 +4,4 @@
 - Updated simplified Chinese translation
 - Added Turkish translation
 - Fixed custom name rendering
+- Fixed name showing on top of the plane
