@@ -1,2 +1,1 @@
-- Fixed plane eye height
-- Fixed planes ignoring water
+- Fixed players getting damaged when jumping out of planes

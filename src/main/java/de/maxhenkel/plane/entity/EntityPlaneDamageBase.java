@@ -189,21 +189,36 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (!level().isClientSide && entity instanceof LivingEntity && !getPassengers().contains(entity)) {
-            if (entity.getBoundingBox().intersects(getBoundingBox())) {
-                double speed = getDeltaMovement().length();
-                if (speed > 0.35F) {
-                    float damage = Math.min((float) (speed * 10D), 15F);
-
-                    tasks.add(() -> {
-                        ServerLevel serverLevel = (ServerLevel) level();
-                        Optional<Holder.Reference<DamageType>> holder = serverLevel.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageSourcePlane.DAMAGE_PLANE_TYPE);
-                        holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
-                    });
-                }
-            }
-        }
+        damageEntityCollided(entity);
         return super.canCollideWith(entity);
+    }
+
+    protected void damageEntityCollided(Entity entity) {
+        if (!(level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return;
+        }
+        if (getPassengers().contains(livingEntity)) {
+            return;
+        }
+        if (!livingEntity.getBoundingBox().intersects(getBoundingBox())) {
+            return;
+        }
+        if (livingEntity instanceof ServerPlayer && !livingEntity.onGround()) {
+            //Don't damage players that are in the air, as this would damage players jumping out
+            return;
+        }
+        double speed = getDeltaMovement().length();
+        if (speed <= 0.35F) {
+            return;
+        }
+        float damage = Math.min((float) (speed * 10D), 15F);
+        tasks.add(() -> {
+            Optional<Holder.Reference<DamageType>> holder = level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(DamageSourcePlane.DAMAGE_PLANE_TYPE);
+            holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
+        });
     }
 
     @Override
