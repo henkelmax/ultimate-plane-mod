@@ -154,7 +154,8 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F);
+                    .sized(3.5F, 2F)
+                    .eyeHeight(1F);
         });
     });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityCargoPlane>> CARGO_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("cargo_plane", () -> {
@@ -163,7 +164,8 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F);
+                    .sized(3.5F, 2F)
+                    .eyeHeight(1F);
         });
     });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityTransporterPlane>> TRANSPORTER_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("transporter_plane", () -> {
@@ -172,7 +174,8 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F);
+                    .sized(3.5F, 2F)
+                    .eyeHeight(1F);
         });
     });
     public static final DeferredHolder<EntityType<?>, EntityType<EntityBushPlane>> BUSH_PLANE_ENTITY_TYPE = ENTITY_REGISTER.register("bush_plane", () -> {
@@ -181,7 +184,8 @@ public class Main {
                     .setTrackingRange(256)
                     .setUpdateInterval(1)
                     .setShouldReceiveVelocityUpdates(true)
-                    .sized(3.5F, 2F);
+                    .sized(3.5F, 2F)
+                    .eyeHeight(1F);
         });
     });
 

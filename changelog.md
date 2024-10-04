@@ -1,2 +1,3 @@
 - Fixed planes rolling when placed down
 - Improved plane handling when trying to gain altitude
+- Fixed plane eye height
