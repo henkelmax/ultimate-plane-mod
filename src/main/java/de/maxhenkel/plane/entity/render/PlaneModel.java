@@ -24,10 +24,10 @@ public class PlaneModel extends AbstractPlaneModel<EntityPlane> {
     @Override
     protected void translateName(EntityPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
-            matrixStack.translate(8.01D / 16D, -20D / 16D, -1D);
+            matrixStack.translate(8.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
         } else {
-            matrixStack.translate(-8.01D / 16D, -20D / 16D, -1D);
+            matrixStack.translate(-8.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
         }
     }

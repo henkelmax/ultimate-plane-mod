@@ -24,10 +24,10 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     @Override
     protected void translateName(EntityCargoPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
-            matrixStack.translate(16.01D / 16D, -20D / 16D, -1D);
+            matrixStack.translate(16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
         } else {
-            matrixStack.translate(-16.01D / 16D, -20D / 16D, -1D);
+            matrixStack.translate(-16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
         }
     }

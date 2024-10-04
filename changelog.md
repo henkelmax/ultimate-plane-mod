@@ -3,3 +3,4 @@
 - Made plane fuel usage configurable
 - Updated simplified Chinese translation
 - Added Turkish translation
+- Fixed custom name rendering

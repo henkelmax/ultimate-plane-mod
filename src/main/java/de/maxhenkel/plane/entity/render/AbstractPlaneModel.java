@@ -99,9 +99,6 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
 
     protected void drawName(T plane, String txt, PoseStack matrixStack, MultiBufferSource buffer, float partialTicks, float yRot, int light, boolean left) {
         matrixStack.pushPose();
-        matrixStack.mulPose(Axis.YP.rotationDegrees(-yRot));
-        float xRot = plane.xRotO + (plane.getXRot() - plane.xRotO) * partialTicks;
-        matrixStack.mulPose(Axis.XP.rotationDegrees(xRot));
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
 
@@ -110,7 +107,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         int textWidth = getFont().width(txt);
         float textScale = 0.02F;
 
-        matrixStack.translate(-(textScale * textWidth) / 2.0F, 0F, 0F);
+        matrixStack.translate(-(textScale * textWidth) / 2F, 0F, 0F);
 
         matrixStack.scale(textScale, textScale, textScale);
 
