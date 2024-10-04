@@ -24,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -54,6 +55,15 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
         if (isInLava()) {
             setPlaneDamage(getPlaneDamage() + 1F);
+        }
+
+        if (isEyeInFluidType(Fluids.WATER.getFluidType())) {
+            if (this instanceof EntityPlaneControlBase plane) {
+                if (plane.isStarted()) {
+                    setPlaneDamage(getPlaneDamage() + 50F);
+                    plane.setStarted(false);
+                }
+            }
         }
 
         handleParticles();

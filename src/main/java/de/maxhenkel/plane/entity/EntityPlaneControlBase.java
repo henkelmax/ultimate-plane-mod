@@ -241,13 +241,20 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
                 Vec3 addVec = getLookAngle().normalize().scale(addSpeed);
 
-                motionVector = motionVector.add(new Vec3(addVec.x, 0D, addVec.z));
+                motionVector = motionVector.add(addVec.x, 0D, addVec.z);
             }
 
             if (isStalling(motionVector)) {
-                motionVector = motionVector.multiply(new Vec3(0.9D, 1D, 0.9D));
+                motionVector = motionVector.multiply(0.9D, 1D, 0.9D);
                 if (motionVector.multiply(1D, 0D, 1D).length() < 0.75D) {
-                    motionVector = motionVector.multiply(new Vec3(1D, 1.1D, 1D));
+                    motionVector = motionVector.multiply(1D, 1.1D, 1D);
+                }
+            }
+
+            if (isInWater()) {
+                motionVector = motionVector.multiply(0.8D, 1D, 0.8D);
+                if (motionVector.y > 0D) {
+                    motionVector = motionVector.multiply(1D, 0.5D, 1D);
                 }
             }
 
