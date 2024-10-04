@@ -1,12 +1,18 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.PlaneType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -18,6 +24,20 @@ public abstract class EntityPlaneBase extends EntityPlaneSoundBase {
 
     public EntityPlaneBase(EntityType type, Level worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack itemInHand = player.getItemInHand(hand);
+        if (player.isCrouching() && itemInHand.is(Items.NAME_TAG)) {
+            Component component = itemInHand.get(DataComponents.CUSTOM_NAME);
+            if (component != null) {
+                setCustomName(component);
+                itemInHand.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.interact(player, hand);
     }
 
     public abstract Vec3 getBodyRotationCenter();
