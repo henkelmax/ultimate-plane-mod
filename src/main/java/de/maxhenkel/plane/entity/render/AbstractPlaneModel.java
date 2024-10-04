@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -83,35 +84,30 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         poseStack.popPose();
 
         if (plane.hasCustomName()) {
-            String name = trimName(plane.getCustomName().getString(), 0.02F, 1F);
-            drawName(plane, name, poseStack, buffer, partialTicks, yRot, light, true);
-            drawName(plane, name, poseStack, buffer, partialTicks, yRot, light, false);
+            drawName(plane, plane.getCustomName(), poseStack, buffer, light, true);
+            drawName(plane, plane.getCustomName(), poseStack, buffer, light, false);
         }
         poseStack.popPose();
     }
 
-    protected String trimName(String name, float textScale, float maxLength) {
-        while (getFont().width(name) * textScale > maxLength) {
-            name = name.substring(0, name.length() - 1);
-        }
-        return name;
-    }
+    public static final float MAX_TEXT_SCALE = 0.02F;
+    public static final float MAX_TEXT_WIDTH = 0.9F;
 
-    protected void drawName(T plane, String txt, PoseStack matrixStack, MultiBufferSource buffer, float partialTicks, float yRot, int light, boolean left) {
+    protected void drawName(T plane, Component name, PoseStack matrixStack, MultiBufferSource buffer, int light, boolean left) {
         matrixStack.pushPose();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
 
         translateName(plane, matrixStack, left);
 
-        int textWidth = getFont().width(txt);
-        float textScale = 0.02F;
+        int textWidth = getFont().width(name);
+        float textScale = Math.min(MAX_TEXT_SCALE, MAX_TEXT_WIDTH / textWidth);
 
         matrixStack.translate(-(textScale * textWidth) / 2F, 0F, 0F);
 
         matrixStack.scale(textScale, textScale, textScale);
 
-        getFont().drawInBatch(txt, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, light);
+        getFont().drawInBatch(name, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, light);
 
         matrixStack.popPose();
     }
