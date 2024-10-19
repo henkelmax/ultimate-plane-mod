@@ -22,7 +22,7 @@ public class TransporterPlaneModel extends AbstractPlaneModel<EntityTransporterP
     }
 
     @Override
-    protected void translateName(EntityTransporterPlane plane, PoseStack matrixStack, boolean left) {
+    protected void translateName(PlaneRenderState plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
@@ -33,33 +33,33 @@ public class TransporterPlaneModel extends AbstractPlaneModel<EntityTransporterP
     }
 
     @Override
-    protected Vector3f getLeftWheelOffset(EntityTransporterPlane plane) {
+    protected Vector3f getLeftWheelOffset(PlaneRenderState plane) {
         return LEFT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getRightWheelOffset(EntityTransporterPlane plane) {
+    protected Vector3f getRightWheelOffset(PlaneRenderState plane) {
         return RIGHT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getPropellerOffset(EntityTransporterPlane plane) {
+    protected Vector3f getPropellerOffset(PlaneRenderState plane) {
         return PROPELLER_OFFSET;
     }
 
     @Override
-    protected Vector3f getBodyOffset(EntityTransporterPlane plane) {
+    protected Vector3f getBodyOffset(PlaneRenderState plane) {
         return BODY_OFFSET;
     }
 
     @Override
-    protected OBJModel getBodyModel(EntityTransporterPlane plane) {
+    protected OBJModel getBodyModel(PlaneRenderState plane) {
         return TRANSPORTER_PLANE_MODEL;
     }
 
     @Override
-    protected ResourceLocation getBodyTexture(EntityTransporterPlane plane) {
-        switch (plane.getPlaneType()) {
+    protected ResourceLocation getBodyTexture(PlaneRenderState plane) {
+        switch (plane.type) {
             default:
             case OAK:
                 return OAK_MODEL;

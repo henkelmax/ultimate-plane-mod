@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -48,10 +49,10 @@ public class EntityCargoPlane extends EntityPlaneBase {
     }
 
     @Override
-    public void destroyPlane(DamageSource source, Player player) {
+    public void destroyPlane(ServerLevel level, DamageSource source, Player player) {
         Containers.dropContents(level(), blockPosition(), cargoInventory);
         cargoInventory.clearContent();
-        super.destroyPlane(source, player);
+        super.destroyPlane(level, source, player);
     }
 
     @Override
@@ -129,7 +130,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
     }
 
     @Override
-    public ResourceKey<LootTable> getLootTable() {
+    public ResourceKey<LootTable> getPlaneLootTable() {
         return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
     }
 

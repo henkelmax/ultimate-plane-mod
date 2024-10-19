@@ -1,6 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.Main;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -110,7 +111,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         if (resourceLocation == null) {
             return null;
         }
-        return BuiltInRegistries.FLUID.get(resourceLocation);
+        return BuiltInRegistries.FLUID.get(resourceLocation).map(Holder.Reference::value).orElse(null);
     }
 
     public void setFuelType(Fluid fluid) {

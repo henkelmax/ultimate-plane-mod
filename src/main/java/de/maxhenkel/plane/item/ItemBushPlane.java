@@ -6,8 +6,8 @@ import net.minecraft.world.level.Level;
 
 public class ItemBushPlane extends ItemAbstractPlane<EntityBushPlane> {
 
-    public ItemBushPlane(PlaneType type) {
-        super(type);
+    public ItemBushPlane(PlaneType type, Properties properties) {
+        super(type, properties);
     }
 
     @Override

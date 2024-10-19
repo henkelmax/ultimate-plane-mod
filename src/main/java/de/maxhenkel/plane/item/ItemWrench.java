@@ -5,12 +5,13 @@ import net.minecraft.world.item.ItemStack;
 
 public class ItemWrench extends Item {
 
-    public ItemWrench() {
-        super(new Properties().stacksTo(1).durability(1024));
+    public ItemWrench(Properties properties) {
+        super(properties.stacksTo(1).durability(1024));
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
+
 }

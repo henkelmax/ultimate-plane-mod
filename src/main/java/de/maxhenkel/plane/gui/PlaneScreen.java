@@ -5,6 +5,7 @@ import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -76,21 +77,21 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(texture, i + 8, j + 20, 176, 0, scaled, 10);
+        guiGraphics.blit(RenderType::guiTextured, texture, i + 8, j + 20, 176, 0, scaled, 10, 256, 256);
     }
 
     public void drawThrottle(GuiGraphics guiGraphics, float percent) {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(texture, i + 8, j + 46, 176, 10, scaled, 10);
+        guiGraphics.blit(RenderType::guiTextured, texture, i + 8, j + 46, 176, 10, scaled, 10, 256, 256);
     }
 
     public void drawDamage(GuiGraphics guiGraphics, float percent) {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(texture, i + 96, j + 20, 176, 20, scaled, 10);
+        guiGraphics.blit(RenderType::guiTextured, texture, i + 96, j + 20, 176, 20, scaled, 10, 256, 256);
     }
 
 }

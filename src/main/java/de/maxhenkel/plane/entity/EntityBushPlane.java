@@ -53,7 +53,7 @@ public class EntityBushPlane extends EntityPlaneBase {
     }
 
     @Override
-    public ResourceKey<LootTable> getLootTable() {
+    public ResourceKey<LootTable> getPlaneLootTable() {
         return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
     }
 

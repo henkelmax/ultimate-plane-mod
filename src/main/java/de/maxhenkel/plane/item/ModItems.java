@@ -13,16 +13,16 @@ import java.util.Arrays;
 
 public class ModItems {
 
-    private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(BuiltInRegistries.ITEM, Main.MODID);
+    private static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(Main.MODID);
 
-    public static final DeferredHolder<Item, ItemPlane>[] PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("plane_" + type.getTypeName(), () -> new ItemPlane(type))).toList().toArray(new DeferredHolder[0]);
-    public static final DeferredHolder<Item, ItemCargoPlane>[] CARGO_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("cargo_plane_" + type.getTypeName(), () -> new ItemCargoPlane(type))).toList().toArray(new DeferredHolder[0]);
-    public static final DeferredHolder<Item, ItemTransporterPlane>[] TRANSPORTER_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("transporter_plane_" + type.getTypeName(), () -> new ItemTransporterPlane(type))).toList().toArray(new DeferredHolder[0]);
-    public static final DeferredHolder<Item, ItemBushPlane>[] BUSH_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.register("bush_plane_" + type.getTypeName(), () -> new ItemBushPlane(type))).toList().toArray(new DeferredHolder[0]);
-    public static final DeferredHolder<Item, ItemWrench> WRENCH = ITEM_REGISTER.register("wrench", () -> new ItemWrench());
-    public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_WHEEL = ITEM_REGISTER.register("plane_wheel", () -> new ItemCraftingComponent());
-    public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_ENGINE = ITEM_REGISTER.register("plane_engine", () -> new ItemCraftingComponent());
-    public static final DeferredHolder<Item, ItemCraftingComponent> DIAMOND_REINFORCED_IRON = ITEM_REGISTER.register("diamond_reinforced_iron", () -> new ItemCraftingComponent());
+    public static final DeferredHolder<Item, ItemPlane>[] PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.registerItem("plane_" + type.getTypeName(), p -> new ItemPlane(type, p))).toList().toArray(new DeferredHolder[0]);
+    public static final DeferredHolder<Item, ItemCargoPlane>[] CARGO_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.registerItem("cargo_plane_" + type.getTypeName(), p -> new ItemCargoPlane(type, p))).toList().toArray(new DeferredHolder[0]);
+    public static final DeferredHolder<Item, ItemTransporterPlane>[] TRANSPORTER_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.registerItem("transporter_plane_" + type.getTypeName(), p -> new ItemTransporterPlane(type, p))).toList().toArray(new DeferredHolder[0]);
+    public static final DeferredHolder<Item, ItemBushPlane>[] BUSH_PLANES = Arrays.asList(PlaneType.values()).stream().map(type -> ITEM_REGISTER.registerItem("bush_plane_" + type.getTypeName(), p -> new ItemBushPlane(type, p))).toList().toArray(new DeferredHolder[0]);
+    public static final DeferredHolder<Item, ItemWrench> WRENCH = ITEM_REGISTER.registerItem("wrench", ItemWrench::new);
+    public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_WHEEL = ITEM_REGISTER.registerItem("plane_wheel", ItemCraftingComponent::new);
+    public static final DeferredHolder<Item, ItemCraftingComponent> PLANE_ENGINE = ITEM_REGISTER.registerItem("plane_engine", ItemCraftingComponent::new);
+    public static final DeferredHolder<Item, ItemCraftingComponent> DIAMOND_REINFORCED_IRON = ITEM_REGISTER.registerItem("diamond_reinforced_iron", ItemCraftingComponent::new);
 
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, Main.MODID);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PlaneData>> PLANE_DATA_COMPONENT = DATA_COMPONENT_TYPE_REGISTER.register("plane_data", () -> DataComponentType.<PlaneData>builder().persistent(PlaneData.CODEC).networkSynchronized(PlaneData.STREAM_CODEC).build());

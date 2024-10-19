@@ -85,7 +85,7 @@ public class EntityTransporterPlane extends EntityPlaneBase {
     }
 
     @Override
-    public ResourceKey<LootTable> getLootTable() {
+    public ResourceKey<LootTable> getPlaneLootTable() {
         return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/transporter_plane_" + getPlaneType().getTypeName()));
     }
 

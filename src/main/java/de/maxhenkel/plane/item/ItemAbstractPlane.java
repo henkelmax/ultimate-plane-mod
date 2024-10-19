@@ -27,8 +27,8 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
 
     protected final PlaneType type;
 
-    public ItemAbstractPlane(PlaneType type) {
-        super(new Properties().stacksTo(1));
+    public ItemAbstractPlane(PlaneType type, Properties properties) {
+        super(properties.stacksTo(1));
         this.type = type;
     }
 

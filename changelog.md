@@ -1,2 +1,1 @@
-- Fixed players getting damaged when jumping out of planes
-- Damage players when crashing a plane
+- Update to 1.21.2

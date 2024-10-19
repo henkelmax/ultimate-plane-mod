@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends EntityRenderer<T> {
+public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends EntityRenderer<T, PlaneRenderState> {
 
     protected static final OBJModel WHEEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj"));
     protected static final OBJModel PROPELLER = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj"));
@@ -43,57 +43,72 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
     }
 
     @Override
-    public void render(T plane, float yRot, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
-        super.render(plane, yRot, partialTicks, poseStack, buffer, light);
+    public void render(PlaneRenderState state, PoseStack pose, MultiBufferSource buffer, int light) {
+        super.render(state, pose, buffer, light);
+        pose.pushPose();
+        pose.mulPose(Axis.YP.rotationDegrees(180F - state.yRot));
+        Vec3 bodyCenter = state.bodyRotationCenter;
+        pose.rotateAround(Axis.XN.rotationDegrees(state.xRot), (float) bodyCenter.x, (float) bodyCenter.y, (float) bodyCenter.z);
 
-        poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(180F - yRot));
-        float pitch = plane.xRotO + (plane.getXRot() - plane.xRotO) * partialTicks;
-        Vec3 bodyCenter = plane.getBodyRotationCenter();
-        poseStack.rotateAround(Axis.XN.rotationDegrees(pitch), (float) bodyCenter.x, (float) bodyCenter.y, (float) bodyCenter.z);
+        pose.pushPose();
+        Vector3f leftWheelOffset = getLeftWheelOffset(state);
+        pose.translate(leftWheelOffset.x, leftWheelOffset.y, leftWheelOffset.z);
+        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        pose.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        WHEEL.render(WHEEL_TEXTURE, pose, buffer, light);
+        pose.popPose();
 
-        poseStack.pushPose();
-        Vector3f leftWheelOffset = getLeftWheelOffset(plane);
-        poseStack.translate(leftWheelOffset.x, leftWheelOffset.y, leftWheelOffset.z);
-        poseStack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-        WHEEL.render(WHEEL_TEXTURE, poseStack, buffer, light);
-        poseStack.popPose();
+        pose.pushPose();
+        Vector3f rightWheelOffset = getRightWheelOffset(state);
+        pose.translate(rightWheelOffset.x, rightWheelOffset.y, rightWheelOffset.z);
+        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        pose.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        WHEEL.render(WHEEL_TEXTURE, pose, buffer, light);
+        pose.popPose();
 
-        poseStack.pushPose();
-        Vector3f rightWheelOffset = getRightWheelOffset(plane);
-        poseStack.translate(rightWheelOffset.x, rightWheelOffset.y, rightWheelOffset.z);
-        poseStack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-plane.getWheelRotation(partialTicks)));
-        WHEEL.render(WHEEL_TEXTURE, poseStack, buffer, light);
-        poseStack.popPose();
+        pose.pushPose();
+        Vector3f propellerOffset = getPropellerOffset(state);
+        pose.translate(propellerOffset.x, propellerOffset.y, propellerOffset.z);
+        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        pose.mulPose(Axis.ZP.rotationDegrees(-state.propellerRotation));
+        PROPELLER.render(PROPELLER_TEXTURE, pose, buffer, light);
+        pose.popPose();
 
-        poseStack.pushPose();
-        Vector3f propellerOffset = getPropellerOffset(plane);
-        poseStack.translate(propellerOffset.x, propellerOffset.y, propellerOffset.z);
-        poseStack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(-plane.getPropellerRotation(partialTicks)));
-        PROPELLER.render(PROPELLER_TEXTURE, poseStack, buffer, light);
-        poseStack.popPose();
+        pose.pushPose();
+        Vector3f bodyOffset = getBodyOffset(state);
+        pose.translate(bodyOffset.x, bodyOffset.y, bodyOffset.z);
+        pose.mulPose(Axis.YP.rotationDegrees(180F));
+        getBodyModel(state).render(getBodyTexture(state), pose, buffer, light);
+        pose.popPose();
 
-        poseStack.pushPose();
-        Vector3f bodyOffset = getBodyOffset(plane);
-        poseStack.translate(bodyOffset.x, bodyOffset.y, bodyOffset.z);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180F));
-        getBodyModel(plane).render(getBodyTexture(plane), poseStack, buffer, light);
-        poseStack.popPose();
-
-        if (plane.hasCustomName()) {
-            drawName(plane, plane.getCustomName(), poseStack, buffer, light, true);
-            drawName(plane, plane.getCustomName(), poseStack, buffer, light, false);
+        if (state.customName != null) {
+            drawName(state, state.customName, pose, buffer, light, true);
+            drawName(state, state.customName, pose, buffer, light, false);
         }
-        poseStack.popPose();
+        pose.popPose();
+    }
+
+    @Override
+    public PlaneRenderState createRenderState() {
+        return new PlaneRenderState();
+    }
+
+    @Override
+    public void extractRenderState(T plane, PlaneRenderState state, float partialTicks) {
+        super.extractRenderState(plane, state, partialTicks);
+        state.type = plane.getPlaneType();
+        state.xRot = plane.xRotO + (plane.getXRot() - plane.xRotO) * state.partialTick;
+        state.yRot = plane.yRotO + (plane.getYRot() - plane.yRotO) * state.partialTick;
+        state.wheelRotation = plane.getWheelRotation(state.partialTick);
+        state.propellerRotation = plane.getPropellerRotation(state.partialTick);
+        state.bodyRotationCenter = plane.getBodyRotationCenter();
+        state.customName = plane.getCustomName();
     }
 
     public static final float MAX_TEXT_SCALE = 0.02F;
     public static final float MAX_TEXT_WIDTH = 0.9F;
 
-    protected void drawName(T plane, Component name, PoseStack matrixStack, MultiBufferSource buffer, int light, boolean left) {
+    protected void drawName(PlaneRenderState plane, Component name, PoseStack matrixStack, MultiBufferSource buffer, int light, boolean left) {
         matrixStack.pushPose();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
@@ -112,27 +127,22 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         matrixStack.popPose();
     }
 
-    protected abstract void translateName(T plane, PoseStack matrixStack, boolean left);
+    protected abstract void translateName(PlaneRenderState plane, PoseStack matrixStack, boolean left);
 
-    protected abstract Vector3f getLeftWheelOffset(T plane);
+    protected abstract Vector3f getLeftWheelOffset(PlaneRenderState plane);
 
-    protected abstract Vector3f getRightWheelOffset(T plane);
+    protected abstract Vector3f getRightWheelOffset(PlaneRenderState plane);
 
-    protected abstract Vector3f getPropellerOffset(T plane);
+    protected abstract Vector3f getPropellerOffset(PlaneRenderState plane);
 
-    protected abstract Vector3f getBodyOffset(T plane);
+    protected abstract Vector3f getBodyOffset(PlaneRenderState plane);
 
-    protected abstract OBJModel getBodyModel(T plane);
+    protected abstract OBJModel getBodyModel(PlaneRenderState plane);
 
-    protected abstract ResourceLocation getBodyTexture(T plane);
-
-    @Override
-    public ResourceLocation getTextureLocation(T entity) {
-        return null;
-    }
+    protected abstract ResourceLocation getBodyTexture(PlaneRenderState plane);
 
     @Override
-    protected boolean shouldShowName(T entity) {
+    protected boolean shouldShowName(T entity, double d) {
         return false;
     }
 }

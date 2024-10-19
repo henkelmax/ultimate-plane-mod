@@ -6,7 +6,6 @@ import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -124,7 +123,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (isInvulnerable()) {
             return false;
         }
@@ -148,7 +147,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
         if (player.getAbilities().instabuild) {
             if (player.isShiftKeyDown()) {
-                destroyPlane(source, player);
+                destroyPlane(level, source, player);
                 return true;
             }
         }
@@ -159,18 +158,18 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
                 heldItem.hurtAndBreak(512, serverPlayer.serverLevel(), serverPlayer, (item) -> {
                 });
             }
-            destroyPlane(source, player);
+            destroyPlane(level, source, player);
         }
 
         return false;
     }
 
-    public void destroyPlane(DamageSource source, Player player) {
+    public void destroyPlane(ServerLevel level, DamageSource source, Player player) {
         Container inventory = ((EntityPlaneInventoryBase) this).getInventory();
         Containers.dropContents(level(), blockPosition(), inventory);
         inventory.clearContent();
 
-        ResourceKey<LootTable> lootTable = getLootTable();
+        ResourceKey<LootTable> lootTable = getPlaneLootTable();
         if (lootTable != null) {
             LootTable table = level().getServer().reloadableRegistries().getLootTable(lootTable);
             LootParams.Builder context = new LootParams.Builder((ServerLevel) level())
@@ -179,14 +178,14 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
                     .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                     .withParameter(LootContextParams.ATTACKING_ENTITY, player)
                     .withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player);
-            table.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(this::spawnAtLocation);
+            table.getRandomItems(context.create(LootContextParamSets.ENTITY)).forEach(stack -> spawnAtLocation(level, stack));
         }
 
-        kill();
+        kill(level);
     }
 
     @Nullable
-    public abstract ResourceKey<LootTable> getLootTable();
+    public abstract ResourceKey<LootTable> getPlaneLootTable();
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
@@ -237,7 +236,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
 
     protected void damageEntity(Entity entity, float damage, ResourceKey<DamageType> damageType) {
         tasks.add(() -> {
-            Optional<Holder.Reference<DamageType>> holder = level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolder(damageType);
+            Optional<Holder.Reference<DamageType>> holder = level().registryAccess().get(damageType);
             holder.ifPresent(damageTypeReference -> entity.hurt(new DamageSource(damageTypeReference, this), damage));
         });
     }

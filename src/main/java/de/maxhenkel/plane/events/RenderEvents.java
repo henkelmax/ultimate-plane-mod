@@ -11,7 +11,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -81,7 +81,6 @@ public class RenderEvents {
     public void renderPlaneInfo(GuiGraphics guiGraphics, EntityPlaneSoundBase plane) {
         guiGraphics.pose().pushPose();
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
         int texWidth = 110;
@@ -99,7 +98,7 @@ public class RenderEvents {
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        guiGraphics.blit(PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight);
+        guiGraphics.blit(RenderType::guiTextured, PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight, 256, 256);
 
         Font font = mc.gui.getFont();
 
@@ -121,7 +120,7 @@ public class RenderEvents {
     private double getRelativeHeight(EntityPlaneSoundBase plane) {
         int highestBlock = (int) plane.getY();
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos(plane.getX(), plane.getY(), plane.getZ());
-        for (int y = highestBlock; y >= plane.level().getMinBuildHeight(); y--) {
+        for (int y = highestBlock; y >= plane.level().getMinY(); y--) {
             p.setY(y);
             if (plane.level().getBlockState(p).canOcclude()) {
                 highestBlock = y;
@@ -134,7 +133,13 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPre(RenderPlayerEvent.Pre event) {
-        Player player = event.getEntity();
+        if (mc.level == null) {
+            return;
+        }
+        Entity entity = mc.level.getEntity(event.getRenderState().id);
+        if (!(entity instanceof Player player)) {
+            return;
+        }
         if (player.getVehicle() instanceof EntityPlaneBase plane) {
             PoseStack pose = event.getPoseStack();
             pose.pushPose();
@@ -161,7 +166,14 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void renderPlayerPost(RenderPlayerEvent.Post event) {
-        if (event.getEntity().getVehicle() instanceof EntityPlaneBase) {
+        if (mc.level == null) {
+            return;
+        }
+        Entity entity = mc.level.getEntity(event.getRenderState().id);
+        if (!(entity instanceof Player player)) {
+            return;
+        }
+        if (player.getVehicle() instanceof EntityPlaneBase) {
             event.getPoseStack().popPose();
         }
     }

@@ -6,8 +6,8 @@ import net.minecraft.world.level.Level;
 
 public class ItemTransporterPlane extends ItemAbstractPlane<EntityTransporterPlane> {
 
-    public ItemTransporterPlane(PlaneType type) {
-        super(type);
+    public ItemTransporterPlane(PlaneType type, Properties properties) {
+        super(type, properties);
     }
 
     @Override
