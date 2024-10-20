@@ -6,18 +6,10 @@
     "W W"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:oak_slab"
-    },
-    "P": {
-      "item": "minecraft:oak_planks"
-    },
-    "E": {
-      "item": "plane:plane_engine"
-    },
-    "W": {
-      "item": "plane:plane_wheel"
-    }
+    "S": "minecraft:oak_slab",
+    "P": "minecraft:oak_planks",
+    "E": "plane:plane_engine",
+    "W": "plane:plane_wheel"
   },
   "result": {
     "id": "plane:transporter_plane_oak",

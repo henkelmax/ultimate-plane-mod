@@ -6,18 +6,10 @@
     "W W"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:dark_oak_slab"
-    },
-    "P": {
-      "item": "minecraft:dark_oak_planks"
-    },
-    "E": {
-      "item": "plane:plane_engine"
-    },
-    "W": {
-      "item": "plane:plane_wheel"
-    }
+    "S": "minecraft:dark_oak_slab",
+    "P": "minecraft:dark_oak_planks",
+    "E": "plane:plane_engine",
+    "W": "plane:plane_wheel"
   },
   "result": {
     "id": "plane:bush_plane_dark_oak",

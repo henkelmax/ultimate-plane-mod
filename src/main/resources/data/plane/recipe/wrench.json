@@ -6,12 +6,8 @@
     "S  "
   ],
   "key": {
-    "D": {
-      "item": "plane:diamond_reinforced_iron"
-    },
-    "S": {
-      "tag": "c:rods/iron"
-    }
+    "D": "plane:diamond_reinforced_iron",
+    "S": "#c:rods/iron"
   },
   "result": {
     "id": "plane:wrench",

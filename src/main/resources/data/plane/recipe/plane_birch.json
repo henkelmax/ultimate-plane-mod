@@ -6,18 +6,10 @@
     "W W"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:birch_slab"
-    },
-    "P": {
-      "item": "minecraft:birch_planks"
-    },
-    "E": {
-      "item": "plane:plane_engine"
-    },
-    "W": {
-      "item": "plane:plane_wheel"
-    }
+    "S": "minecraft:birch_slab",
+    "P": "minecraft:birch_planks",
+    "E": "plane:plane_engine",
+    "W": "plane:plane_wheel"
   },
   "result": {
     "id": "plane:plane_birch",

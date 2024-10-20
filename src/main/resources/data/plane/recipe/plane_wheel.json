@@ -4,12 +4,8 @@
     "WIW"
   ],
   "key": {
-    "W": {
-      "item": "minecraft:black_wool"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "W": "minecraft:black_wool",
+    "I": "#c:ingots/iron"
   },
   "result": {
     "id": "plane:plane_wheel",

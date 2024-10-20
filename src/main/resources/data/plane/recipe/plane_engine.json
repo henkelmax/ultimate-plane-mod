@@ -6,15 +6,9 @@
     "FIF"
   ],
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/iron"
-    },
-    "F": {
-      "item": "minecraft:flint"
-    },
-    "I": {
-      "item": "plane:diamond_reinforced_iron"
-    }
+    "B": "#c:storage_blocks/iron",
+    "F": "minecraft:flint",
+    "I": "plane:diamond_reinforced_iron"
   },
   "result": {
     "id": "plane:plane_engine",

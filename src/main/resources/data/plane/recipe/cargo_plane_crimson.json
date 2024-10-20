@@ -6,18 +6,10 @@
     "W W"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:crimson_slab"
-    },
-    "C": {
-      "tag": "c:chests/wooden"
-    },
-    "E": {
-      "item": "plane:plane_engine"
-    },
-    "W": {
-      "item": "plane:plane_wheel"
-    }
+    "S": "minecraft:crimson_slab",
+    "C": "#c:chests/wooden",
+    "E": "plane:plane_engine",
+    "W": "plane:plane_wheel"
   },
   "result": {
     "id": "plane:cargo_plane_crimson",

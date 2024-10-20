@@ -6,18 +6,10 @@
     "W W"
   ],
   "key": {
-    "S": {
-      "item": "minecraft:mangrove_slab"
-    },
-    "P": {
-      "item": "minecraft:mangrove_planks"
-    },
-    "E": {
-      "item": "plane:plane_engine"
-    },
-    "W": {
-      "item": "plane:plane_wheel"
-    }
+    "S": "minecraft:mangrove_slab",
+    "P": "minecraft:mangrove_planks",
+    "E": "plane:plane_engine",
+    "W": "plane:plane_wheel"
   },
   "result": {
     "id": "plane:plane_mangrove",

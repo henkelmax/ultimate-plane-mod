@@ -6,15 +6,9 @@
     "DDD"
   ],
   "key": {
-    "D": {
-      "tag": "c:gems/diamond"
-    },
-    "G": {
-      "tag": "c:ingots/gold"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "D": "#c:gems/diamond",
+    "G": "#c:ingots/gold",
+    "I": "#c:ingots/iron"
   },
   "result": {
     "id": "plane:diamond_reinforced_iron",
