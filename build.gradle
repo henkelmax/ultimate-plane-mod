@@ -16,7 +16,7 @@ dependencies {
 
     compileOnly "maven.modrinth:jei:${jei_version}"
     compileOnly "maven.modrinth:jade:${jade_version}"
-    //runtimeOnly "maven.modrinth:ultimate-car-mod:neoforge-${car_version}"
+    runtimeOnly "maven.modrinth:ultimate-car-mod:neoforge-${car_version}"
 }
 
 processResources {
