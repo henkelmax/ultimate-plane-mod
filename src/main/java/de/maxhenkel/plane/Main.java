@@ -2,10 +2,10 @@ package de.maxhenkel.plane;
 
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.plane.entity.*;
-import de.maxhenkel.plane.entity.render.BushPlaneModel;
-import de.maxhenkel.plane.entity.render.CargoPlaneModel;
-import de.maxhenkel.plane.entity.render.PlaneModel;
-import de.maxhenkel.plane.entity.render.TransporterPlaneModel;
+import de.maxhenkel.plane.entity.render.BushPlaneRenderer;
+import de.maxhenkel.plane.entity.render.CargoPlaneRenderer;
+import de.maxhenkel.plane.entity.render.PlaneRenderer;
+import de.maxhenkel.plane.entity.render.TransporterPlaneRenderer;
 import de.maxhenkel.plane.events.InteractEvents;
 import de.maxhenkel.plane.events.KeyEvents;
 import de.maxhenkel.plane.events.RenderEvents;
@@ -111,10 +111,10 @@ public class Main {
         NeoForge.EVENT_BUS.register(new KeyEvents());
         NeoForge.EVENT_BUS.register(new RenderEvents());
 
-        EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneModel(manager));
-        EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneModel(manager));
-        EntityRenderers.register(TRANSPORTER_PLANE_ENTITY_TYPE.get(), manager -> new TransporterPlaneModel(manager));
-        EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneModel(manager));
+        EntityRenderers.register(PLANE_ENTITY_TYPE.get(), manager -> new PlaneRenderer(manager));
+        EntityRenderers.register(CARGO_PLANE_ENTITY_TYPE.get(), manager -> new CargoPlaneRenderer(manager));
+        EntityRenderers.register(TRANSPORTER_PLANE_ENTITY_TYPE.get(), manager -> new TransporterPlaneRenderer(manager));
+        EntityRenderers.register(BUSH_PLANE_ENTITY_TYPE.get(), manager -> new BushPlaneRenderer(manager));
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends EntityRenderer<T> {
+public abstract class AbstractPlaneRenderer<T extends EntityPlaneBase> extends EntityRenderer<T> {
 
     protected static final OBJModel WHEEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj"));
     protected static final OBJModel PROPELLER = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj"));
@@ -38,7 +38,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
 
     protected static final float MODEL_SCALE = 1F / 16F;
 
-    protected AbstractPlaneModel(EntityRendererProvider.Context renderManager) {
+    protected AbstractPlaneRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 

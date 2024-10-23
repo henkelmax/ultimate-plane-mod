@@ -4,61 +4,61 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityPlane;
+import de.maxhenkel.plane.entity.EntityCargoPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
-public class PlaneModel extends AbstractPlaneModel<EntityPlane> {
+public class CargoPlaneRenderer extends AbstractPlaneRenderer<EntityCargoPlane> {
 
-    private static final OBJModel PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/plane.obj"));
+    private static final OBJModel CARGO_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/cargo_plane.obj"));
     private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
     private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
-    private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-10F / 16F, 2F / 16F, -17.5F / 16F);
-    private static final Vector3f RIGHT_WHEEL_OFFSET = new Vector3f(10F / 16F, 2F / 16F, -17.5F / 16F);
+    private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-18F / 16F, 2F / 16F, -17.5F / 16F);
+    private static final Vector3f RIGHT_WHEEL_OFFSET = new Vector3f(18F / 16F, 2F / 16F, -17.5F / 16F);
 
-    public PlaneModel(EntityRendererProvider.Context renderManager) {
+    public CargoPlaneRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
     @Override
-    protected void translateName(EntityPlane plane, PoseStack matrixStack, boolean left) {
+    protected void translateName(EntityCargoPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
-            matrixStack.translate(8.01D / 16D, -20D / 16D, 1D);
+            matrixStack.translate(16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
         } else {
-            matrixStack.translate(-8.01D / 16D, -20D / 16D, 1D);
+            matrixStack.translate(-16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
         }
     }
 
     @Override
-    protected Vector3f getLeftWheelOffset(EntityPlane plane) {
+    protected Vector3f getLeftWheelOffset(EntityCargoPlane plane) {
         return LEFT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getRightWheelOffset(EntityPlane plane) {
+    protected Vector3f getRightWheelOffset(EntityCargoPlane plane) {
         return RIGHT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getPropellerOffset(EntityPlane plane) {
+    protected Vector3f getPropellerOffset(EntityCargoPlane plane) {
         return PROPELLER_OFFSET;
     }
 
     @Override
-    protected Vector3f getBodyOffset(EntityPlane plane) {
+    protected Vector3f getBodyOffset(EntityCargoPlane plane) {
         return BODY_OFFSET;
     }
 
     @Override
-    protected OBJModel getBodyModel(EntityPlane plane) {
-        return PLANE_MODEL;
+    protected OBJModel getBodyModel(EntityCargoPlane plane) {
+        return CARGO_PLANE_MODEL;
     }
 
     @Override
-    protected ResourceLocation getBodyTexture(EntityPlane plane) {
+    protected ResourceLocation getBodyTexture(EntityCargoPlane plane) {
         switch (plane.getPlaneType()) {
             default:
             case OAK:

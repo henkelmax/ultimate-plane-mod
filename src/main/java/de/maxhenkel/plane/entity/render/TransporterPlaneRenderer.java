@@ -4,25 +4,25 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.plane.Main;
-import de.maxhenkel.plane.entity.EntityCargoPlane;
+import de.maxhenkel.plane.entity.EntityTransporterPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
-public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
+public class TransporterPlaneRenderer extends AbstractPlaneRenderer<EntityTransporterPlane> {
 
-    private static final OBJModel CARGO_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/cargo_plane.obj"));
+    private static final OBJModel TRANSPORTER_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/transporter_plane.obj"));
     private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
     private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
     private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-18F / 16F, 2F / 16F, -17.5F / 16F);
     private static final Vector3f RIGHT_WHEEL_OFFSET = new Vector3f(18F / 16F, 2F / 16F, -17.5F / 16F);
 
-    public CargoPlaneModel(EntityRendererProvider.Context renderManager) {
+    public TransporterPlaneRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
     }
 
     @Override
-    protected void translateName(EntityCargoPlane plane, PoseStack matrixStack, boolean left) {
+    protected void translateName(EntityTransporterPlane plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(16.01D / 16D, -20D / 16D, 1D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
@@ -33,32 +33,32 @@ public class CargoPlaneModel extends AbstractPlaneModel<EntityCargoPlane> {
     }
 
     @Override
-    protected Vector3f getLeftWheelOffset(EntityCargoPlane plane) {
+    protected Vector3f getLeftWheelOffset(EntityTransporterPlane plane) {
         return LEFT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getRightWheelOffset(EntityCargoPlane plane) {
+    protected Vector3f getRightWheelOffset(EntityTransporterPlane plane) {
         return RIGHT_WHEEL_OFFSET;
     }
 
     @Override
-    protected Vector3f getPropellerOffset(EntityCargoPlane plane) {
+    protected Vector3f getPropellerOffset(EntityTransporterPlane plane) {
         return PROPELLER_OFFSET;
     }
 
     @Override
-    protected Vector3f getBodyOffset(EntityCargoPlane plane) {
+    protected Vector3f getBodyOffset(EntityTransporterPlane plane) {
         return BODY_OFFSET;
     }
 
     @Override
-    protected OBJModel getBodyModel(EntityCargoPlane plane) {
-        return CARGO_PLANE_MODEL;
+    protected OBJModel getBodyModel(EntityTransporterPlane plane) {
+        return TRANSPORTER_PLANE_MODEL;
     }
 
     @Override
-    protected ResourceLocation getBodyTexture(EntityCargoPlane plane) {
+    protected ResourceLocation getBodyTexture(EntityTransporterPlane plane) {
         switch (plane.getPlaneType()) {
             default:
             case OAK:
