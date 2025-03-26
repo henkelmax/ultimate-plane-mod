@@ -63,9 +63,9 @@ public abstract class EntityVehicleBase extends Entity {
         p.add(passenger);
         passengers = ImmutableList.copyOf(p);
 
-        if (isControlledByLocalInstance() && lerpSteps > 0) {
+        if (isLocalClientAuthoritative() && lerpSteps > 0) {
             lerpSteps = 0;
-            absMoveTo(lerpX, lerpY, lerpZ, (float) lerpYRot, (float) lerpXRot);
+            snapTo(lerpX, lerpY, lerpZ, (float) lerpYRot, (float) lerpXRot);
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class EntityVehicleBase extends Entity {
     }
 
     private void tickLerp() {
-        if (isControlledByLocalInstance()) {
+        if (isLocalClientAuthoritative()) {
             lerpSteps = 0;
             syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
         }
@@ -95,12 +95,11 @@ public abstract class EntityVehicleBase extends Entity {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
+    public void moveOrInterpolateTo(Vec3 pos, float yaw, float pitch) {
+        this.lerpX = pos.x;
+        this.lerpY = pos.y;
+        this.lerpZ = pos.z;
         this.lerpYRot = yaw;
         this.lerpXRot = pitch;
         this.lerpSteps = 10;

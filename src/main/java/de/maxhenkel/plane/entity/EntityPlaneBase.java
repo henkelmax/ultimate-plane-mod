@@ -76,7 +76,7 @@ public abstract class EntityPlaneBase extends EntityPlaneSoundBase {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        setPlaneType(PlaneType.fromTypeName(compound.getString("Type")));
+        setPlaneType(PlaneType.fromTypeName(compound.getStringOr("Type", "")));
     }
 
 }

@@ -439,8 +439,8 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        setEngineSpeed(compound.getFloat("EngineSpeed"));
-        ((EntityPlaneSoundBase) this).setStarted(compound.getBoolean("Started"), false);
+        setEngineSpeed(compound.getFloatOr("EngineSpeed", 0F));
+        ((EntityPlaneSoundBase) this).setStarted(compound.getBooleanOr("Started", false), false);
     }
 
     public boolean isStarted() {

@@ -249,7 +249,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        setPlaneDamage(compound.getFloat("Damage"));
+        setPlaneDamage(compound.getFloatOr("Damage", 0F));
     }
 
     @Override

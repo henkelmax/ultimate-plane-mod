@@ -27,7 +27,7 @@ public abstract class EntityFlyableBase extends EntityVehicleBase {
     }
 
     @Override
-    public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource damageSource) {
+    public boolean causeFallDamage(double distance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 

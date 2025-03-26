@@ -89,8 +89,8 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        setFuel(compound.getInt("Fuel"));
-        setFuelType(compound.getString("FuelType"));
+        setFuel(compound.getIntOr("Fuel", 0));
+        setFuelType(compound.getStringOr("FuelType", ""));
     }
 
     @Override

@@ -34,8 +34,8 @@ public class PlaneData {
     }
 
     private PlaneData(CompoundTag planeData) {
-        this.damage = planeData.getFloat("Damage");
-        this.fuel = planeData.getInt("Fuel");
+        this.damage = planeData.getFloatOr("Damage", 0F);
+        this.fuel = planeData.getIntOr("Fuel", 0);
         this.planeData = planeData;
     }
 

@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,12 +15,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends Item {
 
@@ -58,7 +59,7 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
 
         BlockState state = world.getBlockState(pos);
         VoxelShape collisionShape = state.getCollisionShape(world, pos);
-        plane.absMoveTo(pos.getX() + 0.5D, pos.getY() + (collisionShape.isEmpty() ? 0D : state.getCollisionShape(world, pos).bounds().maxY) + 0.01D, pos.getZ() + 0.5D, context.getPlayer().getYRot(), 0F);
+        plane.snapTo(pos.getX() + 0.5D, pos.getY() + (collisionShape.isEmpty() ? 0D : state.getCollisionShape(world, pos).bounds().maxY) + 0.01D, pos.getZ() + 0.5D, context.getPlayer().getYRot(), 0F);
 
         addData(context.getItemInHand(), plane);
 
@@ -85,23 +86,23 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> consumer, TooltipFlag flag) {
         convert(stack);
         PlaneData planeData = stack.get(ModItems.PLANE_DATA_COMPONENT);
         if (planeData != null) {
-            tooltip.add(
+            consumer.accept(
                     Component.translatable("tooltip.plane.damage",
                             Component.literal(String.valueOf(MathUtils.round(planeData.getDamage(), 2)))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
-            tooltip.add(
+            consumer.accept(
                     Component.translatable("tooltip.plane.fuel",
                             Component.literal(String.valueOf(planeData.getFuel()))
                                     .withStyle(ChatFormatting.DARK_GRAY)
                     ).withStyle(ChatFormatting.GRAY));
         }
 
-        super.appendHoverText(stack, tooltipContext, tooltip, flagIn);
+        super.appendHoverText(stack, context, display, consumer, flag);
     }
 
     public static void convert(ItemStack stack) {
@@ -116,10 +117,11 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
             return;
         }
         CompoundTag compoundTag = customData.copyTag();
-        if (!compoundTag.contains("PlaneData", Tag.TAG_COMPOUND)) {
+        Optional<CompoundTag> optionalPlaneData = compoundTag.getCompound("PlaneData");
+        if (optionalPlaneData.isEmpty()) {
             return;
         }
-        CompoundTag planeData = compoundTag.getCompound("PlaneData");
+        CompoundTag planeData = optionalPlaneData.get();
         compoundTag.remove("PlaneData");
         if (compoundTag.isEmpty()) {
             stack.remove(DataComponents.CUSTOM_DATA);
