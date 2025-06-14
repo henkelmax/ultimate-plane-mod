@@ -1,17 +1,18 @@
 package de.maxhenkel.plane.events;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import de.maxhenkel.corelib.FontColorUtils;
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -79,9 +80,7 @@ public class RenderEvents {
     }
 
     public void renderPlaneInfo(GuiGraphics guiGraphics, EntityPlaneSoundBase plane) {
-        guiGraphics.pose().pushPose();
-
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        guiGraphics.pose().pushMatrix();
 
         int texWidth = 110;
         int texHeight = 90;
@@ -90,29 +89,30 @@ public class RenderEvents {
         int width = mc.getWindow().getGuiScaledWidth();
 
         float scale = Main.CLIENT_CONFIG.planeInfoScale.get().floatValue();
-        guiGraphics.pose().scale(scale, scale, 1F);
-        guiGraphics.pose().translate(-width, -height, 0D);
-        guiGraphics.pose().translate(((double) width) * (1D / scale), ((double) height * (1D / scale)), 0D);
+        guiGraphics.pose().scale(scale, scale);
+        guiGraphics.pose().translate(-width, -height);
+        guiGraphics.pose().translate(width * (1F / scale), (height * (1F / scale)));
 
         int padding = 3;
         int yStart = height - texHeight - padding;
         int xStart = width - texWidth - padding;
 
-        guiGraphics.blit(RenderType::guiTextured, PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight, 256, 256);
 
         Font font = mc.gui.getFont();
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.lineHeight + 2) * integer;
 
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText(), xStart + 7, heightFunc.apply(5), 0, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText(), xStart + 7, heightFunc.apply(6), 0, false);
+        int black = FontColorUtils.getFontColor(ChatFormatting.BLACK);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText(), xStart + 7, heightFunc.apply(5), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText(), xStart + 7, heightFunc.apply(6), black, false);
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     private double cachedRelativeHeight = 0D;

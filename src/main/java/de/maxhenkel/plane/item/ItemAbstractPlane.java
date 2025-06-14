@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.item;
 
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.PlaneType;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Optional;
@@ -76,7 +78,8 @@ public abstract class ItemAbstractPlane<T extends EntityPlaneSoundBase> extends 
         convert(stack);
         PlaneData planeData = stack.get(ModItems.PLANE_DATA_COMPONENT);
         if (planeData != null) {
-            plane.readAdditionalSaveData(planeData.getPlaneDataCopy());
+            TagValueInput valueInput = ValueInputOutputUtils.createValueInput(plane, plane.registryAccess(), planeData.getPlaneDataCopy());
+            plane.readAdditionalSaveData(valueInput);
             plane.setStarted(false, false);
         }
         Component customName = stack.get(DataComponents.CUSTOM_NAME);

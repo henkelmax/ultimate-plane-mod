@@ -1,7 +1,6 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.net.MessageControlPlane;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -9,6 +8,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -430,17 +431,17 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putFloat("EngineSpeed", getEngineSpeed());
-        compound.putBoolean("Started", isStarted());
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.putFloat("EngineSpeed", getEngineSpeed());
+        valueOutput.putBoolean("Started", isStarted());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        setEngineSpeed(compound.getFloatOr("EngineSpeed", 0F));
-        ((EntityPlaneSoundBase) this).setStarted(compound.getBooleanOr("Started", false), false);
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        setEngineSpeed(valueInput.getFloatOr("EngineSpeed", 0F));
+        ((EntityPlaneSoundBase) this).setStarted(valueInput.getBooleanOr("Started", false), false);
     }
 
     public boolean isStarted() {

@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
@@ -22,6 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -93,9 +96,10 @@ public class EntityCargoPlane extends EntityPlaneBase {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        ItemUtils.readInventory(registryAccess(), compound, "CargoInventory", cargoInventory);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        CompoundTag tag = ValueInputOutputUtils.getTag(valueInput);
+        ItemUtils.readInventory(tag, "CargoInventory", cargoInventory);
     }
 
     @Override
@@ -104,9 +108,11 @@ public class EntityCargoPlane extends EntityPlaneBase {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        ItemUtils.saveInventory(registryAccess(), compound, "CargoInventory", cargoInventory);
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        CompoundTag tag = new CompoundTag();
+        ItemUtils.saveInventory(tag, "CargoInventory", cargoInventory);
+        valueOutput.store(tag);
     }
 
     @Override

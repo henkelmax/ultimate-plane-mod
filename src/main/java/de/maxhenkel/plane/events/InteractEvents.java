@@ -37,7 +37,7 @@ public class InteractEvents {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            stack.hurtAndBreak(1, serverPlayer.serverLevel(), serverPlayer, (item) -> {
+            stack.hurtAndBreak(1, serverPlayer.level(), serverPlayer, (item) -> {
             });
         }
 

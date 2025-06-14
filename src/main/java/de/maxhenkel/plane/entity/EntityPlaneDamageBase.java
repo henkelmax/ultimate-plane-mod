@@ -6,7 +6,6 @@ import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,6 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -155,7 +156,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
         ItemStack heldItem = player.getMainHandItem();
         if (heldItem.getItem().equals(ModItems.WRENCH.get()) && (heldItem.getMaxDamage() - heldItem.getDamageValue()) >= 512) {
             if (player instanceof ServerPlayer serverPlayer) {
-                heldItem.hurtAndBreak(512, serverPlayer.serverLevel(), serverPlayer, (item) -> {
+                heldItem.hurtAndBreak(512, serverPlayer.level(), serverPlayer, (item) -> {
                 });
             }
             destroyPlane(level, source, player);
@@ -247,15 +248,15 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        setPlaneDamage(compound.getFloatOr("Damage", 0F));
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        setPlaneDamage(valueInput.getFloatOr("Damage", 0F));
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putFloat("Damage", getPlaneDamage());
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.putFloat("Damage", getPlaneDamage());
     }
 
 }

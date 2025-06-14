@@ -1,11 +1,13 @@
 package de.maxhenkel.plane.item;
 
 import com.mojang.serialization.Codec;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.level.storage.TagValueOutput;
 
 import java.util.Objects;
 
@@ -40,9 +42,9 @@ public class PlaneData {
     }
 
     public static PlaneData of(EntityPlaneSoundBase entity) {
-        CompoundTag saveData = new CompoundTag();
-        entity.addAdditionalSaveData(saveData);
-        return new PlaneData(saveData);
+        TagValueOutput valueOutput = ValueInputOutputUtils.createValueOutput(entity, entity.registryAccess());
+        entity.addAdditionalSaveData(valueOutput);
+        return new PlaneData(ValueInputOutputUtils.toTag(valueOutput));
     }
 
     public static PlaneData of(CompoundTag tag) {

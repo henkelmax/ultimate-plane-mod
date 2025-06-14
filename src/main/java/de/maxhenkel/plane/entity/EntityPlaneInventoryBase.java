@@ -1,5 +1,6 @@
 package de.maxhenkel.plane.entity;
 
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.item.ItemUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -9,6 +10,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
 
@@ -39,15 +42,18 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        ItemUtils.readInventory(registryAccess(), compound, "Inventory", inventory);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        CompoundTag tag = ValueInputOutputUtils.getTag(valueInput);
+        ItemUtils.readInventory(tag, "Inventory", inventory);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        ItemUtils.saveInventory(registryAccess(), compound, "Inventory", inventory);
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        CompoundTag tag = new CompoundTag();
+        ItemUtils.saveInventory(tag, "Inventory", inventory);
+        valueOutput.store(tag);
     }
 
 }

@@ -3,7 +3,6 @@ package de.maxhenkel.plane.entity;
 import de.maxhenkel.plane.Main;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -12,6 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -87,18 +88,18 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        setFuel(compound.getIntOr("Fuel", 0));
-        setFuelType(compound.getStringOr("FuelType", ""));
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        setFuel(valueInput.getIntOr("Fuel", 0));
+        setFuelType(valueInput.getStringOr("FuelType", ""));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("Fuel", getFuel());
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+        valueOutput.putInt("Fuel", getFuel());
         Fluid fuel = getFuelType();
-        compound.putString("FuelType", fuel == null ? "" : BuiltInRegistries.FLUID.getKey(fuel).toString());
+        valueOutput.putString("FuelType", fuel == null ? "" : BuiltInRegistries.FLUID.getKey(fuel).toString());
     }
 
     @Nullable

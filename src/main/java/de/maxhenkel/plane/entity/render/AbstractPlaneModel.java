@@ -1,6 +1,5 @@
 package de.maxhenkel.plane.entity.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
@@ -110,7 +109,6 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
 
     protected void drawName(PlaneRenderState plane, Component name, PoseStack matrixStack, MultiBufferSource buffer, int light, boolean left) {
         matrixStack.pushPose();
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         matrixStack.scale(1F, -1F, 1F);
 
         translateName(plane, matrixStack, left);

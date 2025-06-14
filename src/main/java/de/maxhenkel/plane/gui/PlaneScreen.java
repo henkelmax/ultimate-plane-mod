@@ -5,7 +5,7 @@ import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -48,19 +48,19 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
         if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<FormattedCharSequence> list = new ArrayList<>();
             list.add(Component.translatable("tooltip.plane.fuel", String.valueOf(plane.getFuel())).getVisualOrderText());
-            guiGraphics.renderTooltip(font, list, mouseX - leftPos, mouseY - topPos);
+            guiGraphics.setTooltipForNextFrame(font, list, mouseX, mouseY);
         }
 
         if (mouseX >= leftPos + 96 && mouseX < leftPos + 168 && mouseY >= topPos + 20 && mouseY < topPos + 30) {
             List<FormattedCharSequence> list = new ArrayList<>();
             list.add(Component.translatable("tooltip.plane.damage", String.valueOf(MathUtils.round(plane.getPlaneDamage(), 2))).getVisualOrderText());
-            guiGraphics.renderTooltip(font, list, mouseX - leftPos, mouseY - topPos);
+            guiGraphics.setTooltipForNextFrame(font, list, mouseX, mouseY);
         }
 
         if (mouseX >= leftPos + 8 && mouseX < leftPos + 80 && mouseY >= topPos + 46 && mouseY < topPos + 56) {
             List<FormattedCharSequence> list = new ArrayList<>();
             list.add(Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText());
-            guiGraphics.renderTooltip(font, list, mouseX - leftPos, mouseY - topPos);
+            guiGraphics.setTooltipForNextFrame(font, list, mouseX, mouseY);
         }
     }
 
@@ -77,21 +77,21 @@ public class PlaneScreen extends ScreenBase<ContainerPlane> {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(RenderType::guiTextured, texture, i + 8, j + 20, 176, 0, scaled, 10, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, i + 8, j + 20, 176, 0, scaled, 10, 256, 256);
     }
 
     public void drawThrottle(GuiGraphics guiGraphics, float percent) {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(RenderType::guiTextured, texture, i + 8, j + 46, 176, 10, scaled, 10, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, i + 8, j + 46, 176, 10, scaled, 10, 256, 256);
     }
 
     public void drawDamage(GuiGraphics guiGraphics, float percent) {
         int scaled = (int) (72F * percent);
         int i = leftPos;
         int j = topPos;
-        guiGraphics.blit(RenderType::guiTextured, texture, i + 96, j + 20, 176, 20, scaled, 10, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, i + 96, j + 20, 176, 20, scaled, 10, 256, 256);
     }
 
 }
