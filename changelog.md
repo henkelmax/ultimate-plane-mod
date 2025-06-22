@@ -1,1 +1,1 @@
-- Fixed inventory saving issues
+- Fixed Jade integration
