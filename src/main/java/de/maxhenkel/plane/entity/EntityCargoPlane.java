@@ -1,12 +1,10 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.plane.Main;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -98,8 +96,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
     @Override
     public void readAdditionalSaveData(ValueInput valueInput) {
         super.readAdditionalSaveData(valueInput);
-        CompoundTag tag = ValueInputOutputUtils.getTag(valueInput);
-        ItemUtils.readInventory(tag, "CargoInventory", cargoInventory);
+        ItemUtils.readInventory(valueInput, "CargoInventory", cargoInventory);
     }
 
     @Override
@@ -110,9 +107,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
     @Override
     public void addAdditionalSaveData(ValueOutput valueOutput) {
         super.addAdditionalSaveData(valueOutput);
-        CompoundTag tag = new CompoundTag();
-        ItemUtils.saveInventory(tag, "CargoInventory", cargoInventory);
-        valueOutput.store(tag);
+        ItemUtils.saveInventory(valueOutput, "CargoInventory", cargoInventory);
     }
 
     @Override

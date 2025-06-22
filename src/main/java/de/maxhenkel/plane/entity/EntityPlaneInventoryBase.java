@@ -1,8 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.item.ItemUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,16 +42,13 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     @Override
     public void readAdditionalSaveData(ValueInput valueInput) {
         super.readAdditionalSaveData(valueInput);
-        CompoundTag tag = ValueInputOutputUtils.getTag(valueInput);
-        ItemUtils.readInventory(tag, "Inventory", inventory);
+        ItemUtils.readInventory(valueInput, "Inventory", inventory);
     }
 
     @Override
     public void addAdditionalSaveData(ValueOutput valueOutput) {
         super.addAdditionalSaveData(valueOutput);
-        CompoundTag tag = new CompoundTag();
-        ItemUtils.saveInventory(tag, "Inventory", inventory);
-        valueOutput.store(tag);
+        ItemUtils.saveInventory(valueOutput, "Inventory", inventory);
     }
 
 }

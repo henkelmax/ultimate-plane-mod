@@ -1,1 +1,1 @@
-- Update to 1.21.6
+- Fixed inventory saving issues
