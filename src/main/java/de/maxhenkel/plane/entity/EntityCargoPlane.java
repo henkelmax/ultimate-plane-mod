@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -89,7 +89,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
                 });
             }
         } else {
-            PacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
+            ClientPacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
         }
     }
 

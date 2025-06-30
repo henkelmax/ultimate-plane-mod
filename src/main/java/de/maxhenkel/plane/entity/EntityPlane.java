@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -55,7 +55,7 @@ public class EntityPlane extends EntityPlaneBase {
                 packetBuffer.writeUUID(getUUID());
             });
         } else {
-            PacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
+            ClientPacketDistributor.sendToServer(new MessagePlaneGui(player, outside));
         }
     }
 

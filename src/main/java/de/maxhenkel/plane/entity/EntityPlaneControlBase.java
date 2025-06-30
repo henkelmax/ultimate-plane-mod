@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
 
@@ -426,7 +426,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
         }
 
         if (level().isClientSide && needsUpdate) {
-            PacketDistributor.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
+            ClientPacketDistributor.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }
 
