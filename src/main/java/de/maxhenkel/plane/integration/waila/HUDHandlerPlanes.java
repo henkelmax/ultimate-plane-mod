@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.integration.waila;
 
 import de.maxhenkel.corelib.math.MathUtils;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -17,7 +17,7 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
 
     public static final HUDHandlerPlanes INSTANCE = new HUDHandlerPlanes();
 
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "plane");
+    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "plane");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {

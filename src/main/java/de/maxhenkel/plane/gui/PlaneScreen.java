@@ -2,7 +2,7 @@ package de.maxhenkel.plane.gui;
 
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.corelib.math.MathUtils;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
-    private static final ResourceLocation CAR_GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/gui_plane.png");
+    private static final ResourceLocation CAR_GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/gui_plane.png");
 
     private static final Component TEXT_FUEL = Component.translatable("gui.plane.fuel");
     private static final Component TEXT_DAMAGE = Component.translatable("gui.plane.damage");

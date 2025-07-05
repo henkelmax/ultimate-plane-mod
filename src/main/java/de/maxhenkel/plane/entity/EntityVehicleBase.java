@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import com.google.common.collect.ImmutableList;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,8 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -115,7 +113,6 @@ public abstract class EntityVehicleBase extends Entity {
         entityToUpdate.setYHeadRot(entityToUpdate.getYRot());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void onPassengerTurned(Entity entityToUpdate) {
         this.applyOriantationsToEntity(entityToUpdate);
@@ -152,7 +149,7 @@ public abstract class EntityVehicleBase extends Entity {
 
     @Override
     public boolean canCollideWith(Entity entity) {
-        if (Main.SERVER_CONFIG.planeToPlaneCollision.get()) {
+        if (PlaneMod.SERVER_CONFIG.planeToPlaneCollision.get()) {
             return entity instanceof EntityVehicleBase;
         }
         return false;

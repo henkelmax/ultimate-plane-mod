@@ -12,7 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModCreativeTabs {
 
-    public static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Main.MODID);
+    public static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PlaneMod.MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB_PLANES = TAB_REGISTER.register("planes", () -> {
         return CreativeModeTab.builder()
                 .icon(() -> new ItemStack(ModItems.PLANES[0].get()))

@@ -3,7 +3,7 @@ package de.maxhenkel.plane.entity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityTransporterPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 
 public class TransporterPlaneModel extends AbstractPlaneModel<EntityTransporterPlane> {
 
-    private static final OBJModel TRANSPORTER_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/transporter_plane.obj"));
+    private static final OBJModel TRANSPORTER_PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/transporter_plane.obj"));
     private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
     private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
     private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-18F / 16F, 2F / 16F, -17.5F / 16F);

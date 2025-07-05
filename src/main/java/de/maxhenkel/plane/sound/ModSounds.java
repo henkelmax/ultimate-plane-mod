@@ -1,8 +1,6 @@
 package de.maxhenkel.plane.sound;
 
-import de.maxhenkel.plane.Main;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -10,15 +8,13 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModSounds {
 
-    private static final DeferredRegister<SoundEvent> SOUND_REGISTER = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, Main.MODID);
+    private static final DeferredRegister<SoundEvent> SOUND_REGISTER = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, PlaneMod.MODID);
 
     public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_STOP = addSound("engine_stop");
     public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE_STARTING = addSound("engine_starting");
@@ -29,7 +25,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RATCHET = addSound("ratchet");
 
     public static DeferredHolder<SoundEvent, SoundEvent> addSound(String soundName) {
-        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Main.MODID, soundName)));
+        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, soundName)));
     }
 
     public static void init(IEventBus eventBus) {
@@ -47,20 +43,6 @@ public class ModSounds {
             if (!world.isClientSide) {
                 world.playSound(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, evt, category, volume, pitch);
             }
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void playSoundLoop(AbstractTickableSoundInstance loop, Level world) {
-        if (world.isClientSide) {
-            Minecraft.getInstance().getSoundManager().play(loop);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void playSoundLoopDelayed(AbstractTickableSoundInstance loop, Level world, int delay) {
-        if (world.isClientSide) {
-            Minecraft.getInstance().getSoundManager().playDelayed(loop, delay);
         }
     }
 

@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ public class EntityBushPlane extends EntityPlaneBase {
     private static final Vec3 BODY_CENTER = new Vec3(0D, 0D, -17.5D / 16D);
 
     public EntityBushPlane(Level world) {
-        this(Main.BUSH_PLANE_ENTITY_TYPE.get(), world);
+        this(PlaneMod.BUSH_PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityBushPlane(EntityType<?> type, Level world) {
@@ -34,12 +34,12 @@ public class EntityBushPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return Main.SERVER_CONFIG.bushPlaneFuelCapacity.get();
+        return PlaneMod.SERVER_CONFIG.bushPlaneFuelCapacity.get();
     }
 
     @Override
     protected float getBaseFuelUsage() {
-        return Main.SERVER_CONFIG.bushPlaneBaseFuelUsage.get().floatValue();
+        return PlaneMod.SERVER_CONFIG.bushPlaneBaseFuelUsage.get().floatValue();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class EntityBushPlane extends EntityPlaneBase {
 
     @Override
     public ResourceKey<LootTable> getPlaneLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

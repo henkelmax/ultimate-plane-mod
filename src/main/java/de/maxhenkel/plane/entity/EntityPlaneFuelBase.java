@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -132,7 +132,7 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
     }
 
     public boolean isValidFuel(FluidStack fluid) {
-        return Main.SERVER_CONFIG.validFuels.stream().anyMatch(fluidTag -> fluidTag.contains(fluid.getFluid()));
+        return PlaneMod.SERVER_CONFIG.validFuels.stream().anyMatch(fluidTag -> fluidTag.contains(fluid.getFluid()));
     }
 
     @Override

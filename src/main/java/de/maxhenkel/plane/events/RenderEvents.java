@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.FontColorUtils;
 import de.maxhenkel.corelib.math.MathUtils;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.ChatFormatting;
@@ -19,8 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -29,10 +27,9 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import java.util.List;
 import java.util.function.Function;
 
-@OnlyIn(Dist.CLIENT)
 public class RenderEvents {
 
-    private static final ResourceLocation PLANE_INFO_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/plane_info.png");
+    private static final ResourceLocation PLANE_INFO_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/plane_info.png");
 
     private Minecraft mc;
     private EntityPlaneSoundBase lastVehicle;
@@ -44,15 +41,15 @@ public class RenderEvents {
     @SubscribeEvent
     public void onCameraDistance(CalculateDetachedCameraDistanceEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            evt.setDistance(Main.CLIENT_CONFIG.planeZoom.get().floatValue());
+            evt.setDistance(PlaneMod.CLIENT_CONFIG.planeZoom.get().floatValue());
         }
     }
 
     @SubscribeEvent
     public void onScroll(InputEvent.MouseScrollingEvent evt) {
         if (getPlane() != null && !mc.options.getCameraType().isFirstPerson()) {
-            Main.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, Main.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDeltaY())));
-            Main.CLIENT_CONFIG.planeZoom.save();
+            PlaneMod.CLIENT_CONFIG.planeZoom.set(Math.max(1D, Math.min(20D, PlaneMod.CLIENT_CONFIG.planeZoom.get() - evt.getScrollDeltaY())));
+            PlaneMod.CLIENT_CONFIG.planeZoom.save();
             evt.setCanceled(true);
         }
     }
@@ -74,7 +71,7 @@ public class RenderEvents {
             return;
         }
 
-        if (Main.CLIENT_CONFIG.showPlaneInfo.get()) {
+        if (PlaneMod.CLIENT_CONFIG.showPlaneInfo.get()) {
             renderPlaneInfo(evt.getGuiGraphics(), plane);
         }
     }
@@ -88,7 +85,7 @@ public class RenderEvents {
         int height = mc.getWindow().getGuiScaledHeight();
         int width = mc.getWindow().getGuiScaledWidth();
 
-        float scale = Main.CLIENT_CONFIG.planeInfoScale.get().floatValue();
+        float scale = PlaneMod.CLIENT_CONFIG.planeInfoScale.get().floatValue();
         guiGraphics.pose().scale(scale, scale);
         guiGraphics.pose().translate(-width, -height);
         guiGraphics.pose().translate(width * (1F / scale), (height * (1F / scale)));
@@ -104,8 +101,8 @@ public class RenderEvents {
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.lineHeight + 2) * integer;
 
         int black = FontColorUtils.getFontColor(ChatFormatting.BLACK);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), black, false);
-        guiGraphics.drawString(font, Component.translatable("tooltip.plane.vertical_speed", Main.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.speed", PlaneMod.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), black, false);
+        guiGraphics.drawString(font, Component.translatable("tooltip.plane.vertical_speed", PlaneMod.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), black, false);
         guiGraphics.drawString(font, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), black, false);
         guiGraphics.drawString(font, Component.translatable("tooltip.plane.height", String.valueOf(Math.round(plane.getY()))).getVisualOrderText(), xStart + 7, heightFunc.apply(3), black, false);
         guiGraphics.drawString(font, Component.translatable("tooltip.plane.relative_height", String.valueOf(Math.round(cachedRelativeHeight))).getVisualOrderText(), xStart + 7, heightFunc.apply(4), black, false);

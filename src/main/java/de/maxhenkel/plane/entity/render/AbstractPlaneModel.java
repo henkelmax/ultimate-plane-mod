@@ -3,7 +3,7 @@ package de.maxhenkel.plane.entity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.obj.OBJModel;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,10 +16,10 @@ import org.joml.Vector3f;
 
 public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends EntityRenderer<T, PlaneRenderState> {
 
-    protected static final OBJModel WHEEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/wheel.obj"));
-    protected static final OBJModel PROPELLER = new OBJModel(ResourceLocation.fromNamespaceAndPath(Main.MODID, "models/entity/propeller.obj"));
+    protected static final OBJModel WHEEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/wheel.obj"));
+    protected static final OBJModel PROPELLER = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/propeller.obj"));
 
-    protected static final ResourceLocation WHEEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/entity/wheel.png");
+    protected static final ResourceLocation WHEEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/entity/wheel.png");
     //TODO Rework
     protected static final ResourceLocation PROPELLER_TEXTURE = ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png");
 

@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.net;
 
 import de.maxhenkel.corelib.net.Message;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
-    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "control_plane"));
+    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "control_plane"));
 
     private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 

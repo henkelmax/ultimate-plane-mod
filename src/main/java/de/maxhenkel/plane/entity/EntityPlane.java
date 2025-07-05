@@ -1,6 +1,6 @@
 package de.maxhenkel.plane.entity;
 
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +25,7 @@ public class EntityPlane extends EntityPlaneBase {
     private static final Vec3 BODY_CENTER = new Vec3(0D, 0D, -17.5D / 16D);
 
     public EntityPlane(Level world) {
-        this(Main.PLANE_ENTITY_TYPE.get(), world);
+        this(PlaneMod.PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityPlane(EntityType<?> type, Level world) {
@@ -61,12 +61,12 @@ public class EntityPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return Main.SERVER_CONFIG.planeFuelCapacity.get();
+        return PlaneMod.SERVER_CONFIG.planeFuelCapacity.get();
     }
 
     @Override
     protected float getBaseFuelUsage() {
-        return Main.SERVER_CONFIG.planeBaseFuelUsage.get().floatValue();
+        return PlaneMod.SERVER_CONFIG.planeBaseFuelUsage.get().floatValue();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class EntityPlane extends EntityPlaneBase {
 
     @Override
     public ResourceKey<LootTable> getPlaneLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "entities/plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

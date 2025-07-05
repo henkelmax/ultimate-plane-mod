@@ -2,7 +2,7 @@ package de.maxhenkel.plane.loottable;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.item.PlaneData;
@@ -43,7 +43,7 @@ public class CopyPlaneData extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType getType() {
-        return Main.COPY_PLANE_DATA.get();
+        return PlaneMod.COPY_PLANE_DATA.get();
     }
 
 }

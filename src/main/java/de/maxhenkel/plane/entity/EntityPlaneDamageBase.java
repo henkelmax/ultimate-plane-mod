@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.plane.DamageSourcePlane;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -199,7 +199,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     public void setPlaneDamage(float damage) {
-        entityData.set(DAMAGE, Math.min(damage, Main.SERVER_CONFIG.maxPlaneDamage.get().floatValue()));
+        entityData.set(DAMAGE, Math.min(damage, PlaneMod.SERVER_CONFIG.maxPlaneDamage.get().floatValue()));
     }
 
     private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();

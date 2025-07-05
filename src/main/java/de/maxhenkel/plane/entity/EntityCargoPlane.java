@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.entity;
 
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.gui.ContainerPlane;
 import de.maxhenkel.plane.net.MessagePlaneGui;
 import net.minecraft.core.registries.Registries;
@@ -36,7 +36,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
     private final Container cargoInventory;
 
     public EntityCargoPlane(Level world) {
-        this(Main.CARGO_PLANE_ENTITY_TYPE.get(), world);
+        this(PlaneMod.CARGO_PLANE_ENTITY_TYPE.get(), world);
     }
 
     public EntityCargoPlane(EntityType<?> type, Level world) {
@@ -112,12 +112,12 @@ public class EntityCargoPlane extends EntityPlaneBase {
 
     @Override
     public int getFuelCapacity() {
-        return Main.SERVER_CONFIG.cargoPlaneFuelCapacity.get();
+        return PlaneMod.SERVER_CONFIG.cargoPlaneFuelCapacity.get();
     }
 
     @Override
     protected float getBaseFuelUsage() {
-        return Main.SERVER_CONFIG.cargoPlaneBaseFuelUsage.get().floatValue();
+        return PlaneMod.SERVER_CONFIG.cargoPlaneBaseFuelUsage.get().floatValue();
     }
 
     @Override
@@ -132,7 +132,7 @@ public class EntityCargoPlane extends EntityPlaneBase {
 
     @Override
     public ResourceKey<LootTable> getPlaneLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Main.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "entities/cargo_plane_" + getPlaneType().getTypeName()));
     }
 
 }

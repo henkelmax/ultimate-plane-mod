@@ -1,7 +1,7 @@
 package de.maxhenkel.plane.net;
 
 import de.maxhenkel.corelib.net.Message;
-import de.maxhenkel.plane.Main;
+import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class MessagePlaneGui implements Message<MessagePlaneGui> {
 
-    public static final CustomPacketPayload.Type<MessagePlaneGui> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "plane_gui"));
+    public static final CustomPacketPayload.Type<MessagePlaneGui> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "plane_gui"));
 
     private UUID uuid;
     private boolean outside;
