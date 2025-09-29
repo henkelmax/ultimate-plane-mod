@@ -11,6 +11,7 @@ import de.maxhenkel.plane.gui.PlaneScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,6 +26,7 @@ import org.lwjgl.glfw.GLFW;
 @EventBusSubscriber(modid = PlaneMod.MODID, value = Dist.CLIENT)
 public class PlaneClientMod {
 
+    public static KeyMapping.Category KEY_CATEGORY_PLANE;
     public static KeyMapping PLANE_KEY;
     public static KeyMapping FORWARD_KEY;
     public static KeyMapping BACK_KEY;
@@ -48,15 +50,17 @@ public class PlaneClientMod {
 
     @SubscribeEvent
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, "category.plane");
-        FORWARD_KEY = new KeyMapping("key.plane_add_thrust", GLFW.GLFW_KEY_I, "category.plane");
-        BACK_KEY = new KeyMapping("key.plane_remove_thrust", GLFW.GLFW_KEY_K, "category.plane");
-        LEFT_KEY = new KeyMapping("key.plane_left", GLFW.GLFW_KEY_A, "category.plane");
-        RIGHT_KEY = new KeyMapping("key.plane_right", GLFW.GLFW_KEY_D, "category.plane");
-        UP_KEY = new KeyMapping("key.plane_up", GLFW.GLFW_KEY_S, "category.plane");
-        DOWN_KEY = new KeyMapping("key.plane_down", GLFW.GLFW_KEY_W, "category.plane");
-        START_KEY = new KeyMapping("key.plane_start", GLFW.GLFW_KEY_R, "category.plane");
-        BRAKE_KEY = new KeyMapping("key.plane_brake", GLFW.GLFW_KEY_B, "category.plane");
+        KEY_CATEGORY_PLANE = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "plane"));
+        event.registerCategory(KEY_CATEGORY_PLANE);
+        PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, KEY_CATEGORY_PLANE);
+        FORWARD_KEY = new KeyMapping("key.plane_add_thrust", GLFW.GLFW_KEY_I, KEY_CATEGORY_PLANE);
+        BACK_KEY = new KeyMapping("key.plane_remove_thrust", GLFW.GLFW_KEY_K, KEY_CATEGORY_PLANE);
+        LEFT_KEY = new KeyMapping("key.plane_left", GLFW.GLFW_KEY_A, KEY_CATEGORY_PLANE);
+        RIGHT_KEY = new KeyMapping("key.plane_right", GLFW.GLFW_KEY_D, KEY_CATEGORY_PLANE);
+        UP_KEY = new KeyMapping("key.plane_up", GLFW.GLFW_KEY_S, KEY_CATEGORY_PLANE);
+        DOWN_KEY = new KeyMapping("key.plane_down", GLFW.GLFW_KEY_W, KEY_CATEGORY_PLANE);
+        START_KEY = new KeyMapping("key.plane_start", GLFW.GLFW_KEY_R, KEY_CATEGORY_PLANE);
+        BRAKE_KEY = new KeyMapping("key.plane_brake", GLFW.GLFW_KEY_B, KEY_CATEGORY_PLANE);
 
         event.register(PLANE_KEY);
         event.register(FORWARD_KEY);

@@ -67,7 +67,7 @@
   "tooltip.plane.relative_height": "RHöhe: %s Blöcke",
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-  "category.plane": "Plane",
+  "key.category.plane.plane": "Plane",
   "key.plane": "Flugzeug GUI",
   "key.plane_add_thrust": "Mehr Schub",
   "key.plane_remove_thrust": "Weniger Schub",

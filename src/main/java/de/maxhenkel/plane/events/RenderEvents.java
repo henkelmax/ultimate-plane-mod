@@ -12,6 +12,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -129,7 +130,7 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void renderPlayerPre(RenderPlayerEvent.Pre event) {
+    public void renderPlayerPre(RenderPlayerEvent.Pre<AbstractClientPlayer> event) {
         if (mc.level == null) {
             return;
         }
@@ -162,7 +163,7 @@ public class RenderEvents {
     }
 
     @SubscribeEvent
-    public void renderPlayerPost(RenderPlayerEvent.Post event) {
+    public void renderPlayerPost(RenderPlayerEvent.Post<AbstractClientPlayer> event) {
         if (mc.level == null) {
             return;
         }

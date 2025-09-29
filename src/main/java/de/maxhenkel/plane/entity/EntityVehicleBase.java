@@ -179,7 +179,7 @@ public abstract class EntityVehicleBase extends Entity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (!player.isShiftKeyDown()) {
             if (player.getVehicle() != this) {
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     player.startRiding(this);
                 }
             }

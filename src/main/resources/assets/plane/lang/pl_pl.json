@@ -67,7 +67,7 @@
   "tooltip.plane.relative_height": "Wysokość-R: %s blocks",
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-  "category.plane": "Samolot",
+  "key.category.plane.plane": "Samolot",
   "key.plane": "Interfejs Samolotu",
   "key.plane_add_thrust": "Zwiększ Ciąg",
   "key.plane_remove_thrust": "Zmniejsz Ciąg",

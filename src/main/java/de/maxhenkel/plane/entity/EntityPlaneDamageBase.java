@@ -70,7 +70,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
     }
 
     protected void handleParticles() {
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             return;
         }
 
@@ -129,7 +129,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
             return false;
         }
 
-        if (level().isClientSide || !isAlive()) {
+        if (level().isClientSide() || !isAlive()) {
             return false;
         }
 

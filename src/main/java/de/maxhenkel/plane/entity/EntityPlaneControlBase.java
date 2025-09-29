@@ -51,7 +51,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             setStarted(false);
         }
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (isStarted()) {
                 if (isThrustPositive()) {
                     setEngineSpeed(Math.min(getEngineSpeed() + 0.025F, 1F));
@@ -264,7 +264,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             move(MoverType.SELF, getDeltaMovement());
         }
 
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             return;
         }
         if (isCollidedHorizontal()) {
@@ -425,7 +425,7 @@ public abstract class EntityPlaneControlBase extends EntityPlaneDamageBase {
             }
         }
 
-        if (level().isClientSide && needsUpdate) {
+        if (level().isClientSide() && needsUpdate) {
             ClientPacketDistributor.sendToServer(new MessageControlPlane(up, down, thrustPos, thrustNeg, left, right, braking, starting));
         }
     }

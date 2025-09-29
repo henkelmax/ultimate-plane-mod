@@ -11,7 +11,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
 
     public EntityPlaneSoundBase(EntityType type, Level level) {
         super(type, level);
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             soundManager = new PlaneClientSoundManager(this);
         }
     }
@@ -20,7 +20,7 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     public void tick() {
         super.tick();
 
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             soundManager.updateSounds();
         }
     }
@@ -28,13 +28,13 @@ public abstract class EntityPlaneSoundBase extends EntityPlaneWheelBase {
     @Override
     public void setStarted(boolean started) {
         super.setStarted(started);
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             soundManager.setStarted(started, true);
         }
     }
 
     public void setStarted(boolean started, boolean playSound) {
-        if (level().isClientSide) {
+        if (level().isClientSide()) {
             soundManager.setStarted(started, playSound);
         }
     }

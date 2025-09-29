@@ -47,7 +47,7 @@
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
 
-  "category.plane": "Uçak",
+  "key.category.plane.plane": "Uçak",
 
   "key.plane": "Uçak GUI'si",
   "key.plane_add_thrust": "İtki'yi Artır",

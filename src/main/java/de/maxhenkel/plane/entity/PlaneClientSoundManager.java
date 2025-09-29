@@ -41,7 +41,7 @@ public class PlaneClientSoundManager {
     }
 
     public void setStarted(boolean started, boolean playSound) {
-        if (plane.level().isClientSide && playSound) {
+        if (plane.level().isClientSide() && playSound) {
             if (!started) {
                 checkStopLoop();
             } else {

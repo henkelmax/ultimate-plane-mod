@@ -109,7 +109,7 @@
   "tooltip.plane.relative_height": "RHeight: %s blocks",
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-  "category.plane": "Plane",
+  "key.category.plane.plane": "Plane",
   "key.plane": "Plane GUI",
   "key.plane_add_thrust": "Add Thrust",
   "key.plane_remove_thrust": "Remove Thrust",

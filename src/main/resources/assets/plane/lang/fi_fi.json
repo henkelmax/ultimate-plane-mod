@@ -67,7 +67,7 @@
   "tooltip.plane.relative_height": "R-Korkeus: %s kuutio",
   "plane.speedtype.kmh": "%s km/h",
   "plane.speedtype.bps": "%s b/s",
-  "category.plane": "Plane",
+  "key.category.plane.plane": "Plane",
   "key.plane": "Lentokone GUI",
   "key.plane_add_thrust": "Lisää Työnto",
   "key.plane_remove_thrust": "Poista Työntö",

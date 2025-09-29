@@ -6,11 +6,13 @@ import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -42,49 +44,49 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
     }
 
     @Override
-    public void render(PlaneRenderState state, PoseStack pose, MultiBufferSource buffer, int light) {
-        super.render(state, pose, buffer, light);
-        pose.pushPose();
-        pose.mulPose(Axis.YP.rotationDegrees(180F - state.yRot));
+    public void submit(PlaneRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+        super.submit(state, stack, collector, cameraRenderState);
+        stack.pushPose();
+        stack.mulPose(Axis.YP.rotationDegrees(180F - state.yRot));
         Vec3 bodyCenter = state.bodyRotationCenter;
-        pose.rotateAround(Axis.XN.rotationDegrees(state.xRot), (float) bodyCenter.x, (float) bodyCenter.y, (float) bodyCenter.z);
+        stack.rotateAround(Axis.XN.rotationDegrees(state.xRot), (float) bodyCenter.x, (float) bodyCenter.y, (float) bodyCenter.z);
 
-        pose.pushPose();
+        stack.pushPose();
         Vector3f leftWheelOffset = getLeftWheelOffset(state);
-        pose.translate(leftWheelOffset.x, leftWheelOffset.y, leftWheelOffset.z);
-        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        pose.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
-        WHEEL.render(WHEEL_TEXTURE, pose, buffer, light);
-        pose.popPose();
+        stack.translate(leftWheelOffset.x, leftWheelOffset.y, leftWheelOffset.z);
+        stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        stack.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        WHEEL.submitModels(WHEEL_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
+        stack.popPose();
 
-        pose.pushPose();
+        stack.pushPose();
         Vector3f rightWheelOffset = getRightWheelOffset(state);
-        pose.translate(rightWheelOffset.x, rightWheelOffset.y, rightWheelOffset.z);
-        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        pose.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
-        WHEEL.render(WHEEL_TEXTURE, pose, buffer, light);
-        pose.popPose();
+        stack.translate(rightWheelOffset.x, rightWheelOffset.y, rightWheelOffset.z);
+        stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        stack.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        WHEEL.submitModels(WHEEL_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
+        stack.popPose();
 
-        pose.pushPose();
+        stack.pushPose();
         Vector3f propellerOffset = getPropellerOffset(state);
-        pose.translate(propellerOffset.x, propellerOffset.y, propellerOffset.z);
-        pose.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        pose.mulPose(Axis.ZP.rotationDegrees(-state.propellerRotation));
-        PROPELLER.render(PROPELLER_TEXTURE, pose, buffer, light);
-        pose.popPose();
+        stack.translate(propellerOffset.x, propellerOffset.y, propellerOffset.z);
+        stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
+        stack.mulPose(Axis.ZP.rotationDegrees(-state.propellerRotation));
+        PROPELLER.submitModels(PROPELLER_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
+        stack.popPose();
 
-        pose.pushPose();
+        stack.pushPose();
         Vector3f bodyOffset = getBodyOffset(state);
-        pose.translate(bodyOffset.x, bodyOffset.y, bodyOffset.z);
-        pose.mulPose(Axis.YP.rotationDegrees(180F));
-        getBodyModel(state).render(getBodyTexture(state), pose, buffer, light);
-        pose.popPose();
+        stack.translate(bodyOffset.x, bodyOffset.y, bodyOffset.z);
+        stack.mulPose(Axis.YP.rotationDegrees(180F));
+        getBodyModel(state).submitModels(getBodyTexture(state), stack, collector, cameraRenderState, state.lightCoords);
+        stack.popPose();
 
         if (state.customName != null) {
-            drawName(state, state.customName, pose, buffer, light, true);
-            drawName(state, state.customName, pose, buffer, light, false);
+            drawName(state, state.customName, stack, collector, state.lightCoords, true);
+            drawName(state, state.customName, stack, collector, state.lightCoords, false);
         }
-        pose.popPose();
+        stack.popPose();
     }
 
     @Override
@@ -101,28 +103,29 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         state.wheelRotation = plane.getWheelRotation(state.partialTick);
         state.propellerRotation = plane.getPropellerRotation(state.partialTick);
         state.bodyRotationCenter = plane.getBodyRotationCenter();
-        state.customName = plane.getCustomName();
+        Component customName = plane.getCustomName();
+        state.customName = customName == null ? null : customName.getVisualOrderText();
     }
 
     public static final float MAX_TEXT_SCALE = 0.02F;
     public static final float MAX_TEXT_WIDTH = 0.9F;
 
-    protected void drawName(PlaneRenderState plane, Component name, PoseStack matrixStack, MultiBufferSource buffer, int light, boolean left) {
-        matrixStack.pushPose();
-        matrixStack.scale(1F, -1F, 1F);
+    protected void drawName(PlaneRenderState plane, FormattedCharSequence name, PoseStack stack, SubmitNodeCollector collector, int light, boolean left) {
+        stack.pushPose();
+        stack.scale(1F, -1F, 1F);
 
-        translateName(plane, matrixStack, left);
+        translateName(plane, stack, left);
 
         int textWidth = getFont().width(name);
         float textScale = Math.min(MAX_TEXT_SCALE, MAX_TEXT_WIDTH / textWidth);
 
-        matrixStack.translate(-(textScale * textWidth) / 2F, 0F, 0F);
+        stack.translate(-(textScale * textWidth) / 2F, 0F, 0F);
 
-        matrixStack.scale(textScale, textScale, textScale);
+        stack.scale(textScale, textScale, textScale);
 
-        getFont().drawInBatch(name, 0F, 0F, 0xFFFFFF, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, light);
+        collector.submitText(stack, 0F, 0F, name, false, Font.DisplayMode.NORMAL, light, 0xFFFFFFFF, 0, 0);
 
-        matrixStack.popPose();
+        stack.popPose();
     }
 
     protected abstract void translateName(PlaneRenderState plane, PoseStack matrixStack, boolean left);

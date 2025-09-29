@@ -86,7 +86,7 @@
   "tooltip.plane.relative_height": "距地面：%s米",
   "plane.speedtype.kmh": "%s 千米/时",
   "plane.speedtype.bps": "%s 米/秒",
-  "category.plane": "飞机",
+  "key.category.plane.plane": "飞机",
   "key.plane": "打开飞机GUI",
   "key.plane_add_thrust": "增大节流阀",
   "key.plane_remove_thrust": "减小节流阀",
