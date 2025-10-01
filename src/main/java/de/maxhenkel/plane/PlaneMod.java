@@ -26,9 +26,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -142,21 +139,9 @@ public class PlaneMod {
     }
 
     private static <T extends EntityVehicleBase> void registerEntityCapabilities(RegisterCapabilitiesEvent event, DeferredHolder<EntityType<?>, EntityType<T>> holder) {
-        event.registerEntity(Capabilities.FluidHandler.ENTITY, holder.get(), (object, context) -> {
-            if (object instanceof IFluidHandler fluidHandler) {
-                return fluidHandler;
-            }
-            return null;
-        });
-        event.registerEntity(Capabilities.EnergyStorage.ENTITY, holder.get(), (object, context) -> {
-            if (object instanceof IEnergyStorage energyStorage) {
-                return energyStorage;
-            }
-            return null;
-        });
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, holder.get(), (object, context) -> {
-            if (object instanceof IItemHandler itemHandler) {
-                return itemHandler;
+        event.registerEntity(Capabilities.Fluid.ENTITY, holder.get(), (object, context) -> {
+            if (object instanceof EntityPlaneFuelBase fuelPlane) {
+                return fuelPlane;
             }
             return null;
         });

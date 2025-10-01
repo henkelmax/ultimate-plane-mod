@@ -10,21 +10,41 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.AbstractMap;
+import java.util.Map;
 
-public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements IFluidHandler {
+public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase implements ResourceHandler<FluidResource> {
 
     private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> FUEL_TYPE = SynchedEntityData.defineId(EntityPlaneFuelBase.class, EntityDataSerializers.STRING);
 
     private float fuelAccumulator;
+
+    private final SnapshotJournal<Map.Entry<Fluid, Integer>> fluidJournal = new SnapshotJournal<>() {
+        @Override
+        protected Map.Entry<Fluid, Integer> createSnapshot() {
+            return new AbstractMap.SimpleEntry<>(getFuelType(), getFuel());
+        }
+
+        @Override
+        protected void revertToSnapshot(Map.Entry<Fluid, Integer> snapshot) {
+            Fluid fluid = snapshot.getKey();
+            if (fluid == null) {
+                setFuelType("");
+            } else {
+                setFuelType(fluid);
+            }
+            setFuel(snapshot.getValue());
+        }
+    };
 
     public EntityPlaneFuelBase(EntityType type, Level worldIn) {
         super(type, worldIn);
@@ -131,35 +151,39 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
         entityData.set(FUEL, fuel);
     }
 
-    public boolean isValidFuel(FluidStack fluid) {
-        return PlaneMod.SERVER_CONFIG.validFuels.stream().anyMatch(fluidTag -> fluidTag.contains(fluid.getFluid()));
+    public boolean isValidFuel(Fluid fluid) {
+        return PlaneMod.SERVER_CONFIG.validFuels.stream().anyMatch(fluidTag -> fluidTag.contains(fluid));
     }
 
     @Override
-    public int getTanks() {
+    public int size() {
         return 1;
     }
 
-    @Nonnull
     @Override
-    public FluidStack getFluidInTank(int tank) {
+    public FluidResource getResource(int index) {
         Fluid fluid = getFuelType();
-        return new FluidStack(fluid == null ? Fluids.EMPTY : fluid, getFuel());
+        return fluid == null ? FluidResource.EMPTY : FluidResource.of(fluid);
     }
 
     @Override
-    public int getTankCapacity(int tank) {
+    public long getAmountAsLong(int index) {
+        return getFuel();
+    }
+
+    @Override
+    public long getCapacityAsLong(int index, FluidResource resource) {
         return getFuelCapacity();
     }
 
     @Override
-    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        return isValidFuel(stack);
+    public boolean isValid(int index, FluidResource resource) {
+        return isValidFuel(resource.getFluid());
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        if (resource == null || !isValidFuel(resource)) {
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        if (!isValidFuel(resource.getFluid())) {
             return 0;
         }
 
@@ -169,30 +193,22 @@ public abstract class EntityPlaneFuelBase extends EntityPlaneControlBase impleme
             return 0;
         }
 
-        int amount = Math.min(resource.getAmount(), getFuelCapacity() - getFuel());
+        int result = Math.min(amount, getFuelCapacity() - getFuel());
 
-        if (action.execute()) {
-            int i = getFuel() + amount;
-            if (i > getFuelCapacity()) {
-                i = getFuelCapacity();
-            }
-            setFuel(i);
-            setFuelType(resource.getFluid());
+        fluidJournal.updateSnapshots(transaction);
+        int i = getFuel() + result;
+        if (i > getFuelCapacity()) {
+            i = getFuelCapacity();
         }
+        setFuel(i);
+        setFuelType(resource.getFluid());
 
-        return amount;
+        return result;
     }
 
-    @Nonnull
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
-        return FluidStack.EMPTY;
-    }
-
-    @Nonnull
-    @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        return FluidStack.EMPTY;
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        return 0;
     }
 
 }
