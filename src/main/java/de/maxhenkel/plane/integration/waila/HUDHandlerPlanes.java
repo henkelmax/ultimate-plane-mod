@@ -5,7 +5,7 @@ import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -13,11 +13,11 @@ import snownee.jade.api.config.IPluginConfig;
 
 public class HUDHandlerPlanes implements IEntityComponentProvider {
 
-    public static final ResourceLocation OBJECT_NAME_TAG = ResourceLocation.fromNamespaceAndPath("jade", "object_name");
+    public static final Identifier OBJECT_NAME_TAG = Identifier.fromNamespaceAndPath("jade", "object_name");
 
     public static final HUDHandlerPlanes INSTANCE = new HUDHandlerPlanes();
 
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "plane");
+    public static final Identifier UID = Identifier.fromNamespaceAndPath(PlaneMod.MODID, "plane");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
@@ -30,7 +30,7 @@ public class HUDHandlerPlanes implements IEntityComponentProvider {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public Identifier getUid() {
         return UID;
     }
 }

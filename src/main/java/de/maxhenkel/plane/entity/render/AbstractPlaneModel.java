@@ -11,31 +11,31 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends EntityRenderer<T, PlaneRenderState> {
 
-    protected static final OBJModel WHEEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/wheel.obj"));
-    protected static final OBJModel PROPELLER = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/propeller.obj"));
+    protected static final OBJModel WHEEL = new OBJModel(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/wheel.obj"));
+    protected static final OBJModel PROPELLER = new OBJModel(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/propeller.obj"));
 
-    protected static final ResourceLocation WHEEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/entity/wheel.png");
+    protected static final Identifier WHEEL_TEXTURE = Identifier.fromNamespaceAndPath(PlaneMod.MODID, "textures/entity/wheel.png");
     //TODO Rework
-    protected static final ResourceLocation PROPELLER_TEXTURE = ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png");
+    protected static final Identifier PROPELLER_TEXTURE = Identifier.withDefaultNamespace("textures/block/spruce_planks.png");
 
-    protected static final ResourceLocation OAK_MODEL = ResourceLocation.withDefaultNamespace("textures/block/oak_planks.png");
-    protected static final ResourceLocation DARK_OAK_MODEL = ResourceLocation.withDefaultNamespace("textures/block/dark_oak_planks.png");
-    protected static final ResourceLocation BIRCH_MODEL = ResourceLocation.withDefaultNamespace("textures/block/birch_planks.png");
-    protected static final ResourceLocation JUNGLE_MODEL = ResourceLocation.withDefaultNamespace("textures/block/jungle_planks.png");
-    protected static final ResourceLocation ACACIA_MODEL = ResourceLocation.withDefaultNamespace("textures/block/acacia_planks.png");
-    protected static final ResourceLocation SPRUCE_MODEL = ResourceLocation.withDefaultNamespace("textures/block/spruce_planks.png");
-    protected static final ResourceLocation WARPED_MODEL = ResourceLocation.withDefaultNamespace("textures/block/warped_planks.png");
-    protected static final ResourceLocation CRIMSON_MODEL = ResourceLocation.withDefaultNamespace("textures/block/crimson_planks.png");
-    protected static final ResourceLocation BAMBOO_MODEL = ResourceLocation.withDefaultNamespace("textures/block/bamboo_planks.png");
-    protected static final ResourceLocation CHERRY_MODEL = ResourceLocation.withDefaultNamespace("textures/block/cherry_planks.png");
-    protected static final ResourceLocation MANGROVE_MODEL = ResourceLocation.withDefaultNamespace("textures/block/mangrove_planks.png");
+    protected static final Identifier OAK_MODEL = Identifier.withDefaultNamespace("textures/block/oak_planks.png");
+    protected static final Identifier DARK_OAK_MODEL = Identifier.withDefaultNamespace("textures/block/dark_oak_planks.png");
+    protected static final Identifier BIRCH_MODEL = Identifier.withDefaultNamespace("textures/block/birch_planks.png");
+    protected static final Identifier JUNGLE_MODEL = Identifier.withDefaultNamespace("textures/block/jungle_planks.png");
+    protected static final Identifier ACACIA_MODEL = Identifier.withDefaultNamespace("textures/block/acacia_planks.png");
+    protected static final Identifier SPRUCE_MODEL = Identifier.withDefaultNamespace("textures/block/spruce_planks.png");
+    protected static final Identifier WARPED_MODEL = Identifier.withDefaultNamespace("textures/block/warped_planks.png");
+    protected static final Identifier CRIMSON_MODEL = Identifier.withDefaultNamespace("textures/block/crimson_planks.png");
+    protected static final Identifier BAMBOO_MODEL = Identifier.withDefaultNamespace("textures/block/bamboo_planks.png");
+    protected static final Identifier CHERRY_MODEL = Identifier.withDefaultNamespace("textures/block/cherry_planks.png");
+    protected static final Identifier MANGROVE_MODEL = Identifier.withDefaultNamespace("textures/block/mangrove_planks.png");
 
     protected static final float MODEL_SCALE = 1F / 16F;
 
@@ -140,7 +140,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
 
     protected abstract OBJModel getBodyModel(PlaneRenderState plane);
 
-    protected abstract ResourceLocation getBodyTexture(PlaneRenderState plane);
+    protected abstract Identifier getBodyTexture(PlaneRenderState plane);
 
     @Override
     protected boolean shouldShowName(T entity, double d) {

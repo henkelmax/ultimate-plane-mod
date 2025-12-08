@@ -6,13 +6,13 @@ import de.maxhenkel.plane.entity.EntityPlaneControlBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageControlPlane implements Message<MessageControlPlane> {
 
-    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "control_plane"));
+    public static final CustomPacketPayload.Type<MessageControlPlane> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "control_plane"));
 
     private boolean up, down, thrustPos, thrustNeg, left, right, braking, starting;
 

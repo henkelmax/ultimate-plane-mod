@@ -31,3 +31,11 @@ processResources {
 shadowJar {
     relocate 'de.maxhenkel.corelib', 'de.maxhenkel.plane.corelib'
 }
+
+sourceSets {
+    main {
+        java {
+            exclude 'de/maxhenkel/plane/integration/waila/*/**'
+        }
+    }
+}

@@ -3,7 +3,7 @@ package de.maxhenkel.plane.entity;
 import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -54,7 +54,7 @@ public class EntityBushPlane extends EntityPlaneBase {
 
     @Override
     public ResourceKey<LootTable> getPlaneLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
+        return ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(PlaneMod.MODID, "entities/bush_plane_" + getPlaneType().getTypeName()));
     }
 
     @Override

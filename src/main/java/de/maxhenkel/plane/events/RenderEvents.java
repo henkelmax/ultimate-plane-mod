@@ -16,7 +16,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public class RenderEvents {
 
-    private static final ResourceLocation PLANE_INFO_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/plane_info.png");
+    private static final Identifier PLANE_INFO_TEXTURE = Identifier.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/plane_info.png");
 
     private Minecraft mc;
     private EntityPlaneSoundBase lastVehicle;

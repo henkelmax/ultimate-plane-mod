@@ -3,7 +3,7 @@ package de.maxhenkel.plane.sound;
 import de.maxhenkel.plane.PlaneMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RATCHET = addSound("ratchet");
 
     public static DeferredHolder<SoundEvent, SoundEvent> addSound(String soundName) {
-        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, soundName)));
+        return SOUND_REGISTER.register(soundName, () -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(PlaneMod.MODID, soundName)));
     }
 
     public static void init(IEventBus eventBus) {

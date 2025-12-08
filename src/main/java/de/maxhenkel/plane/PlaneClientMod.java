@@ -11,7 +11,7 @@ import de.maxhenkel.plane.gui.PlaneScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -50,7 +50,7 @@ public class PlaneClientMod {
 
     @SubscribeEvent
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        KEY_CATEGORY_PLANE = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "plane"));
+        KEY_CATEGORY_PLANE = new KeyMapping.Category(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "plane"));
         event.registerCategory(KEY_CATEGORY_PLANE);
         PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, KEY_CATEGORY_PLANE);
         FORWARD_KEY = new KeyMapping("key.plane_add_thrust", GLFW.GLFW_KEY_I, KEY_CATEGORY_PLANE);

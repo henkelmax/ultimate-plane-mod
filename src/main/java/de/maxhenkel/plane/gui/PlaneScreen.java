@@ -7,7 +7,7 @@ import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PlaneScreen extends ScreenBase<ContainerPlane> {
 
-    private static final ResourceLocation CAR_GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/gui_plane.png");
+    private static final Identifier CAR_GUI_TEXTURE = Identifier.fromNamespaceAndPath(PlaneMod.MODID, "textures/gui/gui_plane.png");
 
     private static final Component TEXT_FUEL = Component.translatable("gui.plane.fuel");
     private static final Component TEXT_DAMAGE = Component.translatable("gui.plane.damage");

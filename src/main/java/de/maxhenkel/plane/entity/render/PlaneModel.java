@@ -6,12 +6,12 @@ import de.maxhenkel.corelib.client.obj.OBJModel;
 import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlane;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector3f;
 
 public class PlaneModel extends AbstractPlaneModel<EntityPlane> {
 
-    private static final OBJModel PLANE_MODEL = new OBJModel(ResourceLocation.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/plane.obj"));
+    private static final OBJModel PLANE_MODEL = new OBJModel(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "models/entity/plane.obj"));
     private static final Vector3f BODY_OFFSET = new Vector3f(0F, 8F / 16F, 0F);
     private static final Vector3f PROPELLER_OFFSET = new Vector3f(0F / 16F, 16F / 16F, -29.5F / 16F);
     private static final Vector3f LEFT_WHEEL_OFFSET = new Vector3f(-10F / 16F, 2F / 16F, -17.5F / 16F);
@@ -58,7 +58,7 @@ public class PlaneModel extends AbstractPlaneModel<EntityPlane> {
     }
 
     @Override
-    protected ResourceLocation getBodyTexture(PlaneRenderState plane) {
+    protected Identifier getBodyTexture(PlaneRenderState plane) {
         switch (plane.type) {
             default:
             case OAK:
