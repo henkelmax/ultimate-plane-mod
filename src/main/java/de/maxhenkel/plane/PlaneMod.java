@@ -1,5 +1,6 @@
 package de.maxhenkel.plane;
 
+import com.mojang.serialization.MapCodec;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.plane.entity.*;
 import de.maxhenkel.plane.events.InteractEvents;
@@ -15,7 +16,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -41,8 +42,9 @@ public class PlaneMod {
 
     public static final String MODID = "plane";
 
-    private static final DeferredRegister<LootItemFunctionType<?>> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, PlaneMod.MODID);
-    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPlaneData>> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> new LootItemFunctionType<>(CopyPlaneData.CODEC));
+    private static final
+    DeferredRegister<MapCodec<? extends LootItemFunction>> LOOT_FUNCTION_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.LOOT_FUNCTION_TYPE, PlaneMod.MODID);
+    public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<CopyPlaneData>> COPY_PLANE_DATA = LOOT_FUNCTION_TYPE_REGISTER.register("copy_plane_data", () -> CopyPlaneData.CODEC);
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;

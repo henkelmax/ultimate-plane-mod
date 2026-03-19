@@ -28,7 +28,7 @@ public abstract class EntityPlaneBase extends EntityPlaneSoundBase {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 pos) {
         ItemStack itemInHand = player.getItemInHand(hand);
         if (player.isCrouching() && itemInHand.is(Items.NAME_TAG)) {
             Component component = itemInHand.get(DataComponents.CUSTOM_NAME);
@@ -38,7 +38,7 @@ public abstract class EntityPlaneBase extends EntityPlaneSoundBase {
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.interact(player, hand);
+        return super.interact(player, hand, pos);
     }
 
     public abstract Vec3 getBodyRotationCenter();

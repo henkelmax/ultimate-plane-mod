@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
 
@@ -22,7 +23,7 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 pos) {
         if (player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
                 openGUI(player, true);
@@ -30,7 +31,7 @@ public abstract class EntityPlaneInventoryBase extends EntityPlaneFuelBase {
             return InteractionResult.SUCCESS;
         }
 
-        return super.interact(player, hand);
+        return super.interact(player, hand, pos);
     }
 
     public abstract void openGUI(Player player, boolean outside);

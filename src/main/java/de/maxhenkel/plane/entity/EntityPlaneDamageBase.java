@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -57,7 +57,7 @@ public abstract class EntityPlaneDamageBase extends EntityFlyableBase {
             setPlaneDamage(getPlaneDamage() + 1F);
         }
 
-        if (isEyeInFluidType(Fluids.WATER.getFluidType())) {
+        if (isEyeInFluid(FluidTags.WATER)) {
             if (this instanceof EntityPlaneControlBase plane) {
                 if (plane.isStarted()) {
                     setPlaneDamage(getPlaneDamage() + 50F);
