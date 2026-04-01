@@ -14,7 +14,7 @@ dependencies {
     compileOnly "de.maxhenkel.corelib:corelib:${corelib_version}+${minecraft_version}:javadoc"
 
     compileOnly "maven.modrinth:jei:${jei_version}"
-    compileOnly "maven.modrinth:jade:${jade_version}"
+    implementation "maven.modrinth:jade:${jade_version}"
     implementation "maven.modrinth:ultimate-car-mod:neoforge-${car_version}"
 }
 
@@ -23,18 +23,11 @@ processResources {
         expand 'mod_version': mod_version,
                 'neoforge_dependency': neoforge_dependency,
                 'minecraft_version': minecraft_version,
-                'car_dependency': car_dependency
+                'car_dependency': car_dependency,
+                'minecraft_dependency': minecraft_dependency
     }
 }
 
 shadowJar {
     relocate 'de.maxhenkel.corelib', 'de.maxhenkel.plane.corelib'
-}
-
-sourceSets {
-    main {
-        java {
-            exclude 'de/maxhenkel/plane/integration/waila/*/**'
-        }
-    }
 }
