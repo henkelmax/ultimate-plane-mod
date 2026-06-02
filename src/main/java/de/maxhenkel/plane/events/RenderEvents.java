@@ -7,7 +7,6 @@ import de.maxhenkel.corelib.math.MathUtils;
 import de.maxhenkel.plane.PlaneMod;
 import de.maxhenkel.plane.entity.EntityPlaneBase;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -16,6 +15,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -60,7 +60,7 @@ public class RenderEvents {
         if (!VanillaGuiLayers.HOTBAR.equals(evt.getName())) {
             return;
         }
-        if (mc.options.hideGui) {
+        if (mc.gui.hud.isHidden()) {
             return;
         }
 
@@ -97,11 +97,11 @@ public class RenderEvents {
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PLANE_INFO_TEXTURE, xStart, yStart, 0, 0, texWidth, texHeight, 256, 256);
 
-        Font font = mc.gui.getFont();
+        Font font = mc.font;
 
         Function<Integer, Integer> heightFunc = integer -> yStart + 8 + (font.lineHeight + 2) * integer;
 
-        int black = FontColorUtils.getFontColor(ChatFormatting.BLACK);
+        int black = FontColorUtils.getFontColor(TextColor.BLACK);
         guiGraphics.text(font, Component.translatable("tooltip.plane.speed", PlaneMod.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().length())).getVisualOrderText(), xStart + 7, heightFunc.apply(0), black, false);
         guiGraphics.text(font, Component.translatable("tooltip.plane.vertical_speed", PlaneMod.CLIENT_CONFIG.planeInfoSpeedType.get().getTextComponent(plane.getDeltaMovement().y())).getVisualOrderText(), xStart + 7, heightFunc.apply(1), black, false);
         guiGraphics.text(font, Component.translatable("tooltip.plane.throttle", String.valueOf(Math.round(plane.getEngineSpeed() * 100F))).getVisualOrderText(), xStart + 7, heightFunc.apply(2), black, false);
