@@ -47,7 +47,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
     public void submit(PlaneRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
         super.submit(state, stack, collector, cameraRenderState);
         stack.pushPose();
-        stack.mulPose(Axis.YP.rotationDegrees(180F - state.yRot));
+        stack.rotate(Axis.YP.rotationDegrees(180F - state.yRot));
         Vec3 bodyCenter = state.bodyRotationCenter;
         stack.rotateAround(Axis.XN.rotationDegrees(state.xRot), (float) bodyCenter.x, (float) bodyCenter.y, (float) bodyCenter.z);
 
@@ -55,7 +55,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         Vector3f leftWheelOffset = getLeftWheelOffset(state);
         stack.translate(leftWheelOffset.x, leftWheelOffset.y, leftWheelOffset.z);
         stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        stack.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        stack.rotate(Axis.XP.rotationDegrees(-state.wheelRotation));
         WHEEL.submitModels(WHEEL_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
         stack.popPose();
 
@@ -63,7 +63,7 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         Vector3f rightWheelOffset = getRightWheelOffset(state);
         stack.translate(rightWheelOffset.x, rightWheelOffset.y, rightWheelOffset.z);
         stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        stack.mulPose(Axis.XP.rotationDegrees(-state.wheelRotation));
+        stack.rotate(Axis.XP.rotationDegrees(-state.wheelRotation));
         WHEEL.submitModels(WHEEL_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
         stack.popPose();
 
@@ -71,14 +71,14 @@ public abstract class AbstractPlaneModel<T extends EntityPlaneBase> extends Enti
         Vector3f propellerOffset = getPropellerOffset(state);
         stack.translate(propellerOffset.x, propellerOffset.y, propellerOffset.z);
         stack.scale(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
-        stack.mulPose(Axis.ZP.rotationDegrees(-state.propellerRotation));
+        stack.rotate(Axis.ZP.rotationDegrees(-state.propellerRotation));
         PROPELLER.submitModels(PROPELLER_TEXTURE, stack, collector, cameraRenderState, state.lightCoords);
         stack.popPose();
 
         stack.pushPose();
         Vector3f bodyOffset = getBodyOffset(state);
         stack.translate(bodyOffset.x, bodyOffset.y, bodyOffset.z);
-        stack.mulPose(Axis.YP.rotationDegrees(180F));
+        stack.rotate(Axis.YP.rotationDegrees(180F));
         getBodyModel(state).submitModels(getBodyTexture(state), stack, collector, cameraRenderState, state.lightCoords);
         stack.popPose();
 

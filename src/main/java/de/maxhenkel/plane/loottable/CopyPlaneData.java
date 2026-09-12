@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.maxhenkel.plane.entity.EntityPlaneSoundBase;
 import de.maxhenkel.plane.item.ModItems;
 import de.maxhenkel.plane.item.PlaneData;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -13,19 +14,19 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-import java.util.List;
+import java.util.Optional;
 
 public class CopyPlaneData extends LootItemConditionalFunction {
 
     public static final MapCodec<CopyPlaneData> CODEC = RecordCodecBuilder.mapCodec(instance -> commonFields(instance).apply(instance, CopyPlaneData::new));
 
-    protected CopyPlaneData(List<LootItemCondition> conditions) {
+    protected CopyPlaneData(Optional<Holder<LootItemCondition>> conditions) {
         super(conditions);
     }
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        Entity entity = context.getOptional(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof EntityPlaneSoundBase plane)) {
             return stack;
         }

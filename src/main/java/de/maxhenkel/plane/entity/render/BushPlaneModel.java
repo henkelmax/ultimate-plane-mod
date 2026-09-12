@@ -25,10 +25,10 @@ public class BushPlaneModel extends AbstractPlaneModel<EntityBushPlane> {
     protected void translateName(PlaneRenderState plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
+            matrixStack.rotate(Axis.YP.rotationDegrees(90F));
         } else {
             matrixStack.translate(-8.01D / 16D, -20D / 16D, 0D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
+            matrixStack.rotate(Axis.YP.rotationDegrees(-90F));
         }
     }
 

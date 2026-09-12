@@ -142,9 +142,9 @@ public class RenderEvents {
             PoseStack pose = event.getPoseStack();
             pose.pushPose();
 
-            pose.mulPose(Axis.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
+            pose.rotate(Axis.YP.rotationDegrees(-(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick())));
             Vec3 bodyRotationCenter = plane.getBodyRotationCenter();
-            pose.mulPose(Axis.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
+            pose.rotate(Axis.XP.rotationDegrees(plane.xRotO + (plane.getXRot() - plane.xRotO) * event.getPartialTick()));
 
             List<Entity> passengers = plane.getPassengers();
             int i = passengers.indexOf(player);
@@ -158,7 +158,7 @@ public class RenderEvents {
             pose.scale(plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor(), plane.getPlayerScaleFactor());
             pose.translate(0F, (player.getBbHeight() - (player.getBbHeight() * plane.getPlayerScaleFactor())) / 1.5F + (float) plane.getPlayerOffsets()[0].y, 0F);
 
-            pose.mulPose(Axis.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
+            pose.rotate(Axis.YP.rotationDegrees(plane.yRotO + (plane.getYRot() - plane.yRotO) * event.getPartialTick()));
         }
     }
 

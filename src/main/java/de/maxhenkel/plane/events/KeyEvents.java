@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLKeycode;
 
 public class KeyEvents {
 
@@ -27,7 +27,7 @@ public class KeyEvents {
         }
 
         if (PlaneClientMod.PLANE_KEY.consumeClick()) {
-            if ((event.getModifiers() & GLFW.GLFW_MOD_CONTROL) == GLFW.GLFW_MOD_CONTROL) {
+            if ((event.getModifiers() & SDLKeycode.SDL_KMOD_CTRL) == SDLKeycode.SDL_KMOD_CTRL) {
                 PlaneMod.CLIENT_CONFIG.showPlaneInfo.set(!PlaneMod.CLIENT_CONFIG.showPlaneInfo.get());
                 PlaneMod.CLIENT_CONFIG.showPlaneInfo.save();
             } else {

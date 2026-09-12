@@ -20,7 +20,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @Mod(value = PlaneMod.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = PlaneMod.MODID, value = Dist.CLIENT)
@@ -52,15 +52,15 @@ public class PlaneClientMod {
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
         KEY_CATEGORY_PLANE = new KeyMapping.Category(Identifier.fromNamespaceAndPath(PlaneMod.MODID, "plane"));
         event.registerCategory(KEY_CATEGORY_PLANE);
-        PLANE_KEY = new KeyMapping("key.plane", GLFW.GLFW_KEY_P, KEY_CATEGORY_PLANE);
-        FORWARD_KEY = new KeyMapping("key.plane_add_thrust", GLFW.GLFW_KEY_I, KEY_CATEGORY_PLANE);
-        BACK_KEY = new KeyMapping("key.plane_remove_thrust", GLFW.GLFW_KEY_K, KEY_CATEGORY_PLANE);
-        LEFT_KEY = new KeyMapping("key.plane_left", GLFW.GLFW_KEY_A, KEY_CATEGORY_PLANE);
-        RIGHT_KEY = new KeyMapping("key.plane_right", GLFW.GLFW_KEY_D, KEY_CATEGORY_PLANE);
-        UP_KEY = new KeyMapping("key.plane_up", GLFW.GLFW_KEY_S, KEY_CATEGORY_PLANE);
-        DOWN_KEY = new KeyMapping("key.plane_down", GLFW.GLFW_KEY_W, KEY_CATEGORY_PLANE);
-        START_KEY = new KeyMapping("key.plane_start", GLFW.GLFW_KEY_R, KEY_CATEGORY_PLANE);
-        BRAKE_KEY = new KeyMapping("key.plane_brake", GLFW.GLFW_KEY_B, KEY_CATEGORY_PLANE);
+        PLANE_KEY = new KeyMapping("key.plane", SDLScancode.SDL_SCANCODE_P, KEY_CATEGORY_PLANE);
+        FORWARD_KEY = new KeyMapping("key.plane_add_thrust", SDLScancode.SDL_SCANCODE_I, KEY_CATEGORY_PLANE);
+        BACK_KEY = new KeyMapping("key.plane_remove_thrust", SDLScancode.SDL_SCANCODE_K, KEY_CATEGORY_PLANE);
+        LEFT_KEY = new KeyMapping("key.plane_left", SDLScancode.SDL_SCANCODE_A, KEY_CATEGORY_PLANE);
+        RIGHT_KEY = new KeyMapping("key.plane_right", SDLScancode.SDL_SCANCODE_D, KEY_CATEGORY_PLANE);
+        UP_KEY = new KeyMapping("key.plane_up", SDLScancode.SDL_SCANCODE_S, KEY_CATEGORY_PLANE);
+        DOWN_KEY = new KeyMapping("key.plane_down", SDLScancode.SDL_SCANCODE_W, KEY_CATEGORY_PLANE);
+        START_KEY = new KeyMapping("key.plane_start", SDLScancode.SDL_SCANCODE_R, KEY_CATEGORY_PLANE);
+        BRAKE_KEY = new KeyMapping("key.plane_brake", SDLScancode.SDL_SCANCODE_B, KEY_CATEGORY_PLANE);
 
         event.register(PLANE_KEY);
         event.register(FORWARD_KEY);

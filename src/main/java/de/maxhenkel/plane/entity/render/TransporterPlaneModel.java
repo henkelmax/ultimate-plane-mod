@@ -25,10 +25,10 @@ public class TransporterPlaneModel extends AbstractPlaneModel<EntityTransporterP
     protected void translateName(PlaneRenderState plane, PoseStack matrixStack, boolean left) {
         if (left) {
             matrixStack.translate(16.01D / 16D, -20D / 16D, 1D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(90F));
+            matrixStack.rotate(Axis.YP.rotationDegrees(90F));
         } else {
             matrixStack.translate(-16.01D / 16D, -20D / 16D, 1D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(-90F));
+            matrixStack.rotate(Axis.YP.rotationDegrees(-90F));
         }
     }
 
