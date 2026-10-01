@@ -178,13 +178,13 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent.Pre evt) {
-        if (!evt.getEntity().equals(mc.player)) {
+        if (evt.getEntity() != mc.player) {
             return;
         }
 
         EntityPlaneSoundBase vehicle = getPlane();
 
-        if (vehicle != null && evt.getEntity().equals(vehicle.getDriver())) {
+        if (vehicle != null && evt.getEntity() == vehicle.getDriver()) {
             cachedRelativeHeight = getRelativeHeight(vehicle);
         }
 

@@ -22,7 +22,7 @@ public class KeyEvents {
             return;
         }
 
-        if (player.equals(plane.getDriver())) {
+        if (player == plane.getDriver()) {
             plane.updateControls(PlaneClientMod.UP_KEY.isDown(), PlaneClientMod.DOWN_KEY.isDown(), PlaneClientMod.FORWARD_KEY.isDown(), PlaneClientMod.BACK_KEY.isDown(), PlaneClientMod.LEFT_KEY.isDown(), PlaneClientMod.RIGHT_KEY.isDown(), PlaneClientMod.BRAKE_KEY.isDown(), PlaneClientMod.START_KEY.isDown());
         }
 
