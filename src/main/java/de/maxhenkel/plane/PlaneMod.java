@@ -50,7 +50,7 @@ public class PlaneMod {
     public static ClientConfig CLIENT_CONFIG;
 
     public PlaneMod(IEventBus eventBus) {
-        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SYNCED, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
 
         ModItems.init(eventBus);
